@@ -1,28 +1,22 @@
-# Prompt: captions, text, and local brand assets
+# Prompt: captions that look like a real technical channel
 
-Create a caption and composition proposal for `<project-id>` revision
-`<revision-id>`.
+Create a caption and composition proposal for `hermes-agent-demo-20260728`,
+revision `rev_004`.
 
-Caption requirements:
+Use the locally installed font `Inter-SemiBold.ttf`, whose permission record is
+`asset_font_inter_internal_2026` in the project asset manifest. Captions are
+English, maximum two lines, sentence case, white text with a dark 6px outline,
+bottom safe-area padding of 8% of frame height, and no more than 42 characters
+per line when a natural break is available.
 
-- Language: `<language>`
-- Maximum lines: `<1 or 2>`
-- Font: `<absolute local font path>`
-- Font licence or permission record: `<manifest entry>`
-- Text treatment: `<style, size, color, outline>`
-- Safe-area policy: `<description>`
+Add a small chapter label “HERMES AGENT / LOCAL WORKFLOW” at the upper left
+from `00:00.800-00:04.200`. Use a dark translucent plate and keep it inside the
+title safe area. Do not caption the intro card if it already contains the same
+words. Captions render in front of the subject; a background plate renders
+behind the subject; supporting text must never cover the active prompt box.
 
-Visual requirements:
-
-- Background asset: `<solid or absolute local asset path>`
-- Title copy and range: `<copy and start-end>`
-- Supporting text and range: `<copy and start-end>`
-- Subject layer: `<source or approved mask>`
-- Occlusion: captions in front; `<other layer order>`
-
-Hash every non-source asset and record its local source, permission/licence,
-and attribution requirements in the project manifest. Validate glyph coverage,
-contrast, line wrapping, caption timing against the output transcript, layer
-order, integer frame conversion, and safe-area bounds. Render a still and short
-proof for inspection. Do not treat a successful compositor process as visual
-approval and do not approve Gate 2 on my behalf.
+Hash the font and every other non-source asset. Record origin, permission,
+attribution, glyph coverage, contrast, wrapping, output-clock timing, integer
+frame conversion, layer order, and safe-area checks. Render one still and a
+short proof for inspection. Do not claim visual approval from a successful
+Remotion process and do not approve Gate 2 on my behalf.

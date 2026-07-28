@@ -2,60 +2,71 @@
 
 ## First installation
 
-1. Follow `MANUAL_INSTALL_CHECKLIST.md`.
-2. Install Python 3.11 and `uv`.
-3. Install FFmpeg and ffprobe with the required filters, codecs, and alpha formats.
-4. Install Node.js 22 and the Remotion dependencies.
-5. Install or review the official Remotion skills.
-6. Install the core project dependencies and run schema checks.
-7. Run `videoedit doctor --json`.
-8. Add licensed fonts and local assets through documented configuration.
-9. Install the local Whisper extra before Phase 2.
-10. Leave GPU workers and provider networking disabled until their gates.
+For a creator setup, start with [`README.md`](../README.md),
+[`INSTALL.md`](../INSTALL.md), and [`docs/31_user_quickstart.md`](31_user_quickstart.md).
+The short version is:
+
+1. Install Python 3.11, `uv`, Node.js 22, npm, FFmpeg, ffprobe, and Git.
+2. Run `scripts/setup.ps1` on Windows or `scripts/setup.sh` on Unix-like systems.
+3. Provision a local Whisper checkpoint explicitly.
+4. Run `uv run videoedit doctor --json`.
+5. Keep provider networking and optional workers disabled for the normal path.
+6. Add only local assets whose permission/licence and attribution are recorded.
 
 ## Normal local workflow
 
-The intended public flow is:
+These are the implemented core commands. Run them from the repository root;
+use `videoedit --help` for the complete command list and options.
 
-```bash
-videoedit project init projects/demo
-videoedit ingest projects/demo raw/demo.mp4
-videoedit plan projects/demo
-videoedit review export projects/demo
-videoedit approve edits projects/demo --from projects/demo/review/gate1-decisions.json
-videoedit render rough projects/demo
-videoedit effects plan projects/demo
-videoedit remotion validate projects/demo
-videoedit remotion render projects/demo --pass background
-videoedit remotion render projects/demo --pass middle
-# Optional deferred extensions only after a separate re-enable decision; the final workflow does not call these:
-# videoedit segment projects/demo --effect EFFECT_ID
-# videoedit matte projects/demo --effect EFFECT_ID --initial-mask MASK.png
-videoedit preview segment projects/demo segment_intro
-videoedit review import-fixes projects/demo projects/demo/review/fixes.md
-videoedit verify speech projects/demo
-videoedit qa projects/demo --render preview
-videoedit approve segments projects/demo --from projects/demo/review/gate2-decisions.json
-videoedit render final-candidate projects/demo
-videoedit qa projects/demo --render final
-videoedit approve final projects/demo --preview active --qa-report active
-videoedit render final projects/demo
-videoedit backup verify projects/demo
-videoedit clean projects/demo --derived-only --dry-run
-videoedit status projects/demo
+```powershell
+$project = "my-tutorial-20260728"
+uv run videoedit init $project
+uv run videoedit ingest $project "C:\Users\me\Videos\my-tutorial.mp4"
+uv run videoedit probe $project
+uv run videoedit transcribe $project
+uv run videoedit detect-silence $project
+uv run videoedit plan-review $project --revision-id rev_001
+uv run videoedit plan-focus-pacing $project --candidates review/focus-candidates.json
+uv run videoedit status $project
 ```
+
+After inspecting the Gate 1 packet, use the exact current decision paths:
+
+```powershell
+uv run videoedit approve-gate1 $project `
+  --decisions projects/$project/review/edit-decisions.json `
+  --effect-plan projects/$project/artifacts/effect-plan.json `
+  --focus-pacing-plan projects/$project/artifacts/focus-pacing-plan.json `
+  --revision-id rev_001 `
+  --actor "human-editor"
+uv run videoedit compile-edl $project --revision-id rev_001
+uv run videoedit plan-joins $project
+uv run videoedit qa-joins $project
+uv run videoedit compile-retimed-timeline $project `
+  --retime-plan projects/$project/review/focus-pacing-plan.json `
+  --edl projects/$project/artifacts/edit-decision-list.json
+uv run videoedit render-retimed $project --source projects/$project/raw/source.mp4
+uv run videoedit compose-visual $project
+uv run videoedit render-segment projects/$project/artifacts/visual-timeline.json `
+  projects/$project/review/segment-000001.mp4 --start-frame 0 --end-frame 299
+uv run videoedit qa-focus-pacing $project --focus-pacing-plan projects/$project/review/focus-pacing-plan.json
+```
+
+Do not copy these paths blindly: each project stores its current artifact names
+and hashes. A prompt should ask Codex to resolve the exact paths and stop when
+an approval is missing or stale.
 
 The implemented P11 command sequence is:
 
 ```bash
-videoedit assemble-final demo --segment-spec review/gate3/approved-segments.json
-videoedit qa-final demo --assembly artifacts/final-assembly.json \
+uv run videoedit assemble-final demo --segment-spec review/gate3/approved-segments.json
+uv run videoedit qa-final demo --assembly artifacts/final-assembly.json \
   --plan edit_decision_list=artifacts/edit-decision-list.json \
   --gate2 review/gate2/segment-000001.lock.json \
   --visual-evidence review/gate3/contact-sheet.png
-videoedit record-watchthrough demo --candidate output/candidates/rev_001/final-candidate.mp4 \
+uv run videoedit record-watchthrough demo --candidate output/candidates/rev_001/final-candidate.mp4 \
   --actor reviewer@example.test --role editor
-videoedit approve-gate3 demo --final-qa artifacts/final-qa.json \
+uv run videoedit approve-gate3 demo --final-qa artifacts/final-qa.json \
   --watchthrough review/gate3/watchthrough.json \
   --asset-manifest artifacts/asset-manifest.json \
   --composition-bundle work/composition-bundle.js \
@@ -63,14 +74,14 @@ videoedit approve-gate3 demo --final-qa artifacts/final-qa.json \
   --plan edit_decision_list=artifacts/edit-decision-list.json \
   --gate2 review/gate2/segment-000001.lock.json \
   --actor reviewer@example.test --role editor
-videoedit write-publishing-metadata demo --candidate output/candidates/rev_001/final-candidate.mp4 \
+uv run videoedit write-publishing-metadata demo --candidate output/candidates/rev_001/final-candidate.mp4 \
   --caption-plan artifacts/caption-plan.json --transcript artifacts/transcript.json
-videoedit publish-delivery demo --gate3 review/gate3/gate3-approval.json \
+uv run videoedit publish-delivery demo --gate3 review/gate3/gate3-approval.json \
   --final-qa artifacts/final-qa.json --metadata artifacts/publishing-metadata.json \
   --delivery-profile config/delivery-profile.json --derivative mobile=1280x720
-videoedit backup-verify demo --targets config/backup-targets.json
-videoedit cleanup-plan demo
-videoedit status demo
+uv run videoedit backup-verify demo --targets config/backup-targets.json
+uv run videoedit cleanup-plan demo
+uv run videoedit status demo
 ```
 
 The example reviewer identities are placeholders. Gate 3, delivery, and cleanup must use the
@@ -78,7 +89,9 @@ current human decisions and exact paths produced by the preceding commands. A me
 run is evidence for that fixture only; the earlier 45-minute estimate is not a performance
 guarantee.
 
-Some command names remain planned contracts until their phases are implemented. Once the first public release is published, preserve command names, exit codes, and JSON envelopes.
+The CLI help and the repository-specific command contract are the source of
+truth. Historical phase notes may mention older command spellings; do not use
+those as executable instructions.
 
 ## Purposeful zoom and speed-up review
 
@@ -89,12 +102,11 @@ Prompt speed-ups are absent unless explicitly requested. Confirm that every acce
 Typical commands after implementation:
 
 ```bash
-videoedit focus plan projects/demo
-videoedit review export projects/demo
-videoedit approve focus projects/demo --decisions review/focus-decisions.json
-videoedit timeline retime projects/demo
-videoedit render preview projects/demo --focus
-videoedit qa projects/demo --scope focus-pacing
+uv run videoedit plan-focus-pacing demo --candidates review/focus-candidates.json
+uv run videoedit validate-focus-plan review/focus-pacing-plan.json
+uv run videoedit compile-retimed-timeline demo --retime-plan review/focus-pacing-plan.json
+uv run videoedit render-retimed demo --source projects/demo/raw/source.mp4
+uv run videoedit qa-focus-pacing demo --focus-pacing-plan review/focus-pacing-plan.json
 ```
 
 Use `[ZOOM start-end]` and `[SPEED start-end]` markers only as revision requests. Never edit an approved focus and pacing artifact in place.
@@ -136,23 +148,14 @@ The review export should include:
 
 A reviewer edits only the decision fields or uses a future review interface. The import command validates that the reviewed proposal hash is current.
 
-## Paid generation workflow
+## Paid or remote providers
 
-```bash
-videoedit plan assets PROJECT
-videoedit costs PROJECT
-videoedit approve spend PROJECT --max-usd 10 --expires-in 24h
-videoedit generate assets PROJECT
-```
-
-Before generation, confirm:
-
-- provider is allowed for the project data classification
-- network access is enabled
-- credential is available
-- every request has a fallback
-- estimate plus reserve is within the approval
-- request plan hash matches the approval
+Paid generation is outside the normal local path and remains disabled by
+default. If a future project explicitly selects a provider, use the typed
+`plan-provider-job` and `submit-provider-job` commands only after recording a
+current bounded spend approval, network decision, credential state, retention
+terms, fallback, and idempotency key. Do not use a provider to compensate for
+an unresolved local QA failure.
 
 ## Failure: dependency missing
 
@@ -275,15 +278,24 @@ A cancellation should:
 ## Disk cleanup
 
 ```bash
-videoedit clean PROJECT --dry-run --derived-only
-videoedit clean PROJECT --derived-only
+uv run videoedit cleanup-plan PROJECT
+uv run videoedit approve-cleanup PROJECT --cleanup-plan PATH --actor NAME --reason TEXT
+uv run videoedit execute-cleanup PROJECT --cleanup-plan PATH \
+  --approval PATH --backup-verification PATH
 ```
 
-The dry run lists artifact identifiers, paths, sizes, and retention classes. Source and required reproducibility assets are excluded.
+The cleanup plan is a dry run. It lists artifact identifiers, paths, sizes,
+hashes, retention classes, and recoverability. Source media, valid revisions,
+active approvals, failed evidence, and required reproducibility assets are
+excluded. Execution requires a separate current cleanup approval and a passing
+backup verification.
 
 ## Backup
 
-Use a project export command when implemented. Verify checksums after copying. Confirm whether source media is included or referenced.
+Run `uv run videoedit backup-verify PROJECT` with the configured target file.
+Verify checksums after copying and confirm whether the backup includes a source
+copy or an immutable source reference. Cleanup remains blocked until this
+verification passes.
 
 ## Upgrade
 

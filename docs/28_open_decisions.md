@@ -2,6 +2,19 @@
 
 Record answers in the implementation repository before the related phase starts.
 
+## Public-release defaults already decided
+
+The normal public workflow is local and worker-free: Python 3.11, Node.js 22,
+FFmpeg/ffprobe, local Whisper, and Remotion. Windows + AMD is supported for
+FFmpeg preview acceleration when the doctor check passes. The required path
+does not need CUDA, SAM 3.1, MatAnyone 2, cloud providers, or paid services.
+Controlled green-screen footage uses chroma keying or an approved supplied/manual
+mask. The production master uses the selected hash-bound delivery profile; the
+documented lossless source profile is software `libx264` QP 0 with PCM `f32le`.
+
+Do not turn an unanswered question below into a hidden assumption. Put the
+answer in the project brief or an accepted decision before the affected stage.
+
 ## Product scope
 
 - The final workflow is green-screen or approved supplied/manual-mask first. Normal-background neural matting is deferred and does not ship in the required path; revisit only through ADR-0013 re-enable conditions.

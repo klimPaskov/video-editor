@@ -2,6 +2,11 @@
 
 ## Required operator actions
 
+For the normal workflow, complete only the Foundation, Remotion, Brand,
+Storage, and Cleanup rows. Windows users with an AMD GPU do not need CUDA or a
+vision worker; they may use `h264_amf` for disposable previews after the doctor
+check passes.
+
 | Stage | Action | Evidence to retain | Codex stop condition |
 |---|---|---|---|
 | Foundation | Install Git, FFmpeg, ffprobe, fonts support, `uv`, Python 3.11, Node.js 22, and Codex | Version output and capability report | Required command or FFmpeg filter is missing |

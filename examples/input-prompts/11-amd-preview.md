@@ -1,16 +1,16 @@
-# Prompt: AMD preview and production profile
+# Prompt: use my AMD Radeon RX 7700 XT for previews
 
-I have an AMD GPU at `<GPU model>` and want local preview acceleration for
-`<project-id>`.
+I have an AMD Radeon RX 7700 XT on Windows and want a disposable review
+preview for `hermes-agent-demo-20260728`.
 
-Run `videoedit doctor --json` first. If FFmpeg reports a passing `h264_amf`
-capability, use it only for a disposable proxy, still, or review preview and
-record the encoder, driver, resolution, frame rate, and settings in the stage
-diagnostics. If AMF is unavailable, use the software preview path.
+Run `uv run videoedit doctor --json` first. If the configured FFmpeg exposes a
+passing `h264_amf` capability, render a 1280x720 preview of the segment around
+the prompt-writing action, approximately `11:30-12:25`. Record the GPU/driver,
+encoder, dimensions, FPS, bitrate or rate-control settings, command, output
+hash, full-decode result, and inspected contact-sheet frames. If AMF is not
+ready, use the software preview path and say so.
 
-Keep the production delivery profile deterministic and lossless: software
-`libx264` with QP 0 when the project profile permits it, plus PCM `f32le`
-audio at the configured sample rate and channel layout. Do not claim AMF is
-lossless, silently substitute a lossy codec, or use AMF as evidence for CUDA.
-Do not start SAM 3.1 or MatAnyone 2. Keep the source immutable and show the
-preview evidence before any approval request.
+Do not use AMF for the production master. Keep the master on software
+`libx264` QP 0 with PCM `f32le` audio when that profile is selected. Do not call
+SAM 3.1 or MatAnyone 2, do not claim AMF is lossless, do not overwrite the
+source, and do not treat a successful encode as visual approval.

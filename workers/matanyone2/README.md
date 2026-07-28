@@ -1,5 +1,9 @@
 # MatAnyone 2 Worker Boundary
 
+> This is an optional contract boundary, not part of the required public
+> workflow. Normal users should not install it. Use chroma keying or an
+> approved supplied/manual person mask instead.
+
 This directory is a planning scaffold for a worker that converts a video plus an approved first-frame person mask into a temporally stable foreground and alpha result. Use SAM, an interactive tool, or a manually prepared mask to create the initial mask. The core `videoedit.services.matting.build_matting_job` helper validates and records the mask before this worker boundary is reached.
 
 The included `run_job.py` has a legacy 1.0 compatibility path and a gated 1.1
