@@ -285,7 +285,11 @@ class LocalProcessRunner(ProcessRunner):
                 return
         else:
             try:
-                process.send_signal(signal.CTRL_BREAK_EVENT)
+                ctrl_break_event = getattr(signal, "CTRL_BREAK_EVENT", None)
+                if isinstance(ctrl_break_event, int):
+                    process.send_signal(ctrl_break_event)
+                else:
+                    process.terminate()
             except (OSError, ValueError):
                 process.terminate()
         try:
