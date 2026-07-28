@@ -19,6 +19,9 @@ weakening its review or safety boundaries.
 8. Run the checks in `scripts/check-core.sh` (or the equivalent PowerShell
    commands) before opening a pull request.
 
+The development extra includes NumPy only for validation-only worker contract
+fixtures; it does not install or run SAM 3.1 or MatAnyone 2 inference.
+
 ## Documentation and prompts
 
 User-facing changes belong in the README, `docs/31_user_quickstart.md`, or

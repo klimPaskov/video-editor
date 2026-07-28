@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import shutil
 from pathlib import Path
 
 from videoedit.services.artifacts import validate_artifact
@@ -15,20 +14,19 @@ def package_root() -> Path:
 
 def test_caption_plan_groups_word_timing_and_writes_sidecars(tmp_path: Path) -> None:
     root = package_root()
-    fixture = root / "projects" / "p3_fixture_evidence_final"
+    fixture = root / "tests" / "fixtures"
     source_transcript = json.loads(
-        (fixture / "artifacts" / "transcript-output.json").read_text(encoding="utf-8")
+        (fixture / "segment-transcript.json").read_text(encoding="utf-8")
     )
     source_manifest = json.loads(
-        (fixture / "artifacts" / "render-rough.json").read_text(encoding="utf-8")
+        (fixture / "caption-render-manifest.json").read_text(encoding="utf-8")
     )
     layout = initialize_project(tmp_path, "caption_test")
     source_transcript["project_id"] = "caption_test"
     transcript_path = layout.artifacts / "transcript-output.json"
     transcript_path.write_text(json.dumps(source_transcript), encoding="utf-8")
-    source_video = Path(str(source_manifest["output"]["path"]))
     copied_video = layout.output / "base.mp4"
-    shutil.copyfile(source_video, copied_video)
+    copied_video.write_bytes(b"synthetic caption fixture")
     source_manifest["project_id"] = "caption_test"
     source_manifest["output"]["path"] = str(copied_video)
     source_manifest["output"]["sha256"] = sha256_file(copied_video)

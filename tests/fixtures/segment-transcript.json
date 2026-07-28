@@ -1,0 +1,82 @@
+{
+  "schema_name": "transcript",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_transcript_fixture",
+  "project_id": "transcript_fixture",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-28T00:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "transcription",
+    "adapter": "fixture-transcription",
+    "adapter_version": "1.0.0"
+  },
+  "inputs": [],
+  "config_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "source_duration_us": 6000000,
+  "language": "en",
+  "model": "whisper-fixture",
+  "model_identifier": "fixture-fixture",
+  "device": "cpu",
+  "text": "before go go buy",
+  "segments": [
+    {
+      "segment_id": "seg_000001",
+      "text": "before",
+      "start_us": 500000,
+      "end_us": 1200000,
+      "word_ids": ["wrd_000001"],
+      "average_log_probability": null,
+      "no_speech_probability": null
+    },
+    {
+      "segment_id": "seg_000002",
+      "text": "go go buy",
+      "start_us": 4500000,
+      "end_us": 5600000,
+      "word_ids": ["wrd_000002", "wrd_000003", "wrd_000004"],
+      "average_log_probability": null,
+      "no_speech_probability": null
+    }
+  ],
+  "words": [
+    {
+      "word_id": "wrd_000001",
+      "segment_id": "seg_000001",
+      "text": "before",
+      "start_us": 500000,
+      "end_us": 1200000,
+      "probability": 1.0,
+      "timing_status": "original"
+    },
+    {
+      "word_id": "wrd_000002",
+      "segment_id": "seg_000002",
+      "text": "go",
+      "start_us": 4500000,
+      "end_us": 4700000,
+      "probability": 1.0,
+      "timing_status": "original"
+    },
+    {
+      "word_id": "wrd_000003",
+      "segment_id": "seg_000002",
+      "text": "go",
+      "start_us": 4800000,
+      "end_us": 5000000,
+      "probability": 1.0,
+      "timing_status": "original"
+    },
+    {
+      "word_id": "wrd_000004",
+      "segment_id": "seg_000002",
+      "text": "buy",
+      "start_us": 5100000,
+      "end_us": 5400000,
+      "probability": 1.0,
+      "timing_status": "original"
+    }
+  ],
+  "warnings": [],
+  "status": "complete"
+}

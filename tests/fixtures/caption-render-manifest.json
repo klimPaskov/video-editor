@@ -1,0 +1,48 @@
+{
+  "schema_name": "render_manifest",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_render_caption_fixture",
+  "project_id": "caption_fixture",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-28T00:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "base-render",
+    "adapter": "fixture",
+    "adapter_version": "1.0.0"
+  },
+  "inputs": [],
+  "config_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "render_type": "rough",
+  "composition_artifact_id": "art_edl_fixture",
+  "expected_duration_us": 6000000,
+  "actual_duration_us": 6000000,
+  "output": {
+    "path": "fixture.mp4",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "size_bytes": 1
+  },
+  "video": {
+    "codec": "h264",
+    "width": 640,
+    "height": 360,
+    "frame_rate": {"numerator": 30, "denominator": 1},
+    "pixel_format": "yuv420p"
+  },
+  "audio": {
+    "codec": "aac",
+    "sample_rate_hz": 48000,
+    "channels": 2
+  },
+  "commands": [
+    {
+      "executable": "ffmpeg",
+      "arguments": ["-version"],
+      "working_directory": ".",
+      "exit_code": 0,
+      "elapsed_ms": 0,
+      "version": "fixture"
+    }
+  ],
+  "warnings": []
+}
