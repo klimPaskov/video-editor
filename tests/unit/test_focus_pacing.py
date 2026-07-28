@@ -13,7 +13,11 @@ from videoedit.services.focus_pacing import (
     review_batch,
     validate_focus_pacing_plan,
 )
-from videoedit.services.focus_qa import evaluate_focus_pacing_qa
+from videoedit.services.focus_qa import (
+    evaluate_focus_pacing_qa,
+    keyframes_by_zoom_from_timeline,
+    select_revision_bound_retimed_timeline,
+)
 from videoedit.services.retiming import (
     compile_retimed_timeline,
     map_source_range,
@@ -375,6 +379,90 @@ def test_zoom_qa_checks_compiled_translation_against_the_visible_target() -> Non
     )
     assert centered_failure["status"] == "fail"
     assert centered_failure["required"] is True
+
+
+def test_focus_qa_extracts_compiled_zoom_keyframes_from_visual_timeline() -> None:
+    zoom = classify_zoom_candidate(_zoom_candidate())
+    plan = validate_focus_pacing_plan(
+        ROOT,
+        build_focus_pacing_plan(
+            package_root=ROOT,
+            project_id="p21_zoom_timeline",
+            revision_id="rev_001",
+            inputs=[{"artifact_id": "art_source", "sha256": HASH}],
+            zoom_candidates=[_zoom_candidate()],
+            config_hash=HASH,
+        ),
+    )
+    timeline = TimelineSpec(
+        project_id="p21_zoom_timeline",
+        width=1920,
+        height=1080,
+        fps=RationalFrameRate(numerator=30, denominator=1),
+        duration_frames=120,
+        layers=[
+            VideoLayer(
+                id="base-edit",
+                start_frame=0,
+                duration_frames=120,
+                src="base.mp4",
+                keyframes=build_zoom_keyframes(
+                    zoom,
+                    fps_numerator=30,
+                    width=1920,
+                    height=1080,
+                ),
+                purposeful_zoom_id=zoom.zoom_id,
+            )
+        ],
+    )
+    extracted = keyframes_by_zoom_from_timeline(plan, timeline)
+    assert len(extracted[zoom.zoom_id]) == 4
+    assert extracted[zoom.zoom_id][1].easing == "ease_in"
+
+
+def test_focus_qa_returns_empty_keyframes_when_visual_timeline_omits_zoom() -> None:
+    plan = validate_focus_pacing_plan(
+        ROOT,
+        build_focus_pacing_plan(
+            package_root=ROOT,
+            project_id="p21_zoom_timeline_missing",
+            revision_id="rev_001",
+            inputs=[{"artifact_id": "art_source", "sha256": HASH}],
+            zoom_candidates=[_zoom_candidate()],
+            config_hash=HASH,
+        ),
+    )
+    timeline = TimelineSpec(
+        project_id="p21_zoom_timeline_missing",
+        width=1920,
+        height=1080,
+        fps=30,
+        duration_frames=120,
+        layers=[VideoLayer(id="base-edit", start_frame=0, duration_frames=120, src="base.mp4")],
+    )
+    assert keyframes_by_zoom_from_timeline(plan, timeline)["zoom_prompt_box"] == ()
+
+
+def test_focus_qa_does_not_consume_stale_default_retimed_timeline(tmp_path: Path) -> None:
+    default_path = tmp_path / "retimed-timeline.json"
+    default_path.write_text('{"revision_id": "rev_001"}\n', encoding="utf-8")
+    with pytest.raises(ValueError, match="stale"):
+        select_revision_bound_retimed_timeline(
+            None,
+            default_path,
+            revision_id="rev_004",
+            speedups_requested=True,
+        )
+    assert (
+        select_revision_bound_retimed_timeline(
+            None,
+            default_path,
+            revision_id="rev_004",
+            speedups_requested=False,
+        )
+        is None
+    )
 
 
 def test_zoom_application_rejects_unknown_approval_ids() -> None:

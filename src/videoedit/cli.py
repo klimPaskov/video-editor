@@ -44,9 +44,15 @@ from videoedit.services.focus_pacing import (
     build_focus_pacing_plan,
     read_focus_pacing_plan,
     review_batch,
+    validate_focus_pacing_plan,
     write_focus_pacing_plan,
 )
-from videoedit.services.focus_qa import evaluate_focus_pacing_qa, write_focus_pacing_qa
+from videoedit.services.focus_qa import (
+    evaluate_focus_pacing_qa,
+    keyframes_by_zoom_from_timeline,
+    select_revision_bound_retimed_timeline,
+    write_focus_pacing_qa,
+)
 from videoedit.services.foreground import render_chroma_key_foreground
 from videoedit.services.gate2 import approve_segment_gate2
 from videoedit.services.gate3 import approve_gate3
@@ -93,6 +99,7 @@ from videoedit.services.replacement import write_object_replacement_manifest
 from videoedit.services.retiming import (
     compile_retimed_timeline,
     read_retimed_timeline,
+    rebase_focus_pacing_plan,
     render_retimed_timeline,
     write_retimed_timeline,
 )
@@ -126,6 +133,7 @@ from videoedit.services.transition_sound import (
     write_transition_sound_qa,
 )
 from videoedit.services.transitions import write_structural_boundaries, write_transition_plan
+from videoedit.services.visual_timeline import validate_visual_timeline
 from videoedit.services.watchthrough import record_watchthrough
 from videoedit.services.worker_runtime import approve_worker_runtime
 from videoedit.settings import Settings
@@ -581,6 +589,9 @@ def qa_focus_pacing(
         Path | None, typer.Option(help="Optional retimed timeline JSON")
     ] = None,
     transcript: Annotated[Path | None, typer.Option(help="Optional transcript JSON")] = None,
+    visual_timeline: Annotated[
+        Path | None, typer.Option(help="Optional compiled visual timeline JSON")
+    ] = None,
     width: Annotated[
         int, typer.Option(help="Rendered composition width for geometry checks")
     ] = 1920,
@@ -592,23 +603,55 @@ def qa_focus_pacing(
     layout = ProjectLayout(_workspace_path(workspace) / "projects" / project_id)
     selected_plan = (focus_pacing_plan or layout.artifacts / "focus-pacing-plan.json").resolve()
     plan = read_focus_pacing_plan(_package_root(), selected_plan)
-    selected_retimed = (
-        (retimed_timeline or layout.artifacts / "retimed-timeline.json").resolve()
-        if retimed_timeline is not None or (layout.artifacts / "retimed-timeline.json").is_file()
-        else None
-    )
+    try:
+        selected_retimed = select_revision_bound_retimed_timeline(
+            retimed_timeline,
+            layout.artifacts / "retimed-timeline.json",
+            revision_id=plan.revision_id,
+            speedups_requested=bool(plan.speedups),
+        )
+    except ValueError as exc:
+        raise typer.BadParameter(str(exc)) from exc
     retimed = (
         read_retimed_timeline(_package_root(), selected_retimed)
         if selected_retimed is not None
         else None
     )
+    if retimed is not None and (
+        retimed.project_id != plan.project_id or retimed.revision_id != plan.revision_id
+    ):
+        raise typer.BadParameter("retimed timeline does not belong to the focus plan revision")
+    qa_plan = plan
+    if retimed is not None:
+        qa_plan = validate_focus_pacing_plan(
+            _package_root(), rebase_focus_pacing_plan(retimed, plan.model_dump(mode="json"))
+        )
     transcript_value = (
         json.loads(transcript.resolve().read_text(encoding="utf-8")) if transcript else None
     )
+    selected_visual = visual_timeline.resolve() if visual_timeline is not None else None
+    visual_model = None
+    keyframes_by_zoom = None
+    if selected_visual is not None:
+        visual_payload = json.loads(selected_visual.read_text(encoding="utf-8"))
+        visual_model = validate_visual_timeline(_package_root(), visual_payload)
+        if visual_model.project_id != plan.project_id:
+            raise typer.BadParameter("visual timeline does not belong to the focus plan project")
+        if visual_model.width != width or visual_model.height != height:
+            raise typer.BadParameter(
+                "visual timeline dimensions do not match the focus QA dimensions"
+            )
+        plan_sha256 = sha256_file(selected_plan)
+        if plan.zooms and visual_model.focus_pacing_plan_sha256 != plan_sha256:
+            raise typer.BadParameter(
+                "visual timeline is not hash-bound to the supplied focus pacing plan"
+            )
+        keyframes_by_zoom = keyframes_by_zoom_from_timeline(qa_plan, visual_model)
     report = evaluate_focus_pacing_qa(
-        plan,
+        qa_plan,
         retimed_timeline=retimed,
         transcript=transcript_value,
+        keyframes_by_zoom=keyframes_by_zoom,
         width=width,
         height=height,
     )
@@ -618,6 +661,7 @@ def qa_focus_pacing(
         selected_plan,
         report,
         retimed_timeline_path=selected_retimed,
+        visual_timeline_path=selected_visual,
         revision_id=plan.revision_id,
     )
     typer.echo(report_path.read_text(encoding="utf-8"))

@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from videoedit import __version__
-from videoedit.domain.models import TransformKeyframe
+from videoedit.domain.models import TimelineSpec, TransformKeyframe, VideoLayer
 from videoedit.services.artifacts import (
     artifact_input,
     canonical_sha256,
@@ -21,6 +21,7 @@ from videoedit.services.focus_pacing import (
     FocusPacingPlan,
     _target_translation,
     _track_bbox_at,
+    build_zoom_keyframes,
     validate_focus_pacing_plan,
 )
 from videoedit.services.project import ProjectLayout
@@ -103,6 +104,83 @@ def _target_centering_diagnostics(
         "tolerance_px": tolerance,
         "expected_peak_transforms": expected_values,
     }
+
+
+def keyframes_by_zoom_from_timeline(
+    plan: FocusPacingPlan,
+    timeline: TimelineSpec,
+) -> dict[str, tuple[TransformKeyframe, ...]]:
+    """Extract the compiled keyframes for each planned zoom from a timeline.
+
+    The focus plan is canonical in source or rebased output microseconds, while
+    the visual timeline stores integer Remotion frames. The expected frame
+    locations are therefore derived with the same rational frame conversion
+    used by composition, then matched against the actual compiled layer. This
+    keeps QA bound to rendered timeline data instead of re-creating a passing
+    keyframe set from the plan alone.
+    """
+
+    if plan.project_id != timeline.project_id:
+        raise ValueError("focus plan and visual timeline belong to different projects")
+    if isinstance(timeline.fps, int):
+        fps_numerator, fps_denominator = timeline.fps, 1
+    else:
+        fps_numerator = timeline.fps.numerator
+        fps_denominator = timeline.fps.denominator
+    video_layers = [layer for layer in timeline.layers if isinstance(layer, VideoLayer)]
+    extracted: dict[str, tuple[TransformKeyframe, ...]] = {}
+    for zoom in plan.zooms:
+        matches: list[tuple[bool, tuple[TransformKeyframe, ...]]] = []
+        for layer in video_layers:
+            expected = build_zoom_keyframes(
+                zoom,
+                fps_numerator=fps_numerator,
+                fps_denominator=fps_denominator,
+                width=timeline.width,
+                height=timeline.height,
+                layer_start_frame=layer.start_frame,
+            )
+            frame_map = {item.frame: item for item in layer.keyframes}
+            actual = tuple(
+                frame_map[expected_item.frame]
+                for expected_item in expected
+                if expected_item.frame in frame_map
+            )
+            if len(actual) == len(expected):
+                matches.append((layer.purposeful_zoom_id == zoom.zoom_id, actual))
+        if matches:
+            matches.sort(key=lambda item: item[0], reverse=True)
+            extracted[zoom.zoom_id] = matches[0][1]
+        else:
+            extracted[zoom.zoom_id] = ()
+    return extracted
+
+
+def select_revision_bound_retimed_timeline(
+    requested_path: Path | None,
+    default_path: Path,
+    *,
+    revision_id: str,
+    speedups_requested: bool,
+) -> Path | None:
+    """Select a retimed timeline without ever consuming a stale default."""
+
+    if requested_path is not None:
+        return requested_path.expanduser().resolve()
+    if not default_path.is_file():
+        return None
+    try:
+        payload = json.loads(default_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return default_path.resolve()
+    if isinstance(payload, Mapping) and payload.get("revision_id") == revision_id:
+        return default_path.resolve()
+    if speedups_requested:
+        raise ValueError(
+            "default retimed timeline is stale for the focus plan revision; "
+            "provide --retimed-timeline for the current revision"
+        )
+    return None
 
 
 def evaluate_focus_pacing_qa(
@@ -446,6 +524,7 @@ def write_focus_pacing_qa(
     report: Mapping[str, Any],
     *,
     retimed_timeline_path: Path | None = None,
+    visual_timeline_path: Path | None = None,
     revision_id: str = "rev_001",
 ) -> Path:
     plan_value = json.loads(plan_path.read_text(encoding="utf-8"))
@@ -455,6 +534,8 @@ def write_focus_pacing_qa(
     inputs = [artifact_input("art_focus_pacing", plan_path)]
     if retimed_timeline_path is not None:
         inputs.append(artifact_input("art_retimed_timeline", retimed_timeline_path))
+    if visual_timeline_path is not None:
+        inputs.append(artifact_input("art_visual_timeline", visual_timeline_path))
     payload = {
         "schema_name": "focus_pacing_qa",
         "schema_version": "1.0.0",
@@ -484,4 +565,9 @@ def write_focus_pacing_qa(
     return output
 
 
-__all__ = ["evaluate_focus_pacing_qa", "write_focus_pacing_qa"]
+__all__ = [
+    "evaluate_focus_pacing_qa",
+    "keyframes_by_zoom_from_timeline",
+    "select_revision_bound_retimed_timeline",
+    "write_focus_pacing_qa",
+]
