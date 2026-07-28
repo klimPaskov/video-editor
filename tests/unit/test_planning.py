@@ -299,6 +299,31 @@ def test_rejected_candidate_repair_keeps_only_explicit_operator_edits(tmp_path: 
     )
     assert "automatic policy cuts are disabled" in repair_by_id["prp_pause_001"]["reason"]
 
+    child_revision_path = materialize_operator_edit_decisions(
+        package_root,
+        layout,
+        production_path,
+        batch_path,
+        instructions_path,
+        revision_id="rev_004",
+        safe_fallback_only=True,
+    )
+    child_revision = json.loads(child_revision_path.read_text(encoding="utf-8"))
+    validate_artifact(package_root, "edit_review_decisions", child_revision)
+    assert child_revision["revision_id"] == "rev_004"
+    assert child_revision["proposal_set_sha256"] == repair["proposal_set_sha256"]
+
+    with pytest.raises(PlanningValidationError, match="invalid decision revision id"):
+        materialize_operator_edit_decisions(
+            package_root,
+            layout,
+            production_path,
+            batch_path,
+            instructions_path,
+            revision_id="repair-latest",
+            safe_fallback_only=True,
+        )
+
     normal_path = materialize_operator_edit_decisions(
         package_root,
         layout,

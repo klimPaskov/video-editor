@@ -402,10 +402,13 @@ def plan_edits(
 @app.command("plan-review")
 def plan_review(
     project_id: str,
+    revision_id: Annotated[
+        str, typer.Option(help="Revision bound to the planning artifacts")
+    ] = "rev_001",
     workspace: Annotated[Path | None, typer.Option(help="Repository workspace")] = None,
 ) -> None:
     layout = ProjectLayout(_workspace_path(workspace) / "projects" / project_id)
-    outputs = plan_review_package(_package_root(), layout)
+    outputs = plan_review_package(_package_root(), layout, revision_id=revision_id)
     typer.echo(
         json.dumps(
             {
@@ -626,10 +629,15 @@ def qa_focus_pacing(
 def import_decisions(
     project_id: str,
     decisions: Annotated[Path, typer.Option(help="Reviewer decision JSON")],
+    revision_id: Annotated[
+        str, typer.Option(help="Revision bound to the decision artifact")
+    ] = "rev_001",
     workspace: Annotated[Path | None, typer.Option(help="Repository workspace")] = None,
 ) -> None:
     layout = ProjectLayout(_workspace_path(workspace) / "projects" / project_id)
-    output = import_edit_decisions(_package_root(), layout, decisions.resolve())
+    output = import_edit_decisions(
+        _package_root(), layout, decisions.resolve(), revision_id=revision_id
+    )
     typer.echo(str(output))
 
 
@@ -668,6 +676,15 @@ def materialize_edit_decisions_command(
             )
         ),
     ] = False,
+    revision_id: Annotated[
+        str | None,
+        typer.Option(
+            help=(
+                "Optional target revision for a repair decision artifact; parent proposal and "
+                "operator hashes remain bound"
+            )
+        ),
+    ] = None,
     workspace: Annotated[Path | None, typer.Option(help="Repository workspace")] = None,
 ) -> None:
     layout = ProjectLayout(_workspace_path(workspace) / "projects" / project_id)
@@ -679,6 +696,7 @@ def materialize_edit_decisions_command(
         instructions.resolve(),
         output=output.resolve() if output else None,
         safe_fallback_only=safe_fallback_only,
+        revision_id=revision_id,
     )
     typer.echo(str(created))
 
@@ -692,6 +710,9 @@ def approve_gate1(
     focus_pacing_plan: Annotated[
         Path | None, typer.Option(help="Optional focus/pacing plan bound to Gate 1")
     ] = None,
+    revision_id: Annotated[
+        str, typer.Option(help="Revision bound to the Gate 1 approval")
+    ] = "rev_001",
     reason: Annotated[str, typer.Option(help="Approval reason")] = "Gate 1 approved after review",
     workspace: Annotated[Path | None, typer.Option(help="Repository workspace")] = None,
 ) -> None:
@@ -709,6 +730,7 @@ def approve_gate1(
         selected_effect_plan.resolve(),
         actor=actor,
         reason=reason,
+        revision_id=revision_id,
         focus_pacing_plan_path=selected_focus_plan.resolve() if selected_focus_plan else None,
     )
     typer.echo(str(output))
@@ -724,6 +746,9 @@ def compile_edit_decisions(
     focus_pacing_plan: Annotated[
         Path | None, typer.Option(help="Optional focus/pacing plan bound to Gate 1")
     ] = None,
+    revision_id: Annotated[
+        str, typer.Option(help="Revision bound to the compiled EDL")
+    ] = "rev_001",
     workspace: Annotated[Path | None, typer.Option(help="Repository workspace")] = None,
 ) -> None:
     layout = ProjectLayout(_workspace_path(workspace) / "projects" / project_id)
@@ -737,6 +762,7 @@ def compile_edit_decisions(
         _package_root(),
         layout,
         selected,
+        revision_id=revision_id,
         gate1_approval_path=gate1_approval.resolve() if gate1_approval else None,
         focus_pacing_plan_path=selected_focus_plan.resolve() if selected_focus_plan else None,
     )

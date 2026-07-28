@@ -1718,6 +1718,7 @@ def materialize_operator_edit_decisions(
     *,
     output: Path | None = None,
     safe_fallback_only: bool = False,
+    revision_id: str | None = None,
 ) -> Path:
     """Create a complete decision artifact from reviewed and explicit cuts.
 
@@ -1726,6 +1727,10 @@ def materialize_operator_edit_decisions(
     policy-authorized automatic cut, so a failed dense edit cannot be silently
     carried into the next revision.
     """
+
+    target_revision_id = str(revision_id or "")
+    if target_revision_id and re.fullmatch(r"rev_[0-9]{3,}", target_revision_id) is None:
+        raise PlanningValidationError(f"invalid decision revision id: {target_revision_id}")
 
     proposal_path = production_proposals_path.expanduser().resolve()
     batch_path = smart_dense_batch_path.expanduser().resolve()
@@ -1860,7 +1865,9 @@ def materialize_operator_edit_decisions(
         "schema_version": "1.0.0",
         "artifact_id": "art_production_edit_review",
         "project_id": layout.root.name,
-        "revision_id": str(proposals["revision_id"]),
+        # A repair decision may be prepared for a new immutable revision while
+        # retaining its hash-bound parent proposal set and operator request.
+        "revision_id": target_revision_id or str(proposals["revision_id"]),
         "created_at": now_iso(),
         "reviewer": {
             "actor": str(instructions["operator"]["actor"]),
@@ -1872,7 +1879,17 @@ def materialize_operator_edit_decisions(
         "protected_range_overrides": overrides,
     }
     selected_output = (
-        (output or layout.review / "edit-decisions-production.json").expanduser().resolve()
+        (
+            output
+            or layout.review
+            / (
+                f"edit-decisions-{target_revision_id}.json"
+                if target_revision_id
+                else "edit-decisions-production.json"
+            )
+        )
+        .expanduser()
+        .resolve()
     )
     try:
         selected_output.relative_to(layout.root.resolve())

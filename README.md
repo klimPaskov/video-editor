@@ -127,6 +127,7 @@ uv run videoedit materialize-edit-decisions PROJECT_ID `
   --proposals projects/PROJECT_ID/artifacts/edit-proposals-production.json `
   --smart-dense-batch projects/PROJECT_ID/review/smart-dense-review-batch.json `
   --instructions projects/PROJECT_ID/review/operator-edit-instructions.json `
+  --revision-id REVISION_ID `
   --safe-fallback-only `
   --output projects/PROJECT_ID/review/edit-decisions-repair.json
 ```
