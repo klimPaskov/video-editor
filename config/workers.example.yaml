@@ -1,0 +1,41 @@
+schema_version: 1
+
+workers:
+  network_enabled: false
+  maximum_gpu_jobs: 1
+  default_timeout_seconds: 1800
+  result_write_mode: atomic
+  retain_failed_workdir: true
+
+sam3:
+  enabled: false
+  command: null
+  environment_path: workers/sam3/.venv
+  python_version: "3.12"
+  upstream_commit: null
+  checkpoint_id: null
+  checkpoint_hash: null
+  device: cuda:0
+  maximum_source_seconds_per_job: 20
+  prompt_types:
+    - text
+    - point
+    - box
+    - mask
+  require_live_smoke_test: true
+  require_operator_review: true
+
+matanyone2:
+  enabled: false
+  command: null
+  environment_path: workers/matanyone2/.venv
+  python_version: "3.10"
+  upstream_commit: null
+  checkpoint_id: null
+  checkpoint_hash: null
+  device: cuda:0
+  maximum_source_seconds_per_job: 30
+  require_initial_mask: true
+  require_output_role_verification: true
+  require_live_smoke_test: true
+  require_operator_review: true

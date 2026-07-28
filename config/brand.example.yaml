@@ -1,0 +1,52 @@
+schema_version: 1
+brand:
+  id: demo-gold
+  version: 1
+  name: Demo Gold
+
+fonts:
+  caption_primary:
+    family: Inter
+    weight: 600
+    file: null
+  caption_emphasis:
+    family: Inter
+    weight: 800
+    file: null
+  fallback:
+    family: Noto Sans
+    weight: 600
+    file: null
+
+colors:
+  text: "#FFFFFF"
+  emphasis: "#D7A63A"
+  outline: "#111111"
+  shadow: "#00000099"
+  card_background: "#101010E6"
+
+captions:
+  case: sentence
+  alignment: bottom_center
+  safe_margin_x_percent: 8
+  safe_margin_y_percent: 10
+  maximum_width_percent: 84
+  outline_px_at_1080p: 4
+  shadow_px_at_1080p: 2
+  line_spacing_percent: 100
+  emphasize_named_entities: false
+  emphasized_terms:
+    - workflow
+    - automate
+
+motion:
+  default_template: key_point_card
+  transition_ms: 180
+  corner_radius_px_at_1080p: 20
+  safe_margin_percent: 6
+
+logo:
+  enabled: false
+  file: null
+  position: top_right
+  width_percent: 8

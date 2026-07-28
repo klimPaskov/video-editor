@@ -1,0 +1,57 @@
+{
+  "schema_name": "media_proxy",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_proxy_edit",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-23T10:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "ingest-proxy",
+    "adapter": "ffmpeg",
+    "adapter_version": "7.1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_source",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "stage_key": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "kind": "edit",
+  "profile": "edit_h264_1280x720",
+  "duration_us": 12000000,
+  "output": {
+    "path": "work/proxies/rev_001/edit-proxy.mp4",
+    "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "size_bytes": 1000000
+  },
+  "video": {
+    "codec": "h264",
+    "width": 1280,
+    "height": 720,
+    "frame_rate": {
+      "numerator": 30000,
+      "denominator": 1001
+    },
+    "pixel_format": "yuv420p"
+  },
+  "audio": {
+    "codec": "aac",
+    "sample_rate_hz": 48000,
+    "channels": 2
+  },
+  "commands": [
+    {
+      "executable": "ffmpeg",
+      "arguments": ["-i", "raw/source.mp4", "work/proxies/rev_001/edit-proxy.mp4"],
+      "working_directory": ".",
+      "exit_code": 0,
+      "elapsed_ms": 1200,
+      "version": "7.1"
+    }
+  ],
+  "warnings": []
+}

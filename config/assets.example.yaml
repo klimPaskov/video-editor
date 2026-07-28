@@ -1,0 +1,76 @@
+schema_version: 1
+
+catalog:
+  root: private-assets
+  database: private-assets/index.sqlite3
+  network_import_enabled: false
+  provenance_required: true
+  hash_algorithm: sha256
+  allowed_licence_status:
+    - owned
+    - licensed
+    - public_domain
+    - generated_with_recorded_terms
+
+asset_types:
+  fonts:
+    extensions: [ttf, otf, woff2]
+  images:
+    extensions: [png, jpg, jpeg, webp]
+  backgrounds:
+    extensions: [png, jpg, jpeg, webp, mp4, mov]
+  replacement_objects:
+    extensions: [png, webp]
+    transparent_background_preferred: true
+  broll:
+    extensions: [mp4, mov, webm]
+  sound_effects:
+    extensions: [wav, flac, mp3]
+  music:
+    extensions: [wav, flac, mp3]
+
+selection:
+  maximum_broll_coverage_percent: 20
+  minimum_broll_spacing_seconds: 15
+  maximum_same_asset_uses_per_project: 1
+  maximum_sound_cues_per_minute: 3
+  require_project_approval: true
+
+sound_mix:
+  speech_priority: true
+  default_effect_gain_db: -14
+  maximum_effect_gain_db: -6
+  default_fade_ms: 80
+  default_fade_in_ms: 20
+  default_fade_out_ms: 80
+  minimum_speech_clearance_ms: 90
+  duck_under_speech_db: -8
+  true_peak_limit_dbtp: -1.0
+
+required_metadata:
+  - asset_id
+  - file_path
+  - sha256
+  - asset_type
+  - description
+  - tags
+  - source
+  - licence_status
+  - licence_reference
+  - attribution
+  - permitted_uses
+
+transition_sound_metadata:
+  visual_peak_ratio: 0.4
+  transient_alignment_tolerance_ms: 30
+  required_for_tagged_transition_sounds:
+    - integrated_loudness_lufs
+    - true_peak_dbtp
+    - transient_peak_offset_ms
+    - intended_transition_types
+    - intensity
+    - speech_safe
+    - minimum_reuse_interval_seconds
+    - brand_contexts
+  default_minimum_reuse_interval_seconds: 45
+  avoid_same_asset_back_to_back: true

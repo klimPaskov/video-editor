@@ -1,0 +1,16 @@
+{
+  "schema_name": "watchthrough_record",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_watchthrough",
+  "project_id": "prj_demo",
+  "revision_id": "rev_002",
+  "created_at": "2026-07-25T12:00:00Z",
+  "candidate": {"artifact_id": "art_final_candidate", "path": "output/candidates/rev_002/final-candidate.mp4", "sha256": "1111111111111111111111111111111111111111111111111111111111111111", "size_bytes": 100000},
+  "protocol": "full_watch_through",
+  "actor": "operator@example.test",
+  "role": "editor",
+  "status": "complete",
+  "decision": "pass",
+  "notes": "Watched the complete candidate with captions and audio.",
+  "evidence": []
+}

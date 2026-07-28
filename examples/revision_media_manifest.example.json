@@ -1,0 +1,53 @@
+{
+  "schema_name": "revision_media_manifest",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_revision_media_example",
+  "project_id": "prj_demo",
+  "revision_id": "rev_002",
+  "parent_revision_id": "rev_001",
+  "created_at": "2026-07-24T12:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "revision-recut",
+    "adapter": "ffmpeg",
+    "adapter_version": "fixture"
+  },
+  "source_markers": {
+    "artifact_id": "revision_request",
+    "path": "C:/projects/prj_demo/revisions/rev_002/revision-request.json",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "source": {
+    "artifact_id": "source_media",
+    "path": "C:/projects/prj_demo/raw/source.mp4",
+    "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "output": {
+    "artifact_id": "revision_recutted_media",
+    "path": "C:/projects/prj_demo/revisions/rev_002/outputs/recut.mp4",
+    "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+  },
+  "source_duration_us": 6000000,
+  "output_duration_us": 5500000,
+  "removed_ranges": [{"start_us": 2000000, "end_us": 2500000}],
+  "keep_ranges": [
+    {"start_us": 0, "end_us": 2000000},
+    {"start_us": 2500000, "end_us": 6000000}
+  ],
+  "source_to_output_mapping": [
+    {
+      "source_start_us": 0,
+      "source_end_us": 2000000,
+      "output_start_us": 0,
+      "output_end_us": 2000000
+    },
+    {
+      "source_start_us": 2500000,
+      "source_end_us": 6000000,
+      "output_start_us": 2000000,
+      "output_end_us": 5500000
+    }
+  ],
+  "warnings": [],
+  "status": "complete"
+}

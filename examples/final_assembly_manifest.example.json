@@ -1,0 +1,43 @@
+{
+  "schema_name": "final_assembly_manifest",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_final_assembly",
+  "project_id": "prj_demo",
+  "revision_id": "rev_002",
+  "created_at": "2026-07-25T12:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "final-assembly",
+    "adapter": "ffmpeg",
+    "adapter_version": "fixture"
+  },
+  "inputs": [
+    {"artifact_id": "segment_lock_001", "sha256": "1111111111111111111111111111111111111111111111111111111111111111"},
+    {"artifact_id": "segment_media_001", "sha256": "2222222222222222222222222222222222222222222222222222222222222222"}
+  ],
+  "config_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+  "segments": [
+    {
+      "segment_id": "segment_000001",
+      "revision_id": "rev_002",
+      "source_range": {"start_us": 0, "end_us": 3000000},
+      "output_range": {"start_us": 0, "end_us": 3000000},
+      "lock": {"artifact_id": "segment_lock_001", "path": "revisions/rev_002/locks/segment_000001.lock.json", "sha256": "1111111111111111111111111111111111111111111111111111111111111111", "size_bytes": 1000},
+      "media": {"artifact_id": "segment_media_001", "path": "revisions/rev_002/outputs/segment-000001.mp4", "sha256": "2222222222222222222222222222222222222222222222222222222222222222", "size_bytes": 100000}
+    }
+  ],
+  "expected_duration_us": 3000000,
+  "actual_duration_us": 3000000,
+  "pre_normalized_output": {"artifact_id": "art_final_pre_normalized", "path": "output/candidates/final-pre-normalized.mp4", "sha256": "4444444444444444444444444444444444444444444444444444444444444444", "size_bytes": 100000},
+  "output": {"artifact_id": "art_final_candidate", "path": "output/candidates/final-candidate.mp4", "sha256": "5555555555555555555555555555555555555555555555555555555555555555", "size_bytes": 100000},
+  "loudness": {
+    "profile": {"integrated_target_lufs": -16, "true_peak_target_dbfs": -1.5, "loudness_range_target_lu": 11, "integrated_tolerance_lu": 1, "true_peak_tolerance_db": 0.5},
+    "input": {"integrated_lufs": -20, "true_peak_dbfs": -3, "loudness_range_lu": 5, "threshold_lufs": -30},
+    "output": {"integrated_lufs": -16, "true_peak_dbfs": -1.5, "loudness_range_lu": 5, "threshold_lufs": -26},
+    "clipped_samples": 0,
+    "status": "pass"
+  },
+  "commands": [{"executable": "ffmpeg", "arguments": ["-i", "segment.mp4"], "working_directory": "output", "exit_code": 0, "elapsed_ms": 100, "version": "fixture"}],
+  "warnings": [],
+  "status": "complete"
+}

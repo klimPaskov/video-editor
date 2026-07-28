@@ -1,0 +1,811 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "visual_timeline.schema.json",
+  "title": "Visual timeline",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "project_id",
+    "width",
+    "height",
+    "fps",
+    "duration_frames",
+    "background",
+    "layers",
+    "audio",
+    "captions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "width": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "height": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "fps": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 240
+        },
+        {
+          "$ref": "#/$defs/rational"
+        }
+      ]
+    },
+    "duration_frames": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "background": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "solid",
+            "gradient",
+            "image",
+            "video"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "secondary_value": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "layers": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/text_layer"
+          },
+          {
+            "$ref": "#/$defs/video_layer"
+          },
+          {
+            "$ref": "#/$defs/image_layer"
+          }
+        ]
+      }
+    },
+    "audio": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/audio_layer"
+      }
+    },
+    "captions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "start_frame",
+          "end_frame",
+          "text"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "start_frame": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "end_frame": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "text": {
+            "type": "string"
+          },
+          "emphasis": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "style_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region": {
+            "enum": [
+              "top",
+              "center",
+              "bottom",
+              "custom"
+            ]
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "word_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/transition"
+      },
+      "default": []
+    },
+    "focus_pacing_plan_sha256": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "caption_safe_area": {
+      "$ref": "#/$defs/caption_safe_area"
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/asset_ref"
+      }
+    },
+    "code_bundle_sha256": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "transition_plan_sha256": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "$defs": {
+    "rational": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "numerator",
+        "denominator"
+      ],
+      "properties": {
+        "numerator": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "denominator": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "caption_safe_area": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "left",
+        "right",
+        "top",
+        "bottom"
+      ],
+      "properties": {
+        "left": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 0.5
+        },
+        "right": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 0.5
+        },
+        "top": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 0.5
+        },
+        "bottom": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 0.5
+        }
+      }
+    },
+    "asset_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "asset_id",
+        "src",
+        "sha256",
+        "role"
+      ],
+      "properties": {
+        "asset_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "src": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "role": {
+          "enum": [
+            "background",
+            "middle",
+            "subject",
+            "front",
+            "audio",
+            "font"
+          ]
+        },
+        "font_family": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "font_weight": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 100,
+          "maximum": 900
+        }
+      }
+    },
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "type": "number",
+          "default": 0
+        },
+        "y": {
+          "type": "number",
+          "default": 0
+        },
+        "width": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "scale": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "default": 1
+        },
+        "rotation_degrees": {
+          "type": "number",
+          "default": 0
+        },
+        "opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 1
+        }
+      }
+    },
+    "text_layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id",
+        "start_frame",
+        "duration_frames",
+        "text"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duration_frames": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "z_index": {
+          "type": "integer",
+          "default": 0
+        },
+        "role": {
+          "enum": [
+            "background",
+            "middle",
+            "subject",
+            "front"
+          ],
+          "default": "subject"
+        },
+        "kind": {
+          "const": "text"
+        },
+        "text": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string",
+          "default": "#FFFFFF"
+        },
+        "font_family": {
+          "type": "string",
+          "default": "Arial"
+        },
+        "font_size": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 72
+        },
+        "font_weight": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 900,
+          "default": 700
+        },
+        "align": {
+          "enum": [
+            "left",
+            "center",
+            "right"
+          ],
+          "default": "center"
+        },
+        "template": {
+          "enum": [
+            "plain",
+            "title",
+            "lower_third",
+            "callout",
+            "diagram",
+            "transition"
+          ],
+          "default": "plain"
+        },
+        "animation": {
+          "enum": [
+            "none",
+            "fade",
+            "slide_up",
+            "scale"
+          ],
+          "default": "fade"
+        },
+        "transform": {
+          "$ref": "#/$defs/transform"
+        },
+        "keyframes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/transform_keyframe"
+          },
+          "default": []
+        }
+      }
+    },
+    "video_layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id",
+        "start_frame",
+        "duration_frames",
+        "src"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duration_frames": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "z_index": {
+          "type": "integer",
+          "default": 0
+        },
+        "role": {
+          "enum": [
+            "background",
+            "middle",
+            "subject",
+            "front"
+          ],
+          "default": "subject"
+        },
+        "kind": {
+          "const": "video"
+        },
+        "src": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_from_frame": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "volume": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 4,
+          "default": 1
+        },
+        "muted": {
+          "type": "boolean",
+          "default": false
+        },
+        "fit": {
+          "enum": [
+            "cover",
+            "contain",
+            "fill"
+          ],
+          "default": "cover"
+        },
+        "transform": {
+          "$ref": "#/$defs/transform"
+        },
+        "keyframes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/transform_keyframe"
+          },
+          "default": []
+        },
+        "transparent": {
+          "type": "boolean",
+          "default": false
+        },
+        "purposeful_zoom_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null
+        }
+      }
+    },
+    "image_layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id",
+        "start_frame",
+        "duration_frames",
+        "src"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duration_frames": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "z_index": {
+          "type": "integer",
+          "default": 0
+        },
+        "role": {
+          "enum": [
+            "background",
+            "middle",
+            "subject",
+            "front"
+          ],
+          "default": "subject"
+        },
+        "kind": {
+          "const": "image"
+        },
+        "src": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fit": {
+          "enum": [
+            "cover",
+            "contain",
+            "fill"
+          ],
+          "default": "contain"
+        },
+        "transform": {
+          "$ref": "#/$defs/transform"
+        },
+        "keyframes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/transform_keyframe"
+          },
+          "default": []
+        }
+      }
+    },
+    "audio_layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "id",
+        "start_frame",
+        "duration_frames",
+        "src"
+      ],
+      "properties": {
+        "kind": {
+          "const": "audio"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duration_frames": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "src": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_from_frame": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "volume": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 4,
+          "default": 1
+        }
+      }
+    },
+    "transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "start_frame",
+        "duration_frames",
+        "transition_type",
+        "direction",
+        "easing",
+        "full_frame_coverage",
+        "incoming_first_readable_frame"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duration_frames": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "transition_type": {
+          "enum": [
+            "dip_to_color",
+            "swipe_left",
+            "swipe_right",
+            "push_left",
+            "push_right",
+            "blur_swipe",
+            "chapter_transition"
+          ]
+        },
+        "direction": {
+          "enum": [
+            "none",
+            "left",
+            "right",
+            "up",
+            "down"
+          ],
+          "default": "none"
+        },
+        "easing": {
+          "enum": [
+            "linear",
+            "ease_in",
+            "ease_out",
+            "ease_in_out",
+            "smooth_ease_in_out"
+          ],
+          "default": "smooth_ease_in_out"
+        },
+        "full_frame_coverage": {
+          "const": true
+        },
+        "incoming_first_readable_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "outgoing_segment_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "incoming_segment_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fallback": {
+          "enum": [
+            "hard_cut",
+            "j_cut",
+            "l_cut",
+            "short_crossfade",
+            "no_transition"
+          ],
+          "default": "hard_cut"
+        }
+      }
+    },
+    "transform_keyframe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frame"
+      ],
+      "properties": {
+        "frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "x": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "y": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "width": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "scale": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "rotation_degrees": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "opacity": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "easing": {
+          "enum": [
+            "linear",
+            "ease_in",
+            "ease_out",
+            "ease_in_out",
+            "hold"
+          ],
+          "default": "linear"
+        }
+      }
+    }
+  }
+}

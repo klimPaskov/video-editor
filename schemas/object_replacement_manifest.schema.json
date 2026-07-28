@@ -1,0 +1,233 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/object_replacement_manifest.schema.json",
+  "title": "Provenance-bound tracked object replacement",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "keyframes",
+    "asset_catalog",
+    "asset_manifest",
+    "asset",
+    "layer",
+    "fallback",
+    "status",
+    "warnings"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "object_replacement_manifest"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/id"
+    },
+    "project_id": {
+      "$ref": "#/$defs/id"
+    },
+    "revision_id": {
+      "$ref": "#/$defs/id"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "producer": {
+      "$ref": "#/$defs/producer"
+    },
+    "keyframes": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "asset_catalog": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "asset_manifest": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "asset_id",
+        "asset_type",
+        "file",
+        "licence_status",
+        "licence_reference",
+        "permitted_uses",
+        "approval_ids"
+      ],
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/id"
+        },
+        "asset_type": {
+          "const": "replacement_object"
+        },
+        "file": {
+          "$ref": "#/$defs/file_ref"
+        },
+        "licence_status": {
+          "enum": [
+            "owned",
+            "licensed",
+            "public_domain",
+            "generated_with_recorded_terms"
+          ]
+        },
+        "licence_reference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "permitted_uses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "approval_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "layer_id",
+        "z_index",
+        "fit",
+        "start_frame",
+        "duration_frames"
+      ],
+      "properties": {
+        "layer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "z_index": {
+          "type": "integer"
+        },
+        "fit": {
+          "enum": [
+            "contain",
+            "cover",
+            "fill"
+          ]
+        },
+        "start_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duration_frames": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "fallback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "on_uncertain"
+      ],
+      "properties": {
+        "mode": {
+          "const": "original_shot"
+        },
+        "on_uncertain": {
+          "const": "keep_original"
+        }
+      }
+    },
+    "status": {
+      "const": "complete"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "application_version",
+        "stage",
+        "adapter",
+        "adapter_version"
+      ],
+      "properties": {
+        "application_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

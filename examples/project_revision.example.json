@@ -1,0 +1,15 @@
+{
+  "schema_name": "project_revision",
+  "schema_version": "1.0.0",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "parent_revision_id": null,
+  "created_at": "2026-07-23T10:00:00Z",
+  "active": true,
+  "directories": {
+    "artifacts": "/projects/prj_demo/artifacts",
+    "review": "/projects/prj_demo/review",
+    "work": "/projects/prj_demo/work",
+    "output": "/projects/prj_demo/output"
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/qa_review_visual_evidence.schema.json",
+  "title": "Hash-Bound QA Visual Review Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name", "schema_version", "artifact_id", "project_id", "revision_id",
+    "created_at", "producer", "inputs", "packet", "candidate", "status", "summary",
+    "items"
+  ],
+  "properties": {
+    "schema_name": {"const": "qa_review_visual_evidence"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/revision"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "inputs": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"$ref": "#/$defs/artifact_input"}
+    },
+    "packet": {"$ref": "#/$defs/file_ref"},
+    "candidate": {"$ref": "#/$defs/file_ref"},
+    "status": {"enum": ["complete", "warning"]},
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["item_count", "generated_count", "contact_sheet_count", "failed_count"],
+      "properties": {
+        "item_count": {"type": "integer", "minimum": 1},
+        "generated_count": {"type": "integer", "minimum": 0},
+        "contact_sheet_count": {"type": "integer", "minimum": 0},
+        "failed_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/item"}
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "revision": {"type": "string", "pattern": "^rev_[0-9]{3,}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "time_us": {"type": "integer", "minimum": 0},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "artifact_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "sha256", "size_bytes"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 1}
+      }
+    },
+    "sample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "offset_us", "preview_time_us", "frame_index"],
+      "properties": {
+        "label": {"enum": ["preview_start", "before_join", "at_join", "after_join", "preview_end"]},
+        "offset_us": {"type": "integer"},
+        "preview_time_us": {"$ref": "#/$defs/time_us"},
+        "frame_index": {"type": "integer", "minimum": 0}
+      }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id", "join_id", "preview", "contact_sheet", "preview_range",
+        "output_join_us", "frame_count", "samples"
+      ],
+      "properties": {
+        "item_id": {"$ref": "#/$defs/id"},
+        "join_id": {"$ref": "#/$defs/id"},
+        "preview": {"$ref": "#/$defs/file_ref"},
+        "contact_sheet": {"$ref": "#/$defs/file_ref"},
+        "preview_range": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["start_us", "end_us"],
+          "properties": {
+            "start_us": {"$ref": "#/$defs/time_us"},
+            "end_us": {"$ref": "#/$defs/time_us"}
+          }
+        },
+        "output_join_us": {"$ref": "#/$defs/time_us"},
+        "frame_count": {"type": "integer", "minimum": 1},
+        "samples": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/sample"}
+        }
+      }
+    }
+  }
+}

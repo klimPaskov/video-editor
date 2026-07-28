@@ -1,0 +1,64 @@
+{
+  "schema_name": "qa_override",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_qa_override_example",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-28T12:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "qa-override",
+    "adapter": "human-review",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_final_qa",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "artifact_id": "art_qa_evidence_001",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  ],
+  "target_report": {
+    "schema_name": "final_qa_report",
+    "artifact_id": "art_final_qa",
+    "path": "C:\\project\\review\\final-qa.json",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "size_bytes": 1000
+  },
+  "findings": [
+    {
+      "finding_id": "finding_freeze_frames",
+      "check_code": "FREEZE_FRAMES",
+      "status": "warning",
+      "severity": "medium",
+      "classification": "intentional_static",
+      "reason": "The inspected interval is an intentional static title card.",
+      "scope": {
+        "join_ids": [],
+        "time_ranges": [
+          {"start_us": 1000000, "end_us": 1500000}
+        ]
+      },
+      "evidence": [
+        {
+          "artifact_id": "art_qa_evidence_001",
+          "path": "C:\\project\\review\\title-card.png",
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "size_bytes": 1000
+        }
+      ]
+    }
+  ],
+  "decision": "overridden",
+  "reviewer": {
+    "actor": "operator@example.com",
+    "role": "editor",
+    "reviewed_at": "2026-07-28T12:00:00Z"
+  },
+  "reason": "Reviewed the retained evidence and classified the warning explicitly.",
+  "notes": "This artifact does not change the QA report or approve delivery by itself.",
+  "expires_at": null
+}

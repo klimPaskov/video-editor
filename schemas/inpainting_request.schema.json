@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/inpainting_request.schema.json",
+  "title": "Optional inpainting request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "request_id",
+    "idempotency_key",
+    "provider",
+    "model",
+    "prompt",
+    "source",
+    "mask",
+    "mask_validation",
+    "source_video",
+    "mask_video",
+    "source_range",
+    "fallback",
+    "network",
+    "status",
+    "request_sha256",
+    "approvals",
+    "estimated_cost",
+    "output",
+    "warnings"
+  ],
+  "properties": {
+    "schema_name": {"const": "inpainting_request"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/identifier"},
+    "project_id": {"$ref": "#/$defs/identifier"},
+    "revision_id": {"$ref": "#/$defs/identifier"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "inputs": {
+      "type": "array",
+      "minItems": 3,
+      "items": {"$ref": "#/$defs/artifact_input"}
+    },
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "request_id": {"$ref": "#/$defs/identifier"},
+    "idempotency_key": {"type": "string", "minLength": 1},
+    "provider": {"type": "string", "minLength": 1},
+    "model": {"type": "string", "minLength": 1},
+    "prompt": {"type": "string", "minLength": 1},
+    "source": {"$ref": "#/$defs/file_ref"},
+    "mask": {"$ref": "#/$defs/file_ref"},
+    "mask_validation": {"$ref": "#/$defs/file_ref"},
+    "source_video": {"$ref": "#/$defs/video"},
+    "mask_video": {"$ref": "#/$defs/video"},
+    "source_range": {"$ref": "#/$defs/frame_range"},
+    "fallback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "on_uncertain", "original_visible"],
+      "properties": {
+        "mode": {"const": "original_shot"},
+        "on_uncertain": {"const": "keep_original"},
+        "original_visible": {"const": true}
+      }
+    },
+    "network": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "mode"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "mode": {"enum": ["disabled", "explicit_opt_in"]}
+      }
+    },
+    "status": {
+      "enum": [
+        "awaiting_approval",
+        "approved",
+        "submitted",
+        "validated",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "request_sha256": {"$ref": "#/$defs/sha256"},
+    "approvals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effect", "spend"],
+      "properties": {
+        "effect": {
+          "anyOf": [
+            {"$ref": "#/$defs/approval_ref"},
+            {"type": "null"}
+          ]
+        },
+        "spend": {
+          "anyOf": [
+            {"$ref": "#/$defs/approval_ref"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "estimated_cost": {
+      "anyOf": [
+        {"$ref": "#/$defs/money"},
+        {"type": "null"}
+      ]
+    },
+    "output": {
+      "anyOf": [
+        {"$ref": "#/$defs/file_ref"},
+        {"type": "null"}
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "money": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["currency", "amount"],
+      "properties": {
+        "currency": {"type": "string", "pattern": "^[A-Z]{3}$"},
+        "amount": {"type": "string", "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]{1,4})?$"}
+      }
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "artifact_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/identifier"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size_bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 0}
+      }
+    },
+    "approval_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approval_id", "sha256"],
+      "properties": {
+        "approval_id": {"$ref": "#/$defs/identifier"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "rational": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["numerator", "denominator"],
+      "properties": {
+        "numerator": {"type": "integer", "minimum": 1},
+        "denominator": {"type": "integer", "minimum": 1}
+      }
+    },
+    "video": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["codec", "width", "height", "frame_rate", "pixel_format", "frame_count", "duration_us"],
+      "properties": {
+        "codec": {"type": "string", "minLength": 1},
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1},
+        "frame_rate": {"$ref": "#/$defs/rational"},
+        "pixel_format": {"type": "string", "minLength": 1},
+        "frame_count": {"type": "integer", "minimum": 1},
+        "duration_us": {"type": "integer", "minimum": 0},
+        "lossless": {"type": "boolean"}
+      }
+    },
+    "frame_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_frame", "end_frame"],
+      "properties": {
+        "start_frame": {"type": "integer", "minimum": 0},
+        "end_frame": {"type": "integer", "exclusiveMinimum": 0}
+      }
+    }
+  }
+}

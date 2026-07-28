@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/stage_state.schema.json",
+  "title": "Resumable Stage State",
+  "type": "object",
+  "properties": {
+    "schema_name": {"const": "stage_state"},
+    "schema_version": {"const": "1.0.0"},
+    "stage_run_id": {"$ref": "#/$defs/identifier"},
+    "project_id": {"$ref": "#/$defs/identifier"},
+    "revision_id": {"$ref": "#/$defs/identifier"},
+    "stage": {"type": "string", "minLength": 1},
+    "stage_key": {"$ref": "#/$defs/sha256"},
+    "status": {"enum": ["running", "complete", "failed", "cancelled"]},
+    "attempt": {"type": "integer", "minimum": 1},
+    "started_at": {"$ref": "#/$defs/timestamp"},
+    "updated_at": {"$ref": "#/$defs/timestamp"},
+    "completed_at": {
+      "anyOf": [
+        {"$ref": "#/$defs/timestamp"},
+        {"type": "null"}
+      ]
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/file_ref"}
+    },
+    "staging_paths": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "warnings": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "code": {"type": "string", "minLength": 1},
+            "message": {"type": "string", "minLength": 1}
+          },
+          "required": ["code", "message"],
+          "additionalProperties": false
+        },
+        {"type": "null"}
+      ]
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "stage_run_id",
+    "project_id",
+    "revision_id",
+    "stage",
+    "stage_key",
+    "status",
+    "attempt",
+    "started_at",
+    "updated_at",
+    "completed_at",
+    "artifacts",
+    "staging_paths",
+    "warnings",
+    "error"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "file_ref": {
+      "type": "object",
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 1}
+      },
+      "required": ["path", "sha256", "size_bytes"],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema_name": "segment_lock",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_segment_lock",
+  "project_id": "prj_demo",
+  "revision_id": "rev_002",
+  "segment_id": "segment_000001",
+  "created_at": "2026-07-24T12:00:00Z",
+  "review": {
+    "artifact_id": "art_segment_review",
+    "path": "C:/projects/prj_demo/review/gate2/segment_000001/rev_002/approval.json",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "bound_hashes": {
+    "preview_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "transcript_comparison_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "effect_assets_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+    "composition_bundle_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+    "qa_report_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+    "visual_qa_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+  },
+  "locked": true,
+  "status": "complete"
+}

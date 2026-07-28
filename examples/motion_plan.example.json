@@ -1,0 +1,46 @@
+{
+  "schema_name": "motion_plan",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_motion_plan",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-22T10:00:00Z",
+  "producer": {
+    "application_version": "0.1.0",
+    "stage": "example",
+    "adapter": "fixture",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_edl",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "renderer": "local",
+  "target_width": 1920,
+  "target_height": 1080,
+  "frame_rate": {
+    "numerator": 30000,
+    "denominator": 1001
+  },
+  "cues": [
+    {
+      "cue_id": "mot_001",
+      "cue_type": "key_point",
+      "start_us": 2400000,
+      "end_us": 3400000,
+      "template_id": "tpl_key_point_card",
+      "payload": {
+        "text": "Clean workflow"
+      },
+      "region": "right",
+      "z_index": 20,
+      "rationale": "Reinforce the stated result",
+      "approval_state": "approved",
+      "fallback_template_id": "tpl_simple_title"
+    }
+  ],
+  "warnings": []
+}

@@ -1,0 +1,66 @@
+{
+  "schema_name": "qa_review_packet",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_qa_review_packet_example",
+  "project_id": "example_project",
+  "revision_id": "rev_002",
+  "created_at": "2026-01-01T00:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "qa-review-packet",
+    "adapter": "deterministic-evidence",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {"artifact_id": "art_final_qa", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    {"artifact_id": "art_join_qa", "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}
+  ],
+  "candidate": {
+    "artifact_id": "art_candidate",
+    "path": "projects/example_project/output/candidate.mp4",
+    "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "size_bytes": 100
+  },
+  "review_gate": "gate3",
+  "status": "review_required",
+  "summary": {
+    "total_items": 1,
+    "join_item_count": 1,
+    "segment_item_count": 0,
+    "final_item_count": 0,
+    "high_severity_count": 1,
+    "pending_item_count": 1,
+    "join_preview_count": 1,
+    "join_warning_by_code": {"TRANSCRIPT_SEQUENCE": 1},
+    "segment_warning_by_code": {},
+    "source_warning_finding_ids": ["finding_source_join_review"]
+  },
+  "items": [
+    {
+      "item_id": "qa_join_join_000001",
+      "scope": "join",
+      "check_code": "JOIN_REVIEW",
+      "severity": "high",
+      "source_finding_id": "qa_join_warning_join_000001",
+      "status": "warning",
+      "title": "join_000001: TRANSCRIPT_SEQUENCE",
+      "recommendation": "Inspect the rendered join preview and re-transcription before deciding.",
+      "decision_options": ["repair", "false_positive", "accepted_risk", "reject_candidate"],
+      "decision": "pending",
+      "time_range": {"start_us": 1000000, "end_us": 2000000},
+      "evidence": [
+        {
+          "artifact_id": "art_join_preview_000001",
+          "path": "projects/example_project/review/join-previews/join_000001.mp4",
+          "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "size_bytes": 100
+        }
+      ],
+      "details": {
+        "join_id": "join_000001",
+        "categories": ["TRANSCRIPT_SEQUENCE"],
+        "review_context_ms": 250
+      }
+    }
+  ]
+}

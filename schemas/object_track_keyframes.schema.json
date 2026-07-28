@@ -1,0 +1,316 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/object_track_keyframes.schema.json",
+  "title": "Smoothed object track keyframes",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "source_result",
+    "segmentation_validation",
+    "track_review",
+    "source_range",
+    "frame_rate",
+    "timeline",
+    "object_id",
+    "smoothing",
+    "keyframes",
+    "fallback",
+    "status",
+    "warnings"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "object_track_keyframes"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/id"
+    },
+    "project_id": {
+      "$ref": "#/$defs/id"
+    },
+    "revision_id": {
+      "type": "string",
+      "pattern": "^rev_[0-9]{3,}$"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "producer": {
+      "$ref": "#/$defs/producer"
+    },
+    "source_result": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "segmentation_validation": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "track_review": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "source_range": {
+      "$ref": "#/$defs/source_range"
+    },
+    "frame_rate": {
+      "type": "string",
+      "pattern": "^[0-9]+/[0-9]+$"
+    },
+    "timeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "object_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "smoothing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "window_radius_frames",
+        "padding",
+        "scale_source",
+        "rotation_source"
+      ],
+      "properties": {
+        "method": {
+          "const": "centered_moving_average_visible_runs"
+        },
+        "window_radius_frames": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "padding": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "scale_source": {
+          "const": "bbox_dimensions_unit_scale"
+        },
+        "rotation_source": {
+          "const": "unavailable_default_zero"
+        }
+      }
+    },
+    "keyframes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/keyframe"
+      }
+    },
+    "fallback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "on_uncertain"
+      ],
+      "properties": {
+        "mode": {
+          "const": "original_shot"
+        },
+        "on_uncertain": {
+          "const": "keep_original"
+        }
+      }
+    },
+    "status": {
+      "const": "complete"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "application_version",
+        "stage",
+        "adapter",
+        "adapter_version"
+      ],
+      "properties": {
+        "application_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "source_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_frame",
+        "end_frame"
+      ],
+      "properties": {
+        "start_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_frame": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "keyframe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frame",
+        "source_frame",
+        "visibility",
+        "x",
+        "y",
+        "width",
+        "height",
+        "scale",
+        "rotation_degrees",
+        "opacity",
+        "easing"
+      ],
+      "properties": {
+        "frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "visibility": {
+          "enum": [
+            "visible",
+            "hidden",
+            "uncertain"
+          ]
+        },
+        "x": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "y": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "width": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "scale": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "rotation_degrees": {
+          "type": "number"
+        },
+        "opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "easing": {
+          "enum": [
+            "linear",
+            "ease_in",
+            "ease_out",
+            "ease_in_out",
+            "hold"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "job_id": "segment-ball-v1",
+  "status": "complete",
+  "worker": "sam3",
+  "input_path": "/absolute/path/to/input.mp4",
+  "input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "prompt": {
+    "text": "the ball in the speaker's hand",
+    "frame_index": 0
+  },
+  "mask_pattern": "/absolute/path/to/artifacts/sam3/segment-ball-v1/masks/%06d.png",
+  "frame_count": 1,
+  "frames": [
+    {
+      "frame_index": 0,
+      "combined_mask_path": "/absolute/path/to/artifacts/sam3/segment-ball-v1/masks/000000.png",
+      "objects": [
+        {
+          "object_id": 1,
+          "mask_path": "/absolute/path/to/artifacts/sam3/segment-ball-v1/instances/000000-object-1.png",
+          "visible": true,
+          "area_pixels": 2500,
+          "bbox_xywh": [
+            500,
+            300,
+            50,
+            50
+          ],
+          "centroid_xy": [
+            524.5,
+            324.5
+          ]
+        }
+      ]
+    }
+  ],
+  "software": {
+    "sam3": "editable",
+    "python": "3.12.11"
+  }
+}

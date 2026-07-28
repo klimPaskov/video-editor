@@ -1,0 +1,35 @@
+{
+  "schema_name": "backup_verification",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_backup_001",
+  "project_id": "prj_demo",
+  "revision_id": "rev_final",
+  "created_at": "2026-07-23T15:00:00Z",
+  "status": "pass",
+  "items": [
+    {
+      "role": "source",
+      "source_path": "projects/prj_demo/raw/source.mp4",
+      "source_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+      "source_size_bytes": 1000000,
+      "backup_path": "/backups/prj_demo/source.mp4",
+      "backup_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+      "backup_size_bytes": 1000000,
+      "verified_at": "2026-07-23T15:00:00Z",
+      "status": "pass",
+      "message": null
+    },
+    {
+      "role": "master",
+      "source_path": "projects/prj_demo/output/final.mp4",
+      "source_sha256": "9999999999999999999999999999999999999999999999999999999999999999",
+      "source_size_bytes": 750000,
+      "backup_path": "/backups/prj_demo/final.mp4",
+      "backup_sha256": "9999999999999999999999999999999999999999999999999999999999999999",
+      "backup_size_bytes": 750000,
+      "verified_at": "2026-07-23T15:00:00Z",
+      "status": "pass",
+      "message": null
+    }
+  ]
+}

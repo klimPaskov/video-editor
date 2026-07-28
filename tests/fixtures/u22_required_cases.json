@@ -1,0 +1,219 @@
+{
+  "fixture_catalog_id": "u22_required_cases",
+  "fixture_catalog_version": "1.0.0",
+  "provenance": {
+    "source": "synthetic local fixture",
+    "license_id": "license_synthetic_internal_001",
+    "media_required": true
+  },
+  "dense_edit": {
+    "source_duration_us": 18000000,
+    "expected_proposal_types": [
+      "filler_word",
+      "filler_phrase",
+      "stutter",
+      "false_start",
+      "exact_repetition",
+      "semantic_repetition",
+      "duplicate_take",
+      "long_pause"
+    ],
+    "protected_word_ids": ["wrd_000022", "wrd_000026"],
+    "transcript": {
+      "source_duration_us": 18000000,
+      "confidence_summary": {"speaker_count": 1},
+      "words": [
+        {"word_id": "wrd_000001", "text": "hello", "start_us": 500000, "end_us": 800000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000002", "text": "um", "start_us": 900000, "end_us": 1100000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000003", "text": "you", "start_us": 1200000, "end_us": 1400000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000004", "text": "know", "start_us": 1420000, "end_us": 1620000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000005", "text": "i", "start_us": 1800000, "end_us": 2000000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000006", "text": "i", "start_us": 2015000, "end_us": 2200000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_100001", "text": "build", "start_us": 2400000, "end_us": 2500000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_100002", "text": "local", "start_us": 2510000, "end_us": 2600000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_100003", "text": "edits", "start_us": 2610000, "end_us": 2700000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000007", "text": "build", "start_us": 2800000, "end_us": 3100000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000008", "text": "local", "start_us": 3150000, "end_us": 3400000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000009", "text": "edits", "start_us": 3450000, "end_us": 3750000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000010", "text": "quickly", "start_us": 3800000, "end_us": 4100000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000011", "text": "quickly", "start_us": 4600000, "end_us": 4900000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000012", "text": "build", "start_us": 5000000, "end_us": 5300000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000013", "text": "local", "start_us": 5350000, "end_us": 5600000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000014", "text": "edits", "start_us": 5650000, "end_us": 5950000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000015", "text": "quickly", "start_us": 6000000, "end_us": 6300000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000016", "text": "protect", "start_us": 7000000, "end_us": 7300000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000017", "text": "facts", "start_us": 7350000, "end_us": 7650000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000018", "text": "carefully", "start_us": 7700000, "end_us": 8000000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000019", "text": "carefully", "start_us": 8800000, "end_us": 9100000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000020", "text": "protect", "start_us": 9150000, "end_us": 9450000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000021", "text": "facts", "start_us": 9500000, "end_us": 9800000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000022", "text": "not", "start_us": 10500000, "end_us": 10750000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000023", "text": "remove", "start_us": 10800000, "end_us": 11100000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000024", "text": "facts", "start_us": 11150000, "end_us": 11450000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000025", "text": "facts", "start_us": 12100000, "end_us": 12400000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000026", "text": "not", "start_us": 12450000, "end_us": 12700000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000027", "text": "remove", "start_us": 12750000, "end_us": 13050000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000028", "text": "camera", "start_us": 13500000, "end_us": 13800000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000029", "text": "choose", "start_us": 14000000, "end_us": 14300000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000030", "text": "the", "start_us": 14350000, "end_us": 14500000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000031", "text": "stronger", "start_us": 14550000, "end_us": 14850000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000032", "text": "take", "start_us": 14900000, "end_us": 15200000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000033", "text": "choose", "start_us": 16000000, "end_us": 16300000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000034", "text": "the", "start_us": 16350000, "end_us": 16500000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000035", "text": "stronger", "start_us": 16550000, "end_us": 16850000, "probability": 0.99, "timing_status": "certain"},
+        {"word_id": "wrd_000036", "text": "take", "start_us": 16900000, "end_us": 17200000, "probability": 0.99, "timing_status": "certain"}
+      ],
+      "segments": [
+        {"segment_id": "seg_take_a", "text": "choose the stronger take", "start_us": 14000000, "end_us": 15200000, "word_ids": ["wrd_000029", "wrd_000030", "wrd_000031", "wrd_000032"], "average_log_probability": -0.2},
+        {"segment_id": "seg_take_b", "text": "choose the stronger take", "start_us": 16000000, "end_us": 17200000, "word_ids": ["wrd_000033", "wrd_000034", "wrd_000035", "wrd_000036"], "average_log_probability": -0.8}
+      ]
+    },
+    "silence": {
+      "source_duration_us": 18000000,
+      "intervals": [
+        {"interval_id": "sil_long_pause", "start_us": 4200000, "end_us": 4800000, "classification": "inter_word", "nearest_word_before": "wrd_000010", "nearest_word_after": "wrd_000011"}
+      ]
+    }
+  },
+  "take_selection": {
+    "expected_recommendation": null,
+    "expected_requires_review": true,
+    "candidates": [
+      {
+        "take_id": "take_duplicate_a",
+        "source_range": {"start_us": 14000000, "end_us": 15200000},
+        "components": {"completeness": 0.9, "pronunciation": 0.9, "factual_correctness": 0.9, "delivery": 0.9, "audio_quality": 0.9, "gesture_continuity": 0.9, "screen_state_continuity": 0.9},
+        "evidence_ids": ["ev_take_duplicate_a"]
+      },
+      {
+        "take_id": "take_duplicate_b",
+        "source_range": {"start_us": 16000000, "end_us": 17200000},
+        "components": {"completeness": 0.85, "pronunciation": 0.85, "factual_correctness": 0.85, "delivery": 0.85, "audio_quality": 0.85, "gesture_continuity": 0.85, "screen_state_continuity": 0.85},
+        "evidence_ids": ["ev_take_duplicate_b"]
+      }
+    ]
+  },
+  "joins": [
+    {
+      "case_id": "clean_join",
+      "approved_text": "this is the result",
+      "rendered_text": "This is the result.",
+      "audio_check": {"clipped_syllable": false, "click_or_pop": false, "room_tone_jump": false, "speech_rhythm": "natural"},
+      "visual_check": {"black_flash": false, "freeze": false, "duplicate_frame": false, "face_or_body_jump": "none", "screen_state_jump": "none"},
+      "expected_status": "pass",
+      "expected_repair_action": null
+    },
+    {
+      "case_id": "broken_join_duplicate_word",
+      "approved_text": "this is the result",
+      "rendered_text": "this is is the result",
+      "audio_check": {"clipped_syllable": false, "click_or_pop": false, "room_tone_jump": false, "speech_rhythm": "natural"},
+      "visual_check": {"black_flash": false, "freeze": false, "duplicate_frame": false, "face_or_body_jump": "none", "screen_state_jump": "none"},
+      "expected_status": "fail",
+      "expected_repair_action_contains": "adjusted_handles"
+    },
+    {
+      "case_id": "screen_state_understandable",
+      "approved_text": "now we show the result",
+      "rendered_text": "now we show the result",
+      "audio_check": {"clipped_syllable": false, "click_or_pop": false, "room_tone_jump": false, "speech_rhythm": "natural"},
+      "visual_check": {"black_flash": false, "freeze": false, "duplicate_frame": false, "face_or_body_jump": "none", "screen_state_jump": "understandable"},
+      "expected_status": "pass",
+      "expected_repair_action": null
+    },
+    {
+      "case_id": "screen_state_unexplained",
+      "approved_text": "now we show the result",
+      "rendered_text": "now we show the result",
+      "audio_check": {"clipped_syllable": false, "click_or_pop": false, "room_tone_jump": false, "speech_rhythm": "natural"},
+      "visual_check": {"black_flash": false, "freeze": false, "duplicate_frame": false, "face_or_body_jump": "none", "screen_state_jump": "unexplained"},
+      "expected_status": "fail",
+      "expected_repair_action_contains": "screen_state_jump"
+    }
+  ],
+  "transitions": [
+    {
+      "case_id": "good_structural_transition",
+      "boundary": {
+        "boundary_id": "bnd_good_new_point",
+        "boundary_us": 2400000,
+        "outgoing_segment_id": "seg_intro",
+        "incoming_segment_id": "seg_demo",
+        "purpose": "new_point",
+        "transcript_evidence": "The speaker introduces the next major point.",
+        "visual_evidence": "The approved incoming demo replaces the talking-head coverage.",
+        "evidence_ids": ["ev_good_boundary"],
+        "first_incoming_word_us": 2900000,
+        "last_outgoing_word_us": 2100000,
+        "preferred_transition_type": "swipe_left",
+        "direction": "left",
+        "desired_duration_us": 300000,
+        "easing": "smooth_ease_in_out",
+        "full_frame_coverage": true,
+        "confidence_components": {"structural_boundary": 0.98, "timing": 0.97, "visual_fit": 0.96, "dialogue_safety": 0.99, "sound_sync": 0.97},
+        "confidence": 0.96,
+        "explicit": true,
+        "status": "verified"
+      },
+      "sound_cues": [
+        {"cue_id": "sfx_u22_whoosh", "start_us": 2400000, "end_us": 2700000, "asset_id": "snd_u22_whoosh", "asset_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "license_id": "license_synthetic_internal_001", "purpose": "Support the verified new-point transition", "gain_db": -16.0, "fade_in_us": 15000, "fade_out_us": 70000, "duck_speech": true, "approval_state": "approved", "linked_transition_id": "trn_bnd_good_new_point", "sync_peak_us": 2520000, "speech_clearance_us": 90000, "transient_alignment_status": "pass", "transient_alignment_tolerance_us": 30000, "speech_protection": {"minimum_clearance_us": 90000, "first_important_word_us": 2900000, "status": "pass"}, "qa_status": "pass"}
+      ],
+      "expected_transition_type": "swipe_left",
+      "expected_sound_sync_status": "pass"
+    },
+    {
+      "case_id": "bad_random_transition",
+      "boundary": {
+        "boundary_id": "bnd_bad_random",
+        "boundary_us": 5400000,
+        "outgoing_segment_id": "seg_cleanup_a",
+        "incoming_segment_id": "seg_cleanup_b",
+        "purpose": "new_point",
+        "transcript_evidence": "Routine filler cleanup has no new point.",
+        "visual_evidence": "No verified visual state change.",
+        "evidence_ids": ["ev_bad_random"],
+        "first_incoming_word_us": 6000000,
+        "last_outgoing_word_us": 5100000,
+        "preferred_transition_type": "swipe_right",
+        "direction": "right",
+        "desired_duration_us": 300000,
+        "easing": "smooth_ease_in_out",
+        "full_frame_coverage": false,
+        "confidence_components": {"structural_boundary": 0.55, "timing": 0.55, "visual_fit": 0.35, "dialogue_safety": 0.8, "sound_sync": 0.0},
+        "confidence": 0.55,
+        "explicit": false,
+        "status": "review_required"
+      },
+      "sound_cues": [],
+      "expected_transition_type": "hard_cut",
+      "expected_sound_sync_status": "not_required"
+    },
+    {
+      "case_id": "masked_dialogue",
+      "boundary": {
+        "boundary_id": "bnd_masked_dialogue",
+        "boundary_us": 8400000,
+        "outgoing_segment_id": "seg_speech_a",
+        "incoming_segment_id": "seg_speech_b",
+        "purpose": "new_point",
+        "transcript_evidence": "The point changes, but the motion overlaps speech.",
+        "visual_evidence": "Full-frame coverage is available, but dialogue is not clear.",
+        "evidence_ids": ["ev_masked_dialogue"],
+        "first_incoming_word_us": 8550000,
+        "last_outgoing_word_us": 8450000,
+        "preferred_transition_type": "swipe_left",
+        "direction": "left",
+        "desired_duration_us": 300000,
+        "easing": "smooth_ease_in_out",
+        "full_frame_coverage": true,
+        "confidence_components": {"structural_boundary": 0.96, "timing": 0.95, "visual_fit": 0.95, "dialogue_safety": 0.2, "sound_sync": 0.95},
+        "confidence": 0.2,
+        "explicit": true,
+        "status": "review_required"
+      },
+      "sound_cues": [],
+      "expected_transition_type": "hard_cut",
+      "expected_sound_sync_status": "not_required"
+    }
+  ]
+}

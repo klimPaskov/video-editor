@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/mask_validation.schema.json",
+  "title": "Validated local object mask",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "status",
+    "source",
+    "mask",
+    "source_video",
+    "mask_video",
+    "configuration",
+    "mask_statistics",
+    "validation",
+    "commands",
+    "warnings"
+  ],
+  "properties": {
+    "schema_name": {"const": "mask_validation"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/identifier"},
+    "project_id": {"$ref": "#/$defs/identifier"},
+    "revision_id": {"$ref": "#/$defs/identifier"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "inputs": {"type": "array", "items": {"$ref": "#/$defs/artifact_input"}},
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "status": {"enum": ["complete", "failed"]},
+    "source": {"$ref": "#/$defs/file_ref"},
+    "mask": {"$ref": "#/$defs/file_ref"},
+    "source_video": {"$ref": "#/$defs/video"},
+    "mask_video": {"$ref": "#/$defs/video"},
+    "configuration": {"$ref": "#/$defs/configuration"},
+    "mask_statistics": {"$ref": "#/$defs/mask_statistics"},
+    "validation": {"$ref": "#/$defs/validation"},
+    "commands": {"type": "array", "items": {"$ref": "#/$defs/process_command"}},
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "identifier": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "time_us": {"type": "integer", "minimum": 0},
+    "rational": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["numerator", "denominator"],
+      "properties": {
+        "numerator": {"type": "integer", "minimum": 1},
+        "denominator": {"type": "integer", "minimum": 1}
+      }
+    },
+    "artifact_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/identifier"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size_bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 0}
+      }
+    },
+    "video": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["codec", "width", "height", "frame_rate", "pixel_format", "frame_count", "duration_us"],
+      "properties": {
+        "codec": {"type": "string", "minLength": 1},
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1},
+        "frame_rate": {"$ref": "#/$defs/rational"},
+        "pixel_format": {"type": "string", "minLength": 1},
+        "frame_count": {"type": "integer", "minimum": 1},
+        "duration_us": {"$ref": "#/$defs/time_us"},
+        "lossless": {"type": "boolean"}
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expected_polarity", "sample_frame_indices"],
+      "properties": {
+        "expected_polarity": {"const": "white_foreground"},
+        "sample_frame_indices": {"type": "array", "minItems": 1, "items": {"type": "integer", "minimum": 0}}
+      }
+    },
+    "mask_statistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["min", "max", "mean", "polarity", "sampled_frames"],
+      "properties": {
+        "min": {"type": "number", "minimum": 0, "maximum": 255},
+        "max": {"type": "number", "minimum": 0, "maximum": 255},
+        "mean": {"type": "number", "minimum": 0, "maximum": 255},
+        "polarity": {"enum": ["white_foreground", "opaque", "transparent", "unknown"]},
+        "sampled_frames": {"type": "integer", "minimum": 1}
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["full_decode", "lossless", "pixel_format", "dimensions", "frame_count", "frame_rate", "range", "polarity", "duration"],
+      "properties": {
+        "full_decode": {"enum": ["pass", "fail"]},
+        "lossless": {"enum": ["pass", "fail"]},
+        "pixel_format": {"enum": ["pass", "fail"]},
+        "dimensions": {"enum": ["pass", "fail"]},
+        "frame_count": {"enum": ["pass", "fail"]},
+        "frame_rate": {"enum": ["pass", "fail"]},
+        "range": {"enum": ["pass", "fail"]},
+        "polarity": {"enum": ["pass", "fail"]},
+        "duration": {"enum": ["pass", "fail"]}
+      }
+    },
+    "process_command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executable", "arguments", "working_directory", "exit_code", "elapsed_ms", "version"],
+      "properties": {
+        "executable": {"type": "string", "minLength": 1},
+        "arguments": {"type": "array", "items": {"type": "string"}},
+        "working_directory": {"type": "string", "minLength": 1},
+        "exit_code": {"type": "integer"},
+        "elapsed_ms": {"type": "integer", "minimum": 0},
+        "version": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "schema_name": "qa_review_visual_evidence",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_qa_review_visual_evidence_demo",
+  "project_id": "demo_project",
+  "revision_id": "rev_002",
+  "created_at": "2026-01-01T00:00:00Z",
+  "producer": {
+    "application_version": "0.1.0",
+    "stage": "qa-review-visual-evidence",
+    "adapter": "ffmpeg",
+    "adapter_version": "7.0.0"
+  },
+  "inputs": [
+    {"artifact_id": "art_qa_review_packet_demo", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    {"artifact_id": "art_source_candidate", "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+    {"artifact_id": "art_join_preview_001", "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}
+  ],
+  "packet": {
+    "artifact_id": "art_qa_review_packet_demo",
+    "path": "C:/projects/demo/review/qa-review-packet.json",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "size_bytes": 100
+  },
+  "candidate": {
+    "artifact_id": "art_source_candidate",
+    "path": "C:/projects/demo/output/candidate.mp4",
+    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "size_bytes": 200
+  },
+  "status": "complete",
+  "summary": {
+    "item_count": 1,
+    "generated_count": 1,
+    "contact_sheet_count": 1,
+    "failed_count": 0
+  },
+  "items": [
+    {
+      "item_id": "qa_join_join_000001",
+      "join_id": "join_000001",
+      "preview": {
+        "artifact_id": "art_join_preview_001",
+        "path": "C:/projects/demo/review/join-previews/join_000001.mp4",
+        "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "size_bytes": 300
+      },
+      "contact_sheet": {
+        "artifact_id": "art_qa_join_contact_sheet_000001",
+        "path": "C:/projects/demo/review/qa-visual-evidence/join_000001.png",
+        "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "size_bytes": 400
+      },
+      "preview_range": {"start_us": 0, "end_us": 4000000},
+      "output_join_us": 2000000,
+      "frame_count": 240,
+      "samples": [
+        {"label": "preview_start", "offset_us": -2000000, "preview_time_us": 0, "frame_index": 0},
+        {"label": "before_join", "offset_us": -250000, "preview_time_us": 1750000, "frame_index": 105},
+        {"label": "at_join", "offset_us": 0, "preview_time_us": 2000000, "frame_index": 120},
+        {"label": "after_join", "offset_us": 250000, "preview_time_us": 2250000, "frame_index": 134},
+        {"label": "preview_end", "offset_us": 2000000, "preview_time_us": 4000000, "frame_index": 239}
+      ]
+    }
+  ]
+}

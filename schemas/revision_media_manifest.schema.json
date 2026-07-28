@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/revision_media_manifest.schema.json",
+  "title": "Revision Recut Media Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "parent_revision_id",
+    "created_at",
+    "producer",
+    "source_markers",
+    "source",
+    "output",
+    "source_duration_us",
+    "output_duration_us",
+    "removed_ranges",
+    "keep_ranges",
+    "source_to_output_mapping",
+    "warnings",
+    "status"
+  ],
+  "properties": {
+    "schema_name": {"const": "revision_media_manifest"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/revision"},
+    "parent_revision_id": {"$ref": "#/$defs/revision"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "source_markers": {"$ref": "#/$defs/file_ref"},
+    "source": {"$ref": "#/$defs/file_ref"},
+    "output": {"$ref": "#/$defs/file_ref"},
+    "source_duration_us": {"$ref": "#/$defs/time_us"},
+    "output_duration_us": {"$ref": "#/$defs/time_us"},
+    "removed_ranges": {"type": "array", "items": {"$ref": "#/$defs/range"}},
+    "keep_ranges": {"type": "array", "items": {"$ref": "#/$defs/range"}},
+    "source_to_output_mapping": {"type": "array", "items": {"$ref": "#/$defs/mapping"}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "status": {"enum": ["complete", "warning"]}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "revision": {"type": "string", "pattern": "^rev_[0-9]{3,}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "time_us": {"type": "integer", "minimum": 0},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_us", "end_us"],
+      "properties": {
+        "start_us": {"$ref": "#/$defs/time_us"},
+        "end_us": {"$ref": "#/$defs/time_us"}
+      }
+    },
+    "mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_start_us",
+        "source_end_us",
+        "output_start_us",
+        "output_end_us"
+      ],
+      "properties": {
+        "source_start_us": {"$ref": "#/$defs/time_us"},
+        "source_end_us": {"$ref": "#/$defs/time_us"},
+        "output_start_us": {"$ref": "#/$defs/time_us"},
+        "output_end_us": {"$ref": "#/$defs/time_us"}
+      }
+    }
+  }
+}

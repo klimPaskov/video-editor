@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/retimed_render_manifest.schema.json",
+  "title": "Retimed Render Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_name": {"const": "retimed_render_manifest"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/identifier"},
+    "project_id": {"$ref": "#/$defs/identifier"},
+    "revision_id": {"$ref": "#/$defs/revision"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "inputs": {"type": "array", "items": {"$ref": "#/$defs/artifact_input"}},
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "expected_duration_us": {"$ref": "#/$defs/time_us"},
+    "output": {"$ref": "#/$defs/file_ref"},
+    "video": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "frame_rate", "duration_us"],
+      "properties": {
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1},
+        "frame_rate": {"$ref": "#/$defs/rational"},
+        "duration_us": {"$ref": "#/$defs/time_us"}
+      }
+    },
+    "audio": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["duration_us", "sample_rate_hz", "channels"],
+      "properties": {
+        "duration_us": {"$ref": "#/$defs/time_us"},
+        "sample_rate_hz": {"type": "integer", "minimum": 1},
+        "channels": {"type": "integer", "minimum": 1}
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["full_decode", "duration", "av_sync"],
+      "properties": {
+        "full_decode": {"const": "pass"},
+        "duration": {"const": "pass"},
+        "av_sync": {"const": "pass"}
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executable", "arguments"],
+      "properties": {
+        "executable": {"type": "string", "minLength": 1},
+        "arguments": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "expected_duration_us",
+    "output",
+    "video",
+    "audio",
+    "validation",
+    "command"
+  ],
+  "$defs": {
+    "identifier": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "revision": {"type": "string", "pattern": "^rev_[0-9]{3,}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "time_us": {"type": "integer", "minimum": 0},
+    "rational": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["numerator", "denominator"],
+      "properties": {
+        "numerator": {"type": "integer", "minimum": 1},
+        "denominator": {"type": "integer", "minimum": 1}
+      }
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "artifact_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/identifier"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size_bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/join_plan.schema.json",
+  "title": "Deterministic Applied-Cut Join Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "output_duration_us",
+    "joins",
+    "warnings"
+  ],
+  "properties": {
+    "schema_name": {"const": "join_plan"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/identifier"},
+    "project_id": {"$ref": "#/$defs/identifier"},
+    "revision_id": {"$ref": "#/$defs/identifier"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "inputs": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/artifact_input"}
+    },
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "output_duration_us": {"$ref": "#/$defs/time_us"},
+    "joins": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/join"}
+    },
+    "warnings": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_us": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "time_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_us", "end_us"],
+      "properties": {
+        "start_us": {"$ref": "#/$defs/time_us"},
+        "end_us": {"$ref": "#/$defs/time_us"}
+      }
+    },
+    "artifact_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/identifier"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "join": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "join_id",
+        "proposal_ids",
+        "source_cut_range",
+        "output_join_us",
+        "preview_range",
+        "join_strategy",
+        "repair_order",
+        "fallback",
+        "handles",
+        "reason",
+        "status",
+        "repair_action",
+        "repair_attempt",
+        "review_required"
+      ],
+      "properties": {
+        "join_id": {"$ref": "#/$defs/identifier"},
+        "proposal_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "source_cut_range": {"$ref": "#/$defs/time_range"},
+        "source_preview_ranges": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/time_range"}
+        },
+        "output_join_us": {"$ref": "#/$defs/time_us"},
+        "preview_range": {"$ref": "#/$defs/time_range"},
+        "join_strategy": {"$ref": "#/$defs/join_strategy"},
+        "repair_order": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/join_strategy"}
+        },
+        "fallback": {"const": "hard_cut"},
+        "handles": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["pre_handle_us", "post_handle_us"],
+          "properties": {
+            "pre_handle_us": {"$ref": "#/$defs/time_us"},
+            "post_handle_us": {"$ref": "#/$defs/time_us"}
+          }
+        },
+        "reason": {"type": "string", "minLength": 1},
+        "status": {
+          "enum": ["planned", "repair_required", "fallback_required", "review_required"]
+        },
+        "repair_action": {
+          "anyOf": [{"type": "string"}, {"type": "null"}]
+        },
+        "repair_attempt": {"type": "integer", "minimum": 0},
+        "review_required": {"type": "boolean"}
+      }
+    },
+    "join_strategy": {
+      "enum": [
+        "hard_cut",
+        "hard_cut_with_micro_audio_crossfade",
+        "adjusted_handles",
+        "room_tone",
+        "j_cut",
+        "l_cut",
+        "broll_cover",
+        "alternate_coverage",
+        "purposeful_punch_in"
+      ]
+    }
+  }
+}

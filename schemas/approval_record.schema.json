@@ -1,0 +1,260 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_name": {
+      "const": "approval_record"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "project_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "revision_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "producer": {
+      "$ref": "#/$defs/producer"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifact_input"
+      }
+    },
+    "config_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "approval_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "approval_type": {
+      "enum": [
+        "edit",
+        "edit_batch",
+        "focus_pacing",
+        "spend",
+        "final",
+        "qa_override",
+        "smart_dense_policy",
+        "transition",
+        "transition_batch",
+        "cue_batch",
+        "cleanup"
+      ]
+    },
+    "actor": {
+      "type": "string",
+      "minLength": 1
+    },
+    "role": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision": {
+      "enum": [
+        "approved",
+        "rejected",
+        "modified",
+        "overridden"
+      ]
+    },
+    "reason": {
+      "type": "string"
+    },
+    "approved_item_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "approved_item_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "expires_at": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "budget": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            "maximum_amount": {
+              "$ref": "#/$defs/money"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "currency",
+            "maximum_amount"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "approval_id",
+    "approval_type",
+    "actor",
+    "role",
+    "decision",
+    "reason",
+    "approved_item_type",
+    "approved_item_sha256",
+    "expires_at",
+    "budget"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/approval_record.schema.json",
+  "title": "Approval Record",
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_us": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "time_range": {
+      "type": "object",
+      "properties": {
+        "start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "end_us": {
+          "$ref": "#/$defs/time_us"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "start_us",
+        "end_us"
+      ]
+    },
+    "rational": {
+      "type": "object",
+      "properties": {
+        "numerator": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "denominator": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "numerator",
+        "denominator"
+      ]
+    },
+    "artifact_input": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "sha256"
+      ]
+    },
+    "producer": {
+      "type": "object",
+      "properties": {
+        "application_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "application_version",
+        "stage",
+        "adapter",
+        "adapter_version"
+      ]
+    },
+    "file_ref": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ]
+    },
+    "money": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]{1,4})?$"
+    }
+  }
+}

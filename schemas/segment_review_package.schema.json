@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/segment_review_package.schema.json",
+  "title": "Gate 2 Segment Review Package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "segment_id",
+    "created_at",
+    "producer",
+    "planning_key",
+    "package_key",
+    "source_range",
+    "preview",
+    "contact_sheet",
+    "transcript_excerpt",
+    "transcript_markdown",
+    "effect_summary",
+    "diagnostics",
+    "fixes_template",
+    "warnings",
+    "status"
+  ],
+  "properties": {
+    "schema_name": {"const": "segment_review_package"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/id"},
+    "segment_id": {"$ref": "#/$defs/id"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "planning_key": {"$ref": "#/$defs/sha256"},
+    "package_key": {"$ref": "#/$defs/sha256"},
+    "source_range": {"$ref": "#/$defs/range"},
+    "preview": {"$ref": "#/$defs/file_ref"},
+    "contact_sheet": {"$ref": "#/$defs/file_ref"},
+    "transcript_excerpt": {"$ref": "#/$defs/file_ref"},
+    "transcript_markdown": {"$ref": "#/$defs/file_ref"},
+    "effect_summary": {"$ref": "#/$defs/file_ref"},
+    "diagnostics": {"$ref": "#/$defs/file_ref"},
+    "fixes_template": {"$ref": "#/$defs/file_ref"},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "status": {"enum": ["complete", "warning"]}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "time_us": {"type": "integer", "minimum": 0},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_us", "end_us"],
+      "properties": {
+        "start_us": {"$ref": "#/$defs/time_us"},
+        "end_us": {"$ref": "#/$defs/time_us"}
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

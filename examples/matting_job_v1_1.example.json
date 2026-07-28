@@ -1,0 +1,110 @@
+{
+  "schema_version": "1.1",
+  "job_id": "matte-person-v1-1",
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "project_id": "matting_example",
+  "revision_id": "rev_001",
+  "input_path": "/absolute/path/to/input.mp4",
+  "input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "input": {
+    "path": "/absolute/path/to/input.mp4",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "size_bytes": 1
+  },
+  "input_video": {
+    "width": 320,
+    "height": 180,
+    "frame_count": 30,
+    "frame_rate": "30/1",
+    "duration_us": 1000000
+  },
+  "initial_mask_path": "/absolute/path/to/person-first-frame.png",
+  "initial_mask_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "initial_mask": {
+    "path": "/absolute/path/to/person-first-frame.png",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "width": 320,
+    "height": 180,
+    "frame_index": 0,
+    "polarity": "white_foreground",
+    "source": "manual"
+  },
+  "initial_mask_validation": {
+    "status": "pending",
+    "mask_video": {
+      "width": 320,
+      "height": 180,
+      "frame_count": 1,
+      "frame_rate": "1/1",
+      "duration_us": 0,
+      "codec": "png",
+      "pixel_format": "gray"
+    },
+    "mask_statistics": {
+      "min": 0,
+      "max": 255,
+      "mean": 0,
+      "polarity": "unknown",
+      "sampled_frames": 1
+    },
+    "validation": {
+      "full_decode": "pending",
+      "lossless": "pending",
+      "pixel_format": "pending",
+      "dimensions": "pending",
+      "frame_count": "pending",
+      "frame_rate": "pending",
+      "range": "pending",
+      "polarity": "pending",
+      "frame_index": "pending",
+      "audio": "pending"
+    },
+    "warnings": [
+      "Example only; provide a decoded and independently reviewed first-frame mask."
+    ],
+    "commands": []
+  },
+  "output_dir": "/absolute/path/to/artifacts/matanyone2/matte-person-v1-1",
+  "source_range": {
+    "start_frame": 0,
+    "end_frame": 30
+  },
+  "approval": {
+    "artifact_id": "effect_plan",
+    "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "mask_approval": {
+    "artifact_id": "person_mask_review",
+    "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+  },
+  "worker": {
+    "name": "matanyone2",
+    "contract_version": "1.1",
+    "implementation_version": "matanyone2-worker-v1"
+  },
+  "runtime": {
+    "upstream_repository": "https://github.com/pq-yang/MatAnyone2",
+    "upstream_commit": "d3bb5a1ebedf259a5453c6d168e6840fff85581e",
+    "checkpoint_id": "matanyone2.pth",
+    "checkpoint_sha256": null,
+    "checkpoint_path": null,
+    "python": "3.10",
+    "pytorch": "pending",
+    "cuda": "pending",
+    "device": "cuda:0",
+    "access": "blocked"
+  },
+  "output_contract": {
+    "foreground_format": "video_rgb",
+    "alpha_format": "video_gray",
+    "alpha_polarity": "white_foreground"
+  },
+  "parameters": {
+    "max_size": 1080,
+    "n_warmup": 10,
+    "r_erode": 10,
+    "r_dilate": 10
+  },
+  "start_frame": 0,
+  "end_frame": 30
+}

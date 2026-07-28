@@ -1,0 +1,25 @@
+{
+  "name": "codex-video-agent-remotion",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Deterministic Remotion compositor for the Codex video agent workflow",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts AgentEdit",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.477",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.477"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "typescript": "5.8.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

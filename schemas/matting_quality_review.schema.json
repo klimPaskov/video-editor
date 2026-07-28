@@ -1,0 +1,372 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/matting_quality_review.schema.json",
+  "title": "Matting quality and stability review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "result",
+    "contrast_review",
+    "source_range",
+    "review_frame_indices",
+    "alpha_samples",
+    "validation",
+    "category_reviews",
+    "status",
+    "warnings",
+    "commands"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "matting_quality_review"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/id"
+    },
+    "project_id": {
+      "$ref": "#/$defs/id"
+    },
+    "revision_id": {
+      "type": "string",
+      "pattern": "^rev_[0-9]{3,}$"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "producer": {
+      "$ref": "#/$defs/producer"
+    },
+    "result": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "contrast_review": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "source_range": {
+      "$ref": "#/$defs/frame_range"
+    },
+    "review_frame_indices": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "alpha_samples": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/alpha_sample"
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_schema",
+        "contrast_review",
+        "alpha_decode",
+        "alpha_range",
+        "frame_coverage",
+        "semantic_categories",
+        "operator_review"
+      ],
+      "properties": {
+        "result_schema": {
+          "$ref": "#/$defs/check"
+        },
+        "contrast_review": {
+          "$ref": "#/$defs/check"
+        },
+        "alpha_decode": {
+          "$ref": "#/$defs/check"
+        },
+        "alpha_range": {
+          "$ref": "#/$defs/check"
+        },
+        "frame_coverage": {
+          "$ref": "#/$defs/check"
+        },
+        "semantic_categories": {
+          "$ref": "#/$defs/check"
+        },
+        "operator_review": {
+          "$ref": "#/$defs/check"
+        }
+      }
+    },
+    "category_reviews": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hair",
+        "fingers",
+        "clothing",
+        "holes",
+        "transparent_regions",
+        "fast_motion",
+        "motion_blur",
+        "entry_exit",
+        "temporal_edges"
+      ],
+      "properties": {
+        "hair": {
+          "$ref": "#/$defs/category_review"
+        },
+        "fingers": {
+          "$ref": "#/$defs/category_review"
+        },
+        "clothing": {
+          "$ref": "#/$defs/category_review"
+        },
+        "holes": {
+          "$ref": "#/$defs/category_review"
+        },
+        "transparent_regions": {
+          "$ref": "#/$defs/category_review"
+        },
+        "fast_motion": {
+          "$ref": "#/$defs/category_review"
+        },
+        "motion_blur": {
+          "$ref": "#/$defs/category_review"
+        },
+        "entry_exit": {
+          "$ref": "#/$defs/category_review"
+        },
+        "temporal_edges": {
+          "$ref": "#/$defs/category_review"
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "pass",
+        "fail"
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/command"
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "application_version",
+        "stage",
+        "adapter",
+        "adapter_version"
+      ],
+      "properties": {
+        "application_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "frame_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_frame",
+        "end_frame"
+      ],
+      "properties": {
+        "start_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_frame": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "alpha_sample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "frame_index",
+        "minimum",
+        "maximum",
+        "mean"
+      ],
+      "properties": {
+        "frame_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "minimum": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "maximum": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "mean": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 255
+        }
+      }
+    },
+    "check": {
+      "enum": [
+        "pending",
+        "pass",
+        "fail"
+      ]
+    },
+    "category_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "evidence_frame_indices",
+        "notes",
+        "fallback"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "pass",
+            "warning",
+            "fail"
+          ]
+        },
+        "evidence_frame_indices": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fallback": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "arguments",
+        "working_directory",
+        "exit_code",
+        "elapsed_ms",
+        "version"
+      ],
+      "properties": {
+        "executable": {
+          "type": "string",
+          "minLength": 1
+        },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "working_directory": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exit_code": {
+          "type": "integer"
+        },
+        "elapsed_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

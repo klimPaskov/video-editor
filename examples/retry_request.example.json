@@ -1,0 +1,13 @@
+{
+  "schema_name": "retry_request",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_retry_request",
+  "project_id": "prj_demo",
+  "revision_id": "rev_002",
+  "created_at": "2026-07-25T12:00:00Z",
+  "stage": "final_qa",
+  "previous_status": "failed",
+  "stage_key": "1111111111111111111111111111111111111111111111111111111111111111",
+  "retryable": true,
+  "reason": "Operator requested a retry after repairing the input."
+}

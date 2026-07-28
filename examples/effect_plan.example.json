@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "project_id": "demo",
+  "source_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "effects": [
+    {
+      "id": "fx-ball",
+      "kind": "track_recolor",
+      "start_us": 1000000,
+      "end_us": 3000000,
+      "trigger_quote": "change the ball color",
+      "target_prompt": "the ball in the speaker's hand",
+      "renderer": "sam3",
+      "fallback": "Keep the original object if confidence or continuity fails",
+      "parameters": {
+        "hue_degrees": 100
+      },
+      "requires_approval": true,
+      "linked_action_id": null
+    },
+    {
+      "id": "fx-prompt-zoom",
+      "kind": "purposeful_zoom",
+      "start_us": 8400000,
+      "end_us": 12100000,
+      "trigger_quote": null,
+      "target_prompt": "Visible prompt editor in the opened application window",
+      "renderer": "remotion",
+      "fallback": "Do not zoom if the target, timing, or stability checks fail",
+      "parameters": {
+        "focus_pacing_action_id": "zoom_prompt_box"
+      },
+      "requires_approval": false,
+      "linked_action_id": "zoom_prompt_box"
+    }
+  ],
+  "notes": [
+    "Approval binds to the source hash and this plan hash."
+  ],
+  "focus_pacing_plan_artifact_id": "art_focus_pacing",
+  "focus_pacing_plan_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+}

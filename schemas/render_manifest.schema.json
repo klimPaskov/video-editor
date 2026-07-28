@@ -1,0 +1,397 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_name": {
+      "const": "render_manifest"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "project_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "revision_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "producer": {
+      "$ref": "#/$defs/producer"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifact_input"
+      }
+    },
+    "config_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "render_type": {
+      "enum": [
+        "rough",
+        "preview",
+        "final",
+        "derivative",
+        "motion_asset"
+      ]
+    },
+    "composition_artifact_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "expected_duration_us": {
+      "$ref": "#/$defs/time_us"
+    },
+    "actual_duration_us": {
+      "$ref": "#/$defs/time_us"
+    },
+    "output": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "video": {
+      "type": "object",
+      "properties": {
+        "codec": {
+          "type": "string",
+          "minLength": 1
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "frame_rate": {
+          "$ref": "#/$defs/rational"
+        },
+        "pixel_format": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "codec",
+        "width",
+        "height",
+        "frame_rate",
+        "pixel_format"
+      ]
+    },
+    "audio": {
+      "type": "object",
+      "properties": {
+        "codec": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sample_rate_hz": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "channels": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "codec",
+        "sample_rate_hz",
+        "channels"
+      ]
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/process_command"
+      },
+      "minItems": 1
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "frame_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "expected_frame_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "video_duration_us": {
+      "$ref": "#/$defs/time_us"
+    },
+    "audio_duration_us": {
+      "$ref": "#/$defs/time_us"
+    },
+    "loudness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile", "input", "output", "clipped_samples"],
+      "properties": {
+        "profile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["integrated_target_lufs", "true_peak_target_dbfs", "loudness_range_target_lu", "integrated_tolerance_lu", "true_peak_tolerance_db"],
+          "properties": {
+            "integrated_target_lufs": {"type": "number"},
+            "true_peak_target_dbfs": {"type": "number"},
+            "loudness_range_target_lu": {"type": "number", "exclusiveMinimum": 0},
+            "integrated_tolerance_lu": {"type": "number", "minimum": 0},
+            "true_peak_tolerance_db": {"type": "number", "minimum": 0}
+          }
+        },
+        "input": {"$ref": "#/$defs/loudness_measurement"},
+        "output": {"$ref": "#/$defs/loudness_measurement"},
+        "clipped_samples": {"type": "integer", "minimum": 0}
+      }
+    },
+    "av_sync": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["video_duration_us", "audio_duration_us", "drift_us", "tolerance_us", "status"],
+      "properties": {
+        "video_duration_us": {"$ref": "#/$defs/time_us"},
+        "audio_duration_us": {"$ref": "#/$defs/time_us"},
+        "drift_us": {"type": "integer", "minimum": 0},
+        "tolerance_us": {"$ref": "#/$defs/time_us"},
+        "status": {"enum": ["pass", "warning", "fail"]}
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "full_decode": {"enum": ["pass", "fail"]},
+        "frame_count": {"enum": ["pass", "warning", "fail"]},
+        "duration": {"enum": ["pass", "warning", "fail"]},
+        "audio_duration": {"enum": ["pass", "warning", "fail"]},
+        "clipping": {"enum": ["pass", "warning", "fail"]},
+        "loudness": {"enum": ["pass", "warning", "fail"]}
+      }
+    },
+    "source_to_output_mapping": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/mapping_range"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "render_type",
+    "composition_artifact_id",
+    "expected_duration_us",
+    "actual_duration_us",
+    "output",
+    "video",
+    "audio",
+    "commands",
+    "warnings"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/render_manifest.schema.json",
+  "title": "Render Manifest",
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_us": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "time_range": {
+      "type": "object",
+      "properties": {
+        "start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "end_us": {
+          "$ref": "#/$defs/time_us"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "start_us",
+        "end_us"
+      ]
+    },
+    "rational": {
+      "type": "object",
+      "properties": {
+        "numerator": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "denominator": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "numerator",
+        "denominator"
+      ]
+    },
+    "artifact_input": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "sha256"
+      ]
+    },
+    "producer": {
+      "type": "object",
+      "properties": {
+        "application_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "application_version",
+        "stage",
+        "adapter",
+        "adapter_version"
+      ]
+    },
+    "file_ref": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ]
+    },
+    "money": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]{1,4})?$"
+    },
+    "process_command": {
+      "type": "object",
+      "properties": {
+        "executable": {
+          "type": "string",
+          "minLength": 1
+        },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "working_directory": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exit_code": {
+          "type": "integer"
+        },
+        "elapsed_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "arguments",
+        "working_directory",
+        "exit_code",
+        "elapsed_ms",
+        "version"
+      ]
+    },
+    "loudness_measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["integrated_lufs", "loudness_range_lu", "true_peak_dbfs", "threshold_lufs"],
+      "properties": {
+        "integrated_lufs": {"type": "number"},
+        "loudness_range_lu": {"type": "number", "minimum": 0},
+        "true_peak_dbfs": {"type": "number"},
+        "threshold_lufs": {"type": "number"}
+      }
+    },
+    "mapping_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_start_us", "source_end_us", "output_start_us", "output_end_us"],
+      "properties": {
+        "source_start_us": {"$ref": "#/$defs/time_us"},
+        "source_end_us": {"$ref": "#/$defs/time_us"},
+        "output_start_us": {"$ref": "#/$defs/time_us"},
+        "output_end_us": {"$ref": "#/$defs/time_us"}
+      }
+    }
+  }
+}

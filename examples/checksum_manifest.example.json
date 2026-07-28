@@ -1,0 +1,9 @@
+{
+  "schema_name": "checksum_manifest",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_checksums",
+  "project_id": "prj_demo",
+  "revision_id": "rev_002",
+  "created_at": "2026-07-25T12:00:00Z",
+  "files": [{"role": "master", "path": "delivery/master.mp4", "sha256": "1111111111111111111111111111111111111111111111111111111111111111", "size_bytes": 100000}]
+}

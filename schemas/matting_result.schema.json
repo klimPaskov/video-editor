@@ -1,0 +1,618 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "matting_result.schema.json",
+  "title": "MatAnyone 2 result",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "job_id",
+    "status",
+    "worker"
+  ],
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0",
+        "1.1"
+      ]
+    },
+    "job_id": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "complete",
+        "failed"
+      ]
+    },
+    "worker": {
+      "const": "matanyone2"
+    },
+    "config_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "revision_id": {
+      "type": "string",
+      "pattern": "^rev_[0-9]{3,}$"
+    },
+    "input_path": {
+      "type": "string"
+    },
+    "input_sha256": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "input": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "input_video": {
+      "$ref": "#/$defs/video"
+    },
+    "source_range": {
+      "$ref": "#/$defs/frame_range"
+    },
+    "initial_mask_path": {
+      "type": "string"
+    },
+    "initial_mask_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "initial_mask": {
+      "$ref": "#/$defs/initial_mask"
+    },
+    "mask_approval": {
+      "$ref": "#/$defs/approval"
+    },
+    "output_dir": {
+      "type": "string"
+    },
+    "foreground_path": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "alpha_path": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "media_outputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "outputs": {
+      "$ref": "#/$defs/outputs"
+    },
+    "output_contract": {
+      "$ref": "#/$defs/output_contract"
+    },
+    "verification": {
+      "$ref": "#/$defs/verification"
+    },
+    "diagnostics": {
+      "$ref": "#/$defs/diagnostics"
+    },
+    "upstream_return": {
+      "type": "string"
+    },
+    "model_id": {
+      "type": "string"
+    },
+    "device": {
+      "type": "string"
+    },
+    "software": {
+      "type": "object"
+    },
+    "raw_worker_metadata": {
+      "type": "object"
+    },
+    "error": {
+      "type": "string"
+    },
+    "traceback": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "schema_version": {
+            "const": "1.1"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "config_sha256",
+          "project_id",
+          "revision_id",
+          "input",
+          "input_video",
+          "source_range",
+          "initial_mask",
+          "mask_approval",
+          "outputs",
+          "output_contract",
+          "verification",
+          "diagnostics",
+          "software",
+          "raw_worker_metadata"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "complete"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "input_path",
+          "initial_mask_path",
+          "output_dir",
+          "media_outputs",
+          "model_id",
+          "device",
+          "software"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "failed"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "error"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "video": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height",
+        "frame_count",
+        "frame_rate"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "frame_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "frame_rate": {
+          "type": "string",
+          "pattern": "^[0-9]+/[0-9]+$"
+        },
+        "duration_us": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "frame_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_frame",
+        "end_frame"
+      ],
+      "properties": {
+        "start_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_frame": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "sha256"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "initial_mask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "width",
+        "height",
+        "frame_index",
+        "polarity",
+        "source"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "frame_index": {
+          "const": 0
+        },
+        "polarity": {
+          "const": "white_foreground"
+        },
+        "source": {
+          "enum": [
+            "sam3",
+            "interactive",
+            "manual"
+          ]
+        }
+      }
+    },
+    "output_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "width",
+        "height",
+        "frame_count",
+        "frame_rate",
+        "duration_us"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "frame_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "frame_rate": {
+          "type": "string",
+          "pattern": "^[0-9]+/[0-9]+$"
+        },
+        "duration_us": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pixel_format": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "foreground",
+        "alpha"
+      ],
+      "properties": {
+        "foreground": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/output_ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "alpha": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/output_ref"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "output_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "foreground_format",
+        "alpha_format",
+        "alpha_polarity"
+      ],
+      "properties": {
+        "foreground_format": {
+          "const": "video_rgb"
+        },
+        "alpha_format": {
+          "const": "video_gray"
+        },
+        "alpha_polarity": {
+          "const": "white_foreground"
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "foreground_role",
+        "alpha_role",
+        "alpha_polarity",
+        "dimensions",
+        "frame_count",
+        "decode",
+        "contrasting_background"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "foreground_role": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "alpha_role": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "alpha_polarity": {
+          "enum": [
+            "unknown",
+            "white_foreground",
+            "black_foreground"
+          ]
+        },
+        "dimensions": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "frame_count": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "decode": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        },
+        "contrasting_background": {
+          "enum": [
+            "pending",
+            "pass",
+            "fail"
+          ]
+        }
+      }
+    },
+    "diagnostics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_frame_indices",
+        "warnings",
+        "stability"
+      ],
+      "properties": {
+        "review_frame_indices": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "stability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "hair",
+            "fingers",
+            "clothing",
+            "holes",
+            "transparent_regions",
+            "fast_motion",
+            "motion_blur",
+            "entry_exit",
+            "temporal_edges"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "pending",
+                "pass",
+                "warning",
+                "fail"
+              ]
+            },
+            "hair": {
+              "enum": [
+                "pending",
+                "pass",
+                "warning",
+                "fail"
+              ]
+            },
+            "fingers": {
+              "enum": [
+                "pending",
+                "pass",
+                "warning",
+                "fail"
+              ]
+            },
+            "clothing": {
+              "enum": [
+                "pending",
+                "pass",
+                "warning",
+                "fail"
+              ]
+            },
+            "holes": {
+              "enum": [
+                "pending",
+                "pass",
+                "warning",
+                "fail"
+              ]
+            },
+            "transparent_regions": {
+              "enum": [
+                "pending",
+                "pass",
+                "warning",
+                "fail"
+              ]
+            },
+            "fast_motion": {
+              "enum": [
+                "pending",
+                "pass",
+                "warning",
+                "fail"
+              ]
+            },
+            "motion_blur": {
+              "enum": [
+                "pending",
+                "pass",
+                "warning",
+                "fail"
+              ]
+            },
+            "entry_exit": {
+              "enum": [
+                "pending",
+                "pass",
+                "warning",
+                "fail"
+              ]
+            },
+            "temporal_edges": {
+              "enum": [
+                "pending",
+                "pass",
+                "warning",
+                "fail"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

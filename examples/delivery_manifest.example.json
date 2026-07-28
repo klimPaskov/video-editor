@@ -1,0 +1,57 @@
+{
+  "schema_name": "delivery_manifest",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_delivery",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-22T10:00:00Z",
+  "producer": {
+    "application_version": "0.1.0",
+    "stage": "example",
+    "adapter": "fixture",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_render_final",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "artifact_id": "art_qa",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "final_approval_id": "apr_final_001",
+  "qa_report_id": "art_qa",
+  "profile_id": "pro_youtube_1080p",
+  "outputs": [
+    {
+      "role": "master",
+      "file": {
+        "path": "artifacts/delivery/master.mp4",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "size_bytes": 12500000
+      }
+    },
+    {
+      "role": "captions_webvtt",
+      "file": {
+        "path": "artifacts/delivery/captions.vtt",
+        "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "size_bytes": 320
+      }
+    },
+    {
+      "role": "qa_report",
+      "file": {
+        "path": "artifacts/delivery/qa.json",
+        "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "size_bytes": 2300
+      }
+    }
+  ],
+  "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "reproducible": true,
+  "missing_reproducibility_items": []
+}

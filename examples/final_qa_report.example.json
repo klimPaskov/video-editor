@@ -1,0 +1,18 @@
+{
+  "schema_name": "final_qa_report",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_final_qa",
+  "project_id": "prj_demo",
+  "revision_id": "rev_002",
+  "created_at": "2026-07-25T12:00:00Z",
+  "producer": {"application_version": "0.2.0", "stage": "final-qa", "adapter": "ffmpeg", "adapter_version": "fixture"},
+  "inputs": [{"artifact_id": "art_final_assembly", "sha256": "1111111111111111111111111111111111111111111111111111111111111111"}],
+  "candidate": {"artifact_id": "art_final_candidate", "path": "output/candidates/rev_002/final-candidate.mp4", "sha256": "2222222222222222222222222222222222222222222222222222222222222222", "size_bytes": 100000},
+  "profile_id": "pro_youtube_1080p",
+  "source_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+  "overall_status": "pass",
+  "final_ready": true,
+  "findings": [{"finding_id": "finding_decode", "check_code": "MEDIA_DECODE", "status": "pass", "severity": "info", "message": "Candidate fully decodes.", "required": true, "evidence": {"exit_code": 0}}],
+  "required_failures": 0,
+  "warnings_count": 0
+}

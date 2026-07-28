@@ -1,0 +1,82 @@
+schema_version: 1
+project:
+  name: demo-talking-head
+  data_classification: internal
+  timezone: Europe/Tallinn
+  source_mode: reference
+
+paths:
+  artifact_root: artifacts
+  cache_root: cache
+  log_root: logs
+
+runtime:
+  max_local_workers: 1
+  process_timeout_seconds: 7200
+  network_enabled: false
+  keep_temporary_on_failure: false
+
+transcription:
+  adapter: whisper_local
+  model: small
+  language: auto
+  device: auto
+  word_timestamps: true
+
+editing:
+  policy: conservative
+  silence_threshold_db: -38
+  minimum_silence_ms: 650
+  pre_handle_ms: 120
+  post_handle_ms: 160
+  minimum_cut_ms: 180
+  minimum_kept_segment_ms: 500
+  semantic_planner: none
+  filler_word_proposals: false
+  repetition_proposals: false
+
+captions:
+  brand_profile: config/brand.example.yaml
+  maximum_lines: 2
+  maximum_words_per_phrase: 5
+  minimum_duration_ms: 650
+  maximum_duration_ms: 2800
+  format:
+    - ass
+    - webvtt
+    - text
+
+sound:
+  enabled: false
+  catalog: null
+  maximum_cues_per_minute: 2
+  speech_priority: true
+
+motion:
+  enabled: false
+  renderer: local
+  maximum_cues_per_minute: 2
+
+broll:
+  enabled: false
+  provider: null
+  minimum_spacing_seconds: 20
+  maximum_coverage_percent: 20
+
+budget:
+  currency: USD
+  project_limit: "0.00"
+  daily_limit: "0.00"
+  request_limit: "0.00"
+  reserve_percent: 20
+  approval_expiry_hours: 24
+
+delivery:
+  profile: config/delivery-profile.example.yaml
+
+retention:
+  keep_source_reference: true
+  keep_transcript: true
+  keep_previews: 3
+  keep_provider_assets: true
+  clean_temporary_after_success: true

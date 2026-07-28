@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/sound_mix_qa.schema.json",
+  "title": "Approved sound-plan mix QA",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "source_sha256",
+    "asset_catalog_sha256",
+    "sound_plan_sha256",
+    "cue_plan_bundle_sha256",
+    "cue_approval_id",
+    "output",
+    "cue_results",
+    "qa_status",
+    "failures",
+    "warnings",
+    "full_decode_status",
+    "clipped_samples",
+    "clipping_status",
+    "loudness",
+    "speech_priority"
+  ],
+  "properties": {
+    "schema_name": {"const": "sound_mix_qa"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/id"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "inputs": {"type": "array", "minItems": 5, "items": {"$ref": "#/$defs/input"}},
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "source_sha256": {"$ref": "#/$defs/sha256"},
+    "asset_catalog_sha256": {"$ref": "#/$defs/sha256"},
+    "sound_plan_sha256": {"$ref": "#/$defs/sha256"},
+    "cue_plan_bundle_sha256": {"$ref": "#/$defs/sha256"},
+    "cue_approval_id": {"$ref": "#/$defs/id"},
+    "output": {"$ref": "#/$defs/file_ref"},
+    "cue_results": {"type": "array", "items": {"$ref": "#/$defs/cue_result"}},
+    "qa_status": {"enum": ["pass", "warning", "fail"]},
+    "failures": {"type": "array", "items": {"type": "string"}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "full_decode_status": {"enum": ["pass", "fail"]},
+    "clipped_samples": {"type": "integer", "minimum": 0},
+    "clipping_status": {"enum": ["pass", "fail"]},
+    "loudness": {
+      "anyOf": [
+        {"$ref": "#/$defs/loudness"},
+        {"type": "null"}
+      ]
+    },
+    "speech_priority": {"type": "boolean"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "time_us": {"type": "integer", "minimum": 0},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size_bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 1}
+      }
+    },
+    "cue_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cue_id",
+        "asset_id",
+        "asset_sha256",
+        "start_us",
+        "end_us",
+        "gain_db",
+        "fade_in_us",
+        "fade_out_us",
+        "duck_speech",
+        "mix_policy",
+        "status"
+      ],
+      "properties": {
+        "cue_id": {"$ref": "#/$defs/id"},
+        "asset_id": {"$ref": "#/$defs/id"},
+        "asset_sha256": {"$ref": "#/$defs/sha256"},
+        "start_us": {"$ref": "#/$defs/time_us"},
+        "end_us": {"$ref": "#/$defs/time_us"},
+        "gain_db": {"type": "number", "minimum": -60, "maximum": 12},
+        "fade_in_us": {"$ref": "#/$defs/time_us"},
+        "fade_out_us": {"$ref": "#/$defs/time_us"},
+        "duck_speech": {"type": "boolean"},
+        "mix_policy": {
+          "enum": ["speech_priority", "foreground_effect", "no_speech_overlap"]
+        },
+        "status": {"enum": ["pass", "warning", "fail"]}
+      }
+    },
+    "loudness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["integrated_lufs", "threshold_lufs", "loudness_range_lu", "true_peak_dbfs"],
+      "properties": {
+        "integrated_lufs": {"type": "number"},
+        "threshold_lufs": {"type": "number"},
+        "loudness_range_lu": {"type": "number", "minimum": 0},
+        "true_peak_dbfs": {"type": "number"}
+      }
+    }
+  }
+}

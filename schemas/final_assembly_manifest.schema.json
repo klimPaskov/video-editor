@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/final_assembly_manifest.schema.json",
+  "title": "Approved Segment Final Assembly Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "segments",
+    "expected_duration_us",
+    "actual_duration_us",
+    "pre_normalized_output",
+    "output",
+    "loudness",
+    "commands",
+    "warnings",
+    "status"
+  ],
+  "properties": {
+    "schema_name": {"const": "final_assembly_manifest"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/revision"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "inputs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/artifact_input"}},
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "segments": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/segment"}},
+    "expected_duration_us": {"$ref": "#/$defs/time_us"},
+    "actual_duration_us": {"$ref": "#/$defs/time_us"},
+    "pre_normalized_output": {"$ref": "#/$defs/file_ref"},
+    "output": {"$ref": "#/$defs/file_ref"},
+    "loudness": {"$ref": "#/$defs/loudness"},
+    "commands": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/command"}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "status": {"enum": ["complete", "warning"]}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "revision": {"type": "string", "pattern": "^rev_[0-9]{3,}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "time_us": {"type": "integer", "minimum": 0},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "artifact_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "sha256", "size_bytes"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 1}
+      }
+    },
+    "range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_us", "end_us"],
+      "properties": {
+        "start_us": {"$ref": "#/$defs/time_us"},
+        "end_us": {"$ref": "#/$defs/time_us"}
+      }
+    },
+    "segment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["segment_id", "revision_id", "source_range", "output_range", "lock", "media"],
+      "properties": {
+        "segment_id": {"$ref": "#/$defs/id"},
+        "revision_id": {"$ref": "#/$defs/revision"},
+        "source_range": {"$ref": "#/$defs/range"},
+        "output_range": {"$ref": "#/$defs/range"},
+        "lock": {"$ref": "#/$defs/file_ref"},
+        "media": {"$ref": "#/$defs/file_ref"}
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["integrated_lufs", "true_peak_dbfs", "loudness_range_lu", "threshold_lufs"],
+      "properties": {
+        "integrated_lufs": {"type": "number"},
+        "true_peak_dbfs": {"type": "number"},
+        "loudness_range_lu": {"type": "number", "minimum": 0},
+        "threshold_lufs": {"type": "number"}
+      }
+    },
+    "loudness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile", "input", "output", "clipped_samples", "status"],
+      "properties": {
+        "profile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["integrated_target_lufs", "true_peak_target_dbfs", "loudness_range_target_lu", "integrated_tolerance_lu", "true_peak_tolerance_db"],
+          "properties": {
+            "integrated_target_lufs": {"type": "number"},
+            "true_peak_target_dbfs": {"type": "number"},
+            "loudness_range_target_lu": {"type": "number", "exclusiveMinimum": 0},
+            "integrated_tolerance_lu": {"type": "number", "minimum": 0},
+            "true_peak_tolerance_db": {"type": "number", "minimum": 0}
+          }
+        },
+        "input": {"$ref": "#/$defs/measurement"},
+        "output": {"$ref": "#/$defs/measurement"},
+        "clipped_samples": {"type": "integer", "minimum": 0},
+        "status": {"enum": ["pass", "fail"]}
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executable", "arguments", "working_directory", "exit_code", "elapsed_ms", "version"],
+      "properties": {
+        "executable": {"type": "string", "minLength": 1},
+        "arguments": {"type": "array", "items": {"type": "string"}},
+        "working_directory": {"type": "string", "minLength": 1},
+        "exit_code": {"type": "integer"},
+        "elapsed_ms": {"type": "integer", "minimum": 0},
+        "version": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

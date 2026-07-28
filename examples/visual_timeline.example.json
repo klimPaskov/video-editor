@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0",
+  "project_id": "demo",
+  "width": 1280,
+  "height": 720,
+  "fps": 30,
+  "duration_frames": 180,
+  "background": {
+    "kind": "gradient",
+    "value": "#182848",
+    "secondary_value": "#4B6CB7"
+  },
+  "layers": [
+    {
+      "kind": "text",
+      "id": "behind-subject",
+      "start_frame": 20,
+      "duration_frames": 140,
+      "z_index": 1,
+      "text": "TEXT BEHIND SUBJECT",
+      "color": "#FFFFFF",
+      "font_family": "Arial",
+      "font_size": 72,
+      "font_weight": 700,
+      "align": "center",
+      "animation": "scale",
+      "transform": {
+        "x": 0,
+        "y": -20,
+        "width": null,
+        "height": null,
+        "scale": 1,
+        "rotation_degrees": 0,
+        "opacity": 1
+      },
+      "keyframes": []
+    },
+    {
+      "kind": "video",
+      "id": "main",
+      "start_frame": 0,
+      "duration_frames": 180,
+      "z_index": 2,
+      "src": "generated/demo/composite.mp4",
+      "source_from_frame": 0,
+      "volume": 1,
+      "muted": false,
+      "fit": "cover",
+      "transform": {
+        "x": 0,
+        "y": 0,
+        "width": null,
+        "height": null,
+        "scale": 1,
+        "rotation_degrees": 0,
+        "opacity": 1
+      },
+      "keyframes": [
+        {
+          "frame": 0,
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "easing": "linear"
+        },
+        {
+          "frame": 18,
+          "x": -120,
+          "y": 24,
+          "scale": 1.35,
+          "easing": "ease_in_out"
+        },
+        {
+          "frame": 132,
+          "x": -120,
+          "y": 24,
+          "scale": 1.35,
+          "easing": "hold"
+        },
+        {
+          "frame": 150,
+          "x": 0,
+          "y": 0,
+          "scale": 1,
+          "easing": "ease_in_out"
+        }
+      ],
+      "transparent": false,
+      "purposeful_zoom_id": "zoom_prompt_box"
+    }
+  ],
+  "audio": [],
+  "captions": [
+    {
+      "id": "c1",
+      "start_frame": 45,
+      "end_frame": 120,
+      "text": "Tracked object effects and layered composition",
+      "emphasis": [
+        "Tracked",
+        "layered"
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "id": "trn_new_point_001",
+      "start_frame": 72,
+      "duration_frames": 9,
+      "transition_type": "swipe_left",
+      "direction": "left",
+      "easing": "smooth_ease_in_out",
+      "full_frame_coverage": true,
+      "incoming_first_readable_frame": 81,
+      "outgoing_segment_id": "seg_intro",
+      "incoming_segment_id": "seg_demo",
+      "fallback": "hard_cut"
+    }
+  ],
+  "transition_plan_sha256": "8888888888888888888888888888888888888888888888888888888888888888",
+  "focus_pacing_plan_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+}

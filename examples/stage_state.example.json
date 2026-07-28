@@ -1,0 +1,24 @@
+{
+  "schema_name": "stage_state",
+  "schema_version": "1.0.0",
+  "stage_run_id": "run_ingest_001",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "stage": "ingest",
+  "stage_key": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "status": "complete",
+  "attempt": 1,
+  "started_at": "2026-07-23T10:00:00Z",
+  "updated_at": "2026-07-23T10:00:02Z",
+  "completed_at": "2026-07-23T10:00:02Z",
+  "artifacts": {
+    "edit_proxy": {
+      "path": "work/proxies/rev_001/edit-proxy.mp4",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "size_bytes": 1000000
+    }
+  },
+  "staging_paths": ["state/staging/ingest-bbbbbbbbbbbbbbbb"],
+  "warnings": [],
+  "error": null
+}

@@ -1,0 +1,137 @@
+{
+  "schema_name": "matting_quality_review",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_matting_quality_review",
+  "project_id": "matting_example",
+  "revision_id": "rev_001",
+  "created_at": "2026-01-01T00:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "matting_quality_review",
+    "adapter": "ffmpeg",
+    "adapter_version": "7.0"
+  },
+  "result": {
+    "path": "/absolute/path/to/matting-result.json",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "size_bytes": 1
+  },
+  "contrast_review": {
+    "path": "/absolute/path/to/matting-contrast-review.json",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "size_bytes": 1
+  },
+  "source_range": {
+    "start_frame": 0,
+    "end_frame": 30
+  },
+  "review_frame_indices": [
+    0,
+    15,
+    29
+  ],
+  "alpha_samples": [
+    {
+      "frame_index": 0,
+      "minimum": 0,
+      "maximum": 255,
+      "mean": 92.5
+    },
+    {
+      "frame_index": 15,
+      "minimum": 0,
+      "maximum": 255,
+      "mean": 88.1
+    },
+    {
+      "frame_index": 29,
+      "minimum": 0,
+      "maximum": 255,
+      "mean": 90.2
+    }
+  ],
+  "validation": {
+    "result_schema": "pass",
+    "contrast_review": "pass",
+    "alpha_decode": "pass",
+    "alpha_range": "pass",
+    "frame_coverage": "pass",
+    "semantic_categories": "pending",
+    "operator_review": "pending"
+  },
+  "category_reviews": {
+    "hair": {
+      "status": "pending",
+      "evidence_frame_indices": [0, 15, 29],
+      "notes": ["Example only; compare source and both contrast previews."],
+      "fallback": "Keep the original shot until accepted."
+    },
+    "fingers": {
+      "status": "pending",
+      "evidence_frame_indices": [0, 15, 29],
+      "notes": ["Example only; compare source and both contrast previews."],
+      "fallback": "Keep the original shot until accepted."
+    },
+    "clothing": {
+      "status": "pending",
+      "evidence_frame_indices": [0, 15, 29],
+      "notes": ["Example only; compare source and both contrast previews."],
+      "fallback": "Keep the original shot until accepted."
+    },
+    "holes": {
+      "status": "pending",
+      "evidence_frame_indices": [0, 15, 29],
+      "notes": ["Example only; compare source and both contrast previews."],
+      "fallback": "Keep the original shot until accepted."
+    },
+    "transparent_regions": {
+      "status": "pending",
+      "evidence_frame_indices": [0, 15, 29],
+      "notes": ["Example only; compare source and both contrast previews."],
+      "fallback": "Keep the original shot until accepted."
+    },
+    "fast_motion": {
+      "status": "pending",
+      "evidence_frame_indices": [0, 15, 29],
+      "notes": ["Example only; compare source and both contrast previews."],
+      "fallback": "Keep the original shot until accepted."
+    },
+    "motion_blur": {
+      "status": "pending",
+      "evidence_frame_indices": [0, 15, 29],
+      "notes": ["Example only; compare source and both contrast previews."],
+      "fallback": "Keep the original shot until accepted."
+    },
+    "entry_exit": {
+      "status": "pending",
+      "evidence_frame_indices": [0, 15, 29],
+      "notes": ["Example only; compare source and both contrast previews."],
+      "fallback": "Keep the original shot until accepted."
+    },
+    "temporal_edges": {
+      "status": "pending",
+      "evidence_frame_indices": [0, 15, 29],
+      "notes": ["Example only; compare source and both contrast previews."],
+      "fallback": "Keep the original shot until accepted."
+    }
+  },
+  "status": "pending",
+  "warnings": [
+    "Example only; category decisions require human visual review."
+  ],
+  "commands": [
+    {
+      "executable": "ffmpeg",
+      "arguments": [
+        "-i",
+        "subject_pha.mp4",
+        "-vf",
+        "signalstats"
+      ],
+      "working_directory": "/absolute/path/to/review",
+      "exit_code": 0,
+      "elapsed_ms": 1,
+      "version": "7.0"
+    }
+  ]
+}

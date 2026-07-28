@@ -1,0 +1,14 @@
+{
+  "schema_name": "publishing_metadata",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_publishing_metadata",
+  "project_id": "prj_demo",
+  "revision_id": "rev_002",
+  "created_at": "2026-07-25T12:00:00Z",
+  "candidate_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "captions": {"ass": {"artifact_id": "caption_ass", "path": "delivery/captions.ass", "sha256": "2222222222222222222222222222222222222222222222222222222222222222", "size_bytes": 100}, "webvtt": {"artifact_id": "caption_vtt", "path": "delivery/captions.vtt", "sha256": "3333333333333333333333333333333333333333333333333333333333333333", "size_bytes": 100}, "text": {"artifact_id": "caption_text", "path": "delivery/captions.txt", "sha256": "4444444444444444444444444444444444444444444444444444444444444444", "size_bytes": 100}},
+  "transcript": {"artifact_id": "final_transcript", "path": "delivery/transcript.json", "sha256": "5555555555555555555555555555555555555555555555555555555555555555", "size_bytes": 100},
+  "chapters": [{"start_us": 0, "title": "Introduction", "source": "operator-approved boundary", "confidence": 0.9}],
+  "description_draft": "A short description draft generated from the approved transcript.",
+  "warnings": []
+}

@@ -1,0 +1,380 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_name": {
+      "const": "sound_plan"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "project_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "revision_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "producer": {
+      "$ref": "#/$defs/producer"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifact_input"
+      }
+    },
+    "config_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "catalog_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "cues": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sound_cue"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "catalog_id",
+    "cues",
+    "warnings"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/sound_plan.schema.json",
+  "title": "Sound Cue Plan",
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_us": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "time_range": {
+      "type": "object",
+      "properties": {
+        "start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "end_us": {
+          "$ref": "#/$defs/time_us"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "start_us",
+        "end_us"
+      ]
+    },
+    "rational": {
+      "type": "object",
+      "properties": {
+        "numerator": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "denominator": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "numerator",
+        "denominator"
+      ]
+    },
+    "artifact_input": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "sha256"
+      ]
+    },
+    "producer": {
+      "type": "object",
+      "properties": {
+        "application_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "application_version",
+        "stage",
+        "adapter",
+        "adapter_version"
+      ]
+    },
+    "file_ref": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ]
+    },
+    "money": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]{1,4})?$"
+    },
+    "sound_cue": {
+      "type": "object",
+      "properties": {
+        "cue_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "end_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "asset_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "asset_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "license_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "gain_db": {
+          "type": "number",
+          "minimum": -60,
+          "maximum": 12
+        },
+        "fade_in_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "fade_out_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "duck_speech": {
+          "type": "boolean"
+        },
+        "approval_state": {
+          "enum": [
+            "proposed",
+            "approved",
+            "rejected"
+          ]
+        },
+        "linked_transition_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sync_peak_us": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/time_us"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "transient_peak_offset_us": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/time_us"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "speech_clearance_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "mix_policy": {
+          "enum": [
+            "speech_priority",
+            "foreground_effect",
+            "no_speech_overlap"
+          ]
+        },
+        "minimum_reuse_interval_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "qa_status": {
+          "enum": [
+            "planned",
+            "pass",
+            "warning",
+            "fail"
+          ]
+        },
+        "transient_alignment_status": {
+          "enum": [
+            "not_checked",
+            "pass",
+            "warning",
+            "fail"
+          ]
+        },
+        "transient_alignment_tolerance_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "speech_protection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "minimum_clearance_us",
+            "first_important_word_us",
+            "status"
+          ],
+          "properties": {
+            "minimum_clearance_us": {
+              "$ref": "#/$defs/time_us"
+            },
+            "first_important_word_us": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/time_us"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "status": {
+              "enum": [
+                "not_checked",
+                "pass",
+                "warning",
+                "fail"
+              ]
+            }
+          }
+        },
+        "reuse_status": {
+          "enum": [
+            "not_checked",
+            "pass",
+            "warning",
+            "fail"
+          ]
+        },
+        "selection_score": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "selection_rationale": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "visual_peak_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "alignment_delta_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "source_range_start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "source_range_end_us": {
+          "$ref": "#/$defs/time_us"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "cue_id",
+        "start_us",
+        "end_us",
+        "asset_id",
+        "asset_sha256",
+        "license_id",
+        "purpose",
+        "gain_db",
+        "fade_in_us",
+        "fade_out_us",
+        "duck_speech",
+        "approval_state"
+      ]
+    }
+  }
+}

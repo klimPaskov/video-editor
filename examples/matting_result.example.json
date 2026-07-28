@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "job_id": "matte-person-v1",
+  "status": "complete",
+  "worker": "matanyone2",
+  "input_path": "/absolute/path/to/input.mp4",
+  "input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "initial_mask_path": "/absolute/path/to/person-first-frame.png",
+  "initial_mask_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "output_dir": "/absolute/path/to/artifacts/matanyone2/matte-person-v1",
+  "foreground_path": "/absolute/path/to/artifacts/matanyone2/matte-person-v1/foreground.mp4",
+  "alpha_path": "/absolute/path/to/artifacts/matanyone2/matte-person-v1/alpha.mp4",
+  "media_outputs": [
+    "/absolute/path/to/artifacts/matanyone2/matte-person-v1/foreground.mp4",
+    "/absolute/path/to/artifacts/matanyone2/matte-person-v1/alpha.mp4"
+  ],
+  "upstream_return": "None",
+  "model_id": "PeiqingYang/MatAnyone2",
+  "device": "cuda:0",
+  "software": {
+    "matanyone2": "editable",
+    "python": "3.10.14"
+  }
+}

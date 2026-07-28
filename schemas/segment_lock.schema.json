@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/segment_lock.schema.json",
+  "title": "Immutable Approved Segment Lock",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name", "schema_version", "artifact_id", "project_id", "revision_id",
+    "segment_id", "created_at", "review", "bound_hashes", "locked", "status"
+  ],
+  "properties": {
+    "schema_name": {"const": "segment_lock"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/revision"},
+    "segment_id": {"$ref": "#/$defs/id"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "review": {"$ref": "#/$defs/file_ref"},
+    "bound_hashes": {"type": "object", "additionalProperties": {"$ref": "#/$defs/sha256"}},
+    "locked": {"const": true},
+    "status": {"const": "complete"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "revision": {"type": "string", "pattern": "^rev_[0-9]{3,}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

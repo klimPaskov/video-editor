@@ -1,0 +1,25 @@
+{
+  "schema_name": "cleanup_plan",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_cleanup_001",
+  "project_id": "prj_demo",
+  "revision_id": "rev_final",
+  "created_at": "2026-07-23T15:15:00Z",
+  "status": "approved",
+  "derived_only": true,
+  "source_paths_excluded": true,
+  "backup_verification_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "entries": [
+    {
+      "artifact_id": "art_proxy_001",
+      "path": "projects/prj_demo/work/edit-proxy.mp4",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "size_bytes": 500000,
+      "retention_class": "temporary",
+      "eligible": true,
+      "reason": "Final delivery and source backup were verified."
+    }
+  ],
+  "approval_id": "apr_cleanup_001",
+  "executed_at": null
+}

@@ -1,0 +1,53 @@
+{
+  "schema_name": "cue_plan_bundle",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_cue_plan_bundle",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-24T10:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "cue-planning",
+    "adapter": "licensed-local-catalog",
+    "adapter_version": "cue-planning-v1"
+  },
+  "inputs": [
+    {"artifact_id": "art_transition_plan", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    {"artifact_id": "art_asset_catalog", "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+    {"artifact_id": "art_assets_policy", "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "planning_key": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "timeline_duration_us": 60000000,
+  "dependencies": [
+    {"artifact_id": "art_transition_plan", "path": "artifacts/transition-plan.json", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    {"artifact_id": "art_asset_catalog", "path": "artifacts/asset-catalog.json", "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+    {"artifact_id": "art_assets_policy", "path": "config/assets.example.yaml", "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}
+  ],
+  "plans": {
+    "broll": {"artifact_id": "art_broll_plan", "path": "artifacts/broll-plan.json", "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"},
+    "motion": {"artifact_id": "art_motion_plan", "path": "artifacts/motion-plan.json", "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"},
+    "sound": {"artifact_id": "art_sound_plan", "path": "artifacts/sound-plan.json", "sha256": "9999999999999999999999999999999999999999999999999999999999999999"}
+  },
+  "density_policy": {
+    "maximum_broll_coverage_percent": 20,
+    "minimum_broll_spacing_us": 15000000,
+    "maximum_same_asset_uses_per_project": 1,
+    "maximum_motion_cues_per_minute": 2,
+    "minimum_motion_spacing_us": 12000000,
+    "maximum_sound_cues_per_minute": 3
+  },
+  "metrics": {
+    "broll_count": 0,
+    "broll_coverage_us": 0,
+    "broll_coverage_percent": 0,
+    "motion_count": 1,
+    "sound_count": 1,
+    "collision_status": "pass",
+    "collision_warnings": []
+  },
+  "approval_required": true,
+  "approval_state": "proposed",
+  "bundle_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "warnings": ["cue_plan_approval_required"]
+}

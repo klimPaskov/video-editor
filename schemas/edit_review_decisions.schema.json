@@ -1,0 +1,167 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_name": {
+      "const": "edit_review_decisions"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "project_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "revision_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "reviewer": {
+      "type": "object",
+      "properties": {
+        "actor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "actor",
+        "role"
+      ]
+    },
+    "proposal_set_artifact_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "proposal_set_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "proposal_id": {
+            "$ref": "#/$defs/identifier"
+          },
+          "proposal_sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "decision": {
+            "enum": [
+              "approve",
+              "reject",
+              "modify"
+            ]
+          },
+          "modified_cut_range": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/time_range"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "proposal_id",
+          "proposal_sha256",
+          "decision",
+          "modified_cut_range",
+          "reason"
+        ]
+      },
+      "minItems": 0
+    },
+    "protected_range_overrides": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/protected_range_override"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "reviewer",
+    "proposal_set_artifact_id",
+    "proposal_set_sha256",
+    "decisions"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/edit_review_decisions.schema.json",
+  "title": "Edit Review Decisions",
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_us": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "time_range": {
+      "type": "object",
+      "properties": {
+        "start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "end_us": {
+          "$ref": "#/$defs/time_us"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "start_us",
+        "end_us"
+      ]
+    },
+    "protected_range_override": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "end_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "start_us",
+        "end_us",
+        "reason"
+      ]
+    }
+  }
+}

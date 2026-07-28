@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/cue_plan_bundle.schema.json",
+  "title": "Hash-bound B-roll, motion, and sound cue plan bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "planning_key",
+    "timeline_duration_us",
+    "dependencies",
+    "plans",
+    "density_policy",
+    "metrics",
+    "approval_required",
+    "approval_state",
+    "bundle_sha256",
+    "warnings"
+  ],
+  "properties": {
+    "schema_name": {"const": "cue_plan_bundle"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/id"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "inputs": {
+      "type": "array",
+      "minItems": 3,
+      "items": {"$ref": "#/$defs/input"}
+    },
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "planning_key": {"$ref": "#/$defs/sha256"},
+    "timeline_duration_us": {"$ref": "#/$defs/time_us"},
+    "dependencies": {
+      "type": "array",
+      "minItems": 3,
+      "items": {"$ref": "#/$defs/path_ref"}
+    },
+    "plans": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["broll", "motion", "sound"],
+      "properties": {
+        "broll": {"$ref": "#/$defs/plan_ref"},
+        "motion": {"$ref": "#/$defs/plan_ref"},
+        "sound": {"$ref": "#/$defs/plan_ref"}
+      }
+    },
+    "density_policy": {"$ref": "#/$defs/density_policy"},
+    "metrics": {"$ref": "#/$defs/metrics"},
+    "approval_required": {"const": true},
+    "approval_state": {"enum": ["proposed", "rejected"]},
+    "bundle_sha256": {"$ref": "#/$defs/sha256"},
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "time_us": {"type": "integer", "minimum": 0},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "plan_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "path_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "density_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maximum_broll_coverage_percent",
+        "minimum_broll_spacing_us",
+        "maximum_same_asset_uses_per_project",
+        "maximum_motion_cues_per_minute",
+        "minimum_motion_spacing_us",
+        "maximum_sound_cues_per_minute"
+      ],
+      "properties": {
+        "maximum_broll_coverage_percent": {"type": "number", "minimum": 0, "maximum": 100},
+        "minimum_broll_spacing_us": {"$ref": "#/$defs/time_us"},
+        "maximum_same_asset_uses_per_project": {"type": "integer", "minimum": 1},
+        "maximum_motion_cues_per_minute": {"type": "integer", "minimum": 0},
+        "minimum_motion_spacing_us": {"$ref": "#/$defs/time_us"},
+        "maximum_sound_cues_per_minute": {"type": "integer", "minimum": 0}
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "broll_count",
+        "broll_coverage_us",
+        "broll_coverage_percent",
+        "motion_count",
+        "sound_count",
+        "collision_status",
+        "collision_warnings"
+      ],
+      "properties": {
+        "broll_count": {"type": "integer", "minimum": 0},
+        "broll_coverage_us": {"$ref": "#/$defs/time_us"},
+        "broll_coverage_percent": {"type": "number", "minimum": 0, "maximum": 100},
+        "motion_count": {"type": "integer", "minimum": 0},
+        "sound_count": {"type": "integer", "minimum": 0},
+        "collision_status": {"enum": ["pass", "warning"]},
+        "collision_warnings": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

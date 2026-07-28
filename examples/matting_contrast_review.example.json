@@ -1,0 +1,99 @@
+{
+  "schema_name": "matting_contrast_review",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_matting_contrast_review",
+  "project_id": "matting_example",
+  "revision_id": "rev_001",
+  "created_at": "2026-01-01T00:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "matting_contrast_review",
+    "adapter": "ffmpeg",
+    "adapter_version": "7.0"
+  },
+  "source": {
+    "path": "/absolute/path/to/input.mp4",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "size_bytes": 1
+  },
+  "result": {
+    "path": "/absolute/path/to/matting-result.json",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "size_bytes": 1
+  },
+  "source_range": {
+    "start_frame": 0,
+    "end_frame": 30
+  },
+  "review_frame_indices": [
+    0,
+    15,
+    29
+  ],
+  "source_contact_sheet": {
+    "path": "/absolute/path/to/source-contact-sheet.png",
+    "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "size_bytes": 1
+  },
+  "previews": {
+    "black": {
+      "background_color": "black",
+      "preview": {
+        "path": "/absolute/path/to/black-preview.mp4",
+        "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "size_bytes": 1
+      },
+      "contact_sheet": {
+        "path": "/absolute/path/to/black-contact-sheet.png",
+        "sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+        "size_bytes": 1
+      }
+    },
+    "white": {
+      "background_color": "white",
+      "preview": {
+        "path": "/absolute/path/to/white-preview.mp4",
+        "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+        "size_bytes": 1
+      },
+      "contact_sheet": {
+        "path": "/absolute/path/to/white-contact-sheet.png",
+        "sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "size_bytes": 1
+      }
+    }
+  },
+  "validation": {
+    "result_schema": "pass",
+    "source_identity": "pass",
+    "source_decode": "pass",
+    "foreground_alpha_structure": "pass",
+    "black_decode": "pass",
+    "white_decode": "pass",
+    "dimensions": "pass",
+    "frame_count": "pass",
+    "frame_rate": "pass",
+    "duration": "pass",
+    "preview_distinct": "pass",
+    "source_contact_sheet": "pass",
+    "background_comparison": "pending",
+    "operator_review": "pending"
+  },
+  "status": "pending",
+  "warnings": [
+    "Example only; an operator must compare matte edges on both backgrounds."
+  ],
+  "commands": [
+    {
+      "executable": "ffmpeg",
+      "arguments": [
+        "-i",
+        "subject_fgr.mp4"
+      ],
+      "working_directory": "/absolute/path/to/review",
+      "exit_code": 0,
+      "elapsed_ms": 1,
+      "version": "7.0"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "schema_name": "codex_phase_result",
+  "schema_version": "1.0.0",
+  "phase_id": "P0",
+  "status": "complete",
+  "started_at": "2026-07-22T10:00:00Z",
+  "completed_at": "2026-07-22T10:05:00Z",
+  "tasks_completed": [
+    "P0-01",
+    "P0-02",
+    "P0-03"
+  ],
+  "scope_summary": "Created the package shell, quality tools, and command line entry point.",
+  "files_changed": [
+    "pyproject.toml",
+    "src/videoedit/cli.py",
+    "tests/unit/test_cli.py"
+  ],
+  "tests": [
+    {
+      "command": "uv run ruff check .",
+      "exit_code": 0,
+      "summary": "No lint errors"
+    },
+    {
+      "command": "uv run pytest -q",
+      "exit_code": 0,
+      "summary": "12 tests passed"
+    }
+  ],
+  "acceptance_criteria": [
+    {
+      "criterion": "Clean checkout installs",
+      "status": "pass",
+      "evidence": "uv sync completed"
+    },
+    {
+      "criterion": "Command help works",
+      "status": "pass",
+      "evidence": "videoedit --help exited 0"
+    }
+  ],
+  "unresolved_risks": [
+    "Windows binary discovery is not tested"
+  ],
+  "decisions_needed": [],
+  "next_recommended_task": "P0-04",
+  "notes": [
+    "No provider credentials were used"
+  ]
+}

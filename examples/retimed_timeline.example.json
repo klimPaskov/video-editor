@@ -1,0 +1,85 @@
+{
+  "schema_name": "retimed_timeline",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_retimed_timeline",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-23T10:05:00Z",
+  "producer": {
+    "application_version": "0.2.1",
+    "stage": "timeline-retime",
+    "adapter": "fixture",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_edl",
+      "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+    },
+    {
+      "artifact_id": "art_focus_pacing",
+      "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+    }
+  ],
+  "config_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+  "edit_decision_list_artifact_id": "art_edl",
+  "edit_decision_list_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+  "focus_pacing_plan_artifact_id": "art_focus_pacing",
+  "focus_pacing_plan_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+  "source_duration_us": 12000000,
+  "output_duration_us": 10560000,
+  "segments": [
+    {
+      "segment_id": "retime_keep_001",
+      "operation": "keep",
+      "source_range": {
+        "start_us": 0,
+        "end_us": 9100000
+      },
+      "output_range": {
+        "start_us": 0,
+        "end_us": 9100000
+      },
+      "playback_rate": 1,
+      "audio_mode": "source",
+      "speedup_id": null,
+      "command_strategy": "passthrough",
+      "boundary_confidence": null
+    },
+    {
+      "segment_id": "retime_speed_001",
+      "operation": "prompt_speedup",
+      "source_range": {
+        "start_us": 9100000,
+        "end_us": 11500000
+      },
+      "output_range": {
+        "start_us": 9100000,
+        "end_us": 10060000
+      },
+      "playback_rate": 2.5,
+      "audio_mode": "audible_pitch_preserved",
+      "speedup_id": "speed_prompt_write",
+      "command_strategy": "ffmpeg_trim_setpts_atempo",
+      "boundary_confidence": 0.98
+    },
+    {
+      "segment_id": "retime_keep_002",
+      "operation": "keep",
+      "source_range": {
+        "start_us": 11500000,
+        "end_us": 12000000
+      },
+      "output_range": {
+        "start_us": 10060000,
+        "end_us": 10560000
+      },
+      "playback_rate": 1,
+      "audio_mode": "source",
+      "speedup_id": null,
+      "command_strategy": "passthrough",
+      "boundary_confidence": null
+    }
+  ],
+  "warnings": []
+}

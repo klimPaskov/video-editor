@@ -1,0 +1,347 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_name": {
+      "const": "caption_plan"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "project_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "revision_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "producer": {
+      "$ref": "#/$defs/producer"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifact_input"
+      }
+    },
+    "config_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "target_width": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "target_height": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "brand_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "brand_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "safe_area": {
+      "$ref": "#/$defs/safe_area"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/caption_event"
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "ass": {
+          "$ref": "#/$defs/file_ref"
+        },
+        "webvtt": {
+          "$ref": "#/$defs/file_ref"
+        },
+        "text": {
+          "$ref": "#/$defs/file_ref"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "ass",
+        "webvtt",
+        "text"
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "target_width",
+    "target_height",
+    "brand_id",
+    "brand_version",
+    "events",
+    "outputs",
+    "warnings"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/caption_plan.schema.json",
+  "title": "Caption Plan",
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_us": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "time_range": {
+      "type": "object",
+      "properties": {
+        "start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "end_us": {
+          "$ref": "#/$defs/time_us"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "start_us",
+        "end_us"
+      ]
+    },
+    "rational": {
+      "type": "object",
+      "properties": {
+        "numerator": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "denominator": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "numerator",
+        "denominator"
+      ]
+    },
+    "artifact_input": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "sha256"
+      ]
+    },
+    "producer": {
+      "type": "object",
+      "properties": {
+        "application_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "application_version",
+        "stage",
+        "adapter",
+        "adapter_version"
+      ]
+    },
+    "file_ref": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ]
+    },
+    "money": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]{1,4})?$"
+    },
+    "emphasis_span": {
+      "type": "object",
+      "properties": {
+        "start_char": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_char": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "style_token": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "start_char",
+        "end_char",
+        "style_token"
+      ]
+    },
+    "safe_area": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "left": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 0.5
+        },
+        "right": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 0.5
+        },
+        "top": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 0.5
+        },
+        "bottom": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 0.5
+        }
+      },
+      "required": [
+        "left",
+        "right",
+        "top",
+        "bottom"
+      ]
+    },
+    "caption_event": {
+      "type": "object",
+      "properties": {
+        "caption_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "end_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "maxItems": 3
+        },
+        "word_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "minItems": 1
+        },
+        "style_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "region": {
+          "enum": [
+            "top",
+            "center",
+            "bottom",
+            "custom"
+          ]
+        },
+        "emphasis": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/emphasis_span"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "caption_id",
+        "start_us",
+        "end_us",
+        "text",
+        "lines",
+        "word_ids",
+        "style_id",
+        "region",
+        "emphasis"
+      ]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "schema_name": "revision_request",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_revision_request_example",
+  "project_id": "prj_demo",
+  "revision_id": "rev_002",
+  "parent_revision_id": "rev_001",
+  "created_at": "2026-07-24T12:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "revision-request",
+    "adapter": "review-markers",
+    "adapter_version": "1"
+  },
+  "source_markers": {
+    "artifact_id": "review_markers",
+    "path": "C:/projects/prj_demo/artifacts/review-markers.json",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "markers": [
+    {
+      "marker_id": "marker_000001",
+      "kind": "FIX",
+      "instruction": "Remove the duplicate phrase.",
+      "range_us": {"start_us": 2000000, "end_us": 2500000}
+    }
+  ],
+  "invalidated_stages": ["edit", "transcript", "render", "preview", "qa"],
+  "preserved_inputs": [
+    {
+      "artifact_id": "source_media",
+      "path": "C:/projects/prj_demo/raw/source.mp4",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  ],
+  "status": "created"
+}

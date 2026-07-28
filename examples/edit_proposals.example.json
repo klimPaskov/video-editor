@@ -1,0 +1,210 @@
+{
+  "schema_name": "edit_proposals",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_proposals",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-22T10:00:00Z",
+  "producer": {
+    "application_version": "0.1.0",
+    "stage": "example",
+    "adapter": "fixture",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_transcript",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    {
+      "artifact_id": "art_silence",
+      "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    }
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "policy_id": "pol_smart_dense",
+  "policy_version": 3,
+  "source_duration_us": 12000000,
+  "proposals": [
+    {
+      "proposal_id": "prp_pause_001",
+      "proposal_type": "long_pause",
+      "source_range": {
+        "start_us": 2300000,
+        "end_us": 6300000
+      },
+      "proposed_cut_range": {
+        "start_us": 2420000,
+        "end_us": 6140000
+      },
+      "word_ids": [],
+      "excerpt": "video [pause] cleanly",
+      "reason": "Long silence between completed phrases",
+      "confidence": 0.99,
+      "meaning_risk": "low",
+      "continuity_risk": "low",
+      "evidence_ids": [
+        "sil_001"
+      ],
+      "policy_result": "auto_eligible",
+      "approval_required": false,
+      "alternative": "Keep a 600 millisecond pause",
+      "confidence_components": {
+        "audio_evidence": 0.99,
+        "timing_evidence": 0.99
+      },
+      "recommended_action": "Approve the proposed mechanical cut",
+      "safe_fallback": "Keep the source range unchanged",
+      "review_prompt": null,
+      "edit_intent": "pause_tightening",
+      "density_class": "micro",
+      "join_strategy": "hard_cut_with_micro_audio_crossfade",
+      "protected_content_check": {
+        "passed": true,
+        "categories": [],
+        "notes": "No protected speech overlaps the proposed range."
+      },
+      "take_scores": [],
+      "join_preview_required": true,
+      "pacing_impact": "tightens"
+    },
+    {
+      "proposal_id": "prp_tail_001",
+      "proposal_type": "trailing_silence",
+      "source_range": {
+        "start_us": 7200000,
+        "end_us": 12000000
+      },
+      "proposed_cut_range": {
+        "start_us": 7360000,
+        "end_us": 12000000
+      },
+      "word_ids": [],
+      "excerpt": "cleanly [trailing silence]",
+      "reason": "Trailing silence after final speech",
+      "confidence": 0.99,
+      "meaning_risk": "low",
+      "continuity_risk": "low",
+      "evidence_ids": [
+        "sil_002"
+      ],
+      "policy_result": "auto_eligible",
+      "approval_required": false,
+      "alternative": null,
+      "confidence_components": {
+        "audio_evidence": 0.99,
+        "timing_evidence": 0.99
+      },
+      "recommended_action": "Approve the proposed mechanical cut",
+      "safe_fallback": "Keep the source range unchanged",
+      "review_prompt": null,
+      "edit_intent": "pause_tightening",
+      "density_class": "micro",
+      "join_strategy": "hard_cut_with_micro_audio_crossfade",
+      "protected_content_check": {
+        "passed": true,
+        "categories": [],
+        "notes": "No protected speech overlaps the proposed range."
+      },
+      "take_scores": [],
+      "join_preview_required": true,
+      "pacing_impact": "tightens"
+    },
+    {
+      "proposal_id": "prp_filler_001",
+      "proposal_type": "filler_word",
+      "source_range": {
+        "start_us": 6500000,
+        "end_us": 6800000
+      },
+      "proposed_cut_range": {
+        "start_us": 6490000,
+        "end_us": 6810000
+      },
+      "word_ids": [
+        "wrd_um_001"
+      ],
+      "excerpt": "and um this is the result",
+      "reason": "Isolated filler between complete words",
+      "confidence": 0.97,
+      "meaning_risk": "low",
+      "continuity_risk": "low",
+      "evidence_ids": [
+        "ev_word_001",
+        "ev_audio_001"
+      ],
+      "policy_result": "auto_eligible",
+      "approval_required": false,
+      "alternative": "Keep the filler if rendered cadence is rushed",
+      "confidence_components": {
+        "transcript": 0.99,
+        "timing": 0.98,
+        "audio_join": 0.96,
+        "visual_join": 0.95
+      },
+      "recommended_action": "Remove and verify the rendered join",
+      "safe_fallback": "Keep the source range unchanged",
+      "review_prompt": null,
+      "edit_intent": "micro_cleanup",
+      "density_class": "micro",
+      "join_strategy": "hard_cut_with_micro_audio_crossfade",
+      "protected_content_check": {
+        "passed": true,
+        "categories": [],
+        "notes": "No protected content."
+      },
+      "take_scores": [],
+      "join_preview_required": true,
+      "pacing_impact": "tightens"
+    },
+    {
+      "proposal_id": "prp_semantic_001",
+      "proposal_type": "semantic_repetition",
+      "source_range": {
+        "start_us": 6900000,
+        "end_us": 7300000
+      },
+      "proposed_cut_range": {
+        "start_us": 6900000,
+        "end_us": 7300000
+      },
+      "word_ids": [
+        "wrd_sem_001",
+        "wrd_sem_002"
+      ],
+      "excerpt": "This saves editing time. It reduces the time needed to edit.",
+      "reason": "Two nearby sentences express the same main point, but the second may add useful specificity.",
+      "confidence": 0.74,
+      "meaning_risk": "medium",
+      "continuity_risk": "low",
+      "evidence_ids": [
+        "ev_semantic_001"
+      ],
+      "policy_result": "review_required",
+      "approval_required": true,
+      "alternative": "Keep both sentences",
+      "confidence_components": {
+        "semantic_overlap": 0.86,
+        "unique_detail_risk": 0.62,
+        "audio_join": 0.91,
+        "visual_join": 0.9
+      },
+      "recommended_action": "Keep the more specific sentence",
+      "safe_fallback": "Keep both sentences",
+      "review_prompt": "Choose keep first, keep second, keep both, remove both, or modify.",
+      "edit_intent": "semantic_tightening",
+      "density_class": "standard",
+      "join_strategy": "hard_cut_with_micro_audio_crossfade",
+      "protected_content_check": {
+        "passed": true,
+        "categories": [],
+        "notes": "No protected fact detected, but unique detail needs review."
+      },
+      "take_scores": [],
+      "join_preview_required": true,
+      "pacing_impact": "tightens"
+    }
+  ],
+  "total_proposed_cut_us": 9080000,
+  "warnings": []
+}

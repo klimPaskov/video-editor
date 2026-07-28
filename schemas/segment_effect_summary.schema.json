@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/segment_effect_summary.schema.json",
+  "title": "Segment Effect and Asset Summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "segment_id",
+    "created_at",
+    "producer",
+    "planning_key",
+    "source_range",
+    "source_artifacts",
+    "effects",
+    "assets",
+    "warnings",
+    "status"
+  ],
+  "properties": {
+    "schema_name": {"const": "segment_effect_summary"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/id"},
+    "segment_id": {"$ref": "#/$defs/id"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "planning_key": {"$ref": "#/$defs/sha256"},
+    "source_range": {"$ref": "#/$defs/range"},
+    "source_artifacts": {"type": "array", "items": {"$ref": "#/$defs/file_ref"}},
+    "effects": {"type": "array", "items": {"$ref": "#/$defs/effect"}},
+    "assets": {"type": "array", "items": {"$ref": "#/$defs/asset"}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "status": {"enum": ["complete", "warning"]}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "time_us": {"type": "integer", "minimum": 0},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_us", "end_us"],
+      "properties": {
+        "start_us": {"$ref": "#/$defs/time_us"},
+        "end_us": {"$ref": "#/$defs/time_us"}
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "effect_id",
+        "kind",
+        "renderer",
+        "source_range",
+        "overlap_us",
+        "asset_refs"
+      ],
+      "properties": {
+        "effect_id": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "renderer": {"type": "string", "minLength": 1},
+        "source_range": {"$ref": "#/$defs/range"},
+        "overlap_us": {"type": "integer", "minimum": 1},
+        "asset_refs": {"type": "array", "items": {"$ref": "#/$defs/asset"}},
+        "status": {"enum": ["current", "warning"]}
+      }
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["asset_id", "sha256"],
+      "properties": {
+        "asset_id": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "path": {"type": "string", "minLength": 1},
+        "licence_reference": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

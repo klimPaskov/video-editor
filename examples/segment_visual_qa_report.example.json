@@ -1,0 +1,48 @@
+{
+  "schema_name": "segment_visual_qa_report",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_segment_visual_qa",
+  "project_id": "prj_demo",
+  "revision_id": "rev_002",
+  "created_at": "2026-07-24T12:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "segment-visual-qa",
+    "adapter": "review-contract",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {"artifact_id": "segment_review_package", "sha256": "1111111111111111111111111111111111111111111111111111111111111111"}
+  ],
+  "scope": {"start_us": 0, "end_us": 6000000},
+  "review_package": {
+    "artifact_id": "segment_review_package",
+    "path": "C:/projects/prj_demo/review/segments/segment_000001/review-package.json",
+    "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "size_bytes": 1000
+  },
+  "visual_timeline": null,
+  "findings": [
+    {
+      "finding_id": "finding_review_evidence",
+      "check_code": "REVIEW_EVIDENCE",
+      "status": "pass",
+      "severity": "info",
+      "message": "The contact sheet and diagnostics are hash-bound to the review package.",
+      "time_range": null,
+      "evidence": {"contact_sheet": "present"},
+      "required": true,
+      "repair_hint": null
+    }
+  ],
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "warnings": 0,
+    "failed": 0,
+    "skipped": 0,
+    "required_failures": 0
+  },
+  "overall_status": "pass",
+  "final_ready": true
+}

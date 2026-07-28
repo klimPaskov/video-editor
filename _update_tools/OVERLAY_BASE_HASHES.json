@@ -1,0 +1,669 @@
+{
+  "overlay_version": "2.2.1",
+  "expected_base_versions": [
+    "2.2.0",
+    "2.1.0",
+    "2.0.1"
+  ],
+  "canonical_root_replacements": [
+    "AGENTS.md",
+    "TASKS.md",
+    "WORKFLOW.md",
+    "GOAL_PROMPT.md",
+    "README.md",
+    "CODEX_START_HERE.md",
+    "PLANNING_PACKAGE.md"
+  ],
+  "files": [
+    {
+      "path": ".agents/skills/ffmpeg-video-engine/SKILL.md",
+      "accepted_base_sha256": [
+        "29dec5434693c0393d00ab46c2998cbf29183a66ac5efce02d4719ddcff3075d",
+        "5a5510a21ef703b5e1f479acd56fc2c10ee5cb36195509901a1f70322b30e150"
+      ],
+      "overlay_sha256": "4a217f3d1539f1bfec0958fd69cc1cbbe7351a7f48bd92d759e9bd2023b23957",
+      "size_bytes": 2174,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": ".agents/skills/remotion-compositor/SKILL.md",
+      "accepted_base_sha256": [
+        "fe7139009eb09aaa59d44313b5417e32cf1fcf2c21075f7aa1752b75578feb9b",
+        "fc07924a333fb0173806b54bf547df95fa935eea94f8731dad73c0677ee3c9e2"
+      ],
+      "overlay_sha256": "aba23f4c9fb091c5331143ddb4701e506006dbb7a71524303e8b100428a03a90",
+      "size_bytes": 1983,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": ".agents/skills/smart-cut-editor/SKILL.md",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "ae05880a5c1706681e93e96d731094e66c310dc976f0d09f594d5623c0f18820",
+      "size_bytes": 1832,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": ".agents/skills/transition-sound-editor/SKILL.md",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "01ac619d25684c907b922f5ed05a3b9742b79ade85a452159efbfc4223130dfd",
+      "size_bytes": 1414,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": ".agents/skills/video-editing-orchestrator/SKILL.md",
+      "accepted_base_sha256": [
+        "48ba866493a32d84b65b79bc5d517a36416f3925cbc89408c93c4b1eb02a86af",
+        "dd4e60aa985b47d029886ae4d0d0a0f2d9ccc1ae600ce3acad37fdc10735158f"
+      ],
+      "overlay_sha256": "6bcf15303bfade5ea2311b8607747c2649044b9d5604a8c78fb34c9aacfd612d",
+      "size_bytes": 2445,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": ".agents/skills/video-review-qa/SKILL.md",
+      "accepted_base_sha256": [
+        "d78cd71f107dda59cf993825425d588ba666c6266b6568f7cdaf6dbff1462e44",
+        "a0166aa689d2810a2aacc6f4f3f48dbb72ef3af9255a28ca1ad26e6d4b74ac13"
+      ],
+      "overlay_sha256": "56d455625cf4bc1a615b3fcc172ae3cb45195f5033080fc7568b0d6f15426a3f",
+      "size_bytes": 1684,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "AGENTS.md",
+      "accepted_base_sha256": [
+        "d1cc970b64f27cedb07fded3a8915115e7b9fe2c4c4ae925f04b7dd1dcd08912",
+        "0989f70ac8b81fc51b1cf38408c04e3af2d457773b14999560eee1019f57d4cb"
+      ],
+      "overlay_sha256": "7acc324690e43cca2c9e956821b017b3b184cba2787089645201a4dc15b9222a",
+      "size_bytes": 10658,
+      "operation": "replace",
+      "replace_even_if_modified": true
+    },
+    {
+      "path": "AGENTS_2_2_ADDENDUM.md",
+      "accepted_base_sha256": [
+        "42ccb61cfb0dbff01175edc7e078aeb75ab18c5a701e09096518327b957143a7"
+      ],
+      "overlay_sha256": "c419b99e2918b4783cb7bc6aa08d2b55d00cb3791fa780b1874a28afc912b8ba",
+      "size_bytes": 278,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "APPLY_UPDATE.md",
+      "accepted_base_sha256": [
+        "d800d13d8391ba5a6f4f10cefb8405c8f09f72d2971eb168c6867a44e7d7d168",
+        "7ba083a1488bfcf71f7d13906709f9560d4ec7ab84f12483416a39da47d98bac"
+      ],
+      "overlay_sha256": "e4f3e6ca65b10455d49930ccaff1158449664aac15ab44b9580c90132c90f46d",
+      "size_bytes": 1369,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "CHANGELOG.md",
+      "accepted_base_sha256": [
+        "625ce629b49e176c0e2d2bf0b078bedade168a0b572e7d00376ac4659bd48d85",
+        "6943d773c3fe273cd7b54da638d33371fa6a6f312176db932dc0571674e7446c",
+        "59a0e22b838b8a3f70420c17e9fe8bcfc1e10c15929d6d6df600d43bc89ec97d"
+      ],
+      "overlay_sha256": "8bebd7d15a0c9770f1b98796596e34ae89974f8672d586f5434d11438ea11a66",
+      "size_bytes": 4496,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "CODEX_START_HERE.md",
+      "accepted_base_sha256": [
+        "02e6d1b4bf5c6ade80525b0aa22dd5b4d9e5309ca6219560482d025d824b2a8e",
+        "8ade3d4ab9c0ba25bad7bced7914e1ff82acbeeb0ba8b4e1ae6ca9e62e29d0bf",
+        "a679cb5abc9154a4a67342caf837cc69199f7b1a363866a8fa126701283ea075"
+      ],
+      "overlay_sha256": "056b6b752f54a41095cac5867dc0cee6e50fc8dfcdf438db4ff78d1d88fc60bb",
+      "size_bytes": 4450,
+      "operation": "replace",
+      "replace_even_if_modified": true
+    },
+    {
+      "path": "FOLLOW_UP_PROMPT_ACTIVE_AGENT_2_2.md",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "7df3f1ad157123be7d8c2c58568ab21e8f9d067107b13112beba681872f8a414",
+      "size_bytes": 2941,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "FOLLOW_UP_PROMPT_ACTIVE_AGENT_2_2_1.md",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "4a2e6ca9f733c01e4331b16f502579db640c075f8f50830ec6171ff3ad948224",
+      "size_bytes": 2314,
+      "operation": "add",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "GOAL_PROMPT.md",
+      "accepted_base_sha256": [
+        "2a850ff63bbb92ffe1a01f4a8571a5438f4115c5be5facecc3d01908a6f2882f",
+        "a3ac8a2bce34af02488b40e55b04cffaa5dcb4cb5fa507d6041cd476c65b0000"
+      ],
+      "overlay_sha256": "a8842122d6d9ce3b9e32da515a3773ff9e407e1a9911f32a7fba75b3b84fb256",
+      "size_bytes": 3896,
+      "operation": "replace",
+      "replace_even_if_modified": true
+    },
+    {
+      "path": "OVERLAY_CONTENTS.md",
+      "accepted_base_sha256": [
+        "391dad78373157a5827c18ab05d2e8ad086a2059ad5a360700a3007eaf9fe405",
+        "5b60fbe3333de849098462b56360bd35672cd0199f22fc46f79499d1b369bc11"
+      ],
+      "overlay_sha256": "8ca69b8f16b729f743c931ebad9637ce0f45280a674f35969231b9d4ebd2786d",
+      "size_bytes": 1160,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "PACKAGE_CONTENTS.md",
+      "accepted_base_sha256": [
+        "4b46392cc0a2d56a146c43a1c5f906ae94311c6ca9638f095e0f0b0b525d9ce1",
+        "f76c7d8c1c68a18c7da2cf3bc6f496a7a2f36c774ba2c7e37960c34cd00d78b1",
+        "006ae28edc993c22464b548c084fe49bc6403040aeee41bf231bc26bbb43d4f1"
+      ],
+      "overlay_sha256": "d3c0641d95593a3bf4c456f683cb27798e4f48188ec863e23a101d59de15959f",
+      "size_bytes": 4913,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "PLANNING_PACKAGE.md",
+      "accepted_base_sha256": [
+        "cd2b1cc8a278542e9d9ced7992d5f0f777f886f5770f8cc530d65dd9cdb528af",
+        "9ed43e078b2af87bbacbb2f0d614f1f1278c1b700487583b1c4c3cbc85561fd3",
+        "4568ecd62fd607c6c981130e11798390be6f0d872c16a726147ff3cf519c35fa"
+      ],
+      "overlay_sha256": "5a6794ebe856b75bf2549b0fdb5cd2161aec694497c99e20e2dde1bc80b6400d",
+      "size_bytes": 23118,
+      "operation": "replace",
+      "replace_even_if_modified": true
+    },
+    {
+      "path": "README.md",
+      "accepted_base_sha256": [
+        "dcbc8de6233f4b1efd75acf29b0120c6fea5c152a7775f33ec1e0adc76b2aee4",
+        "d45d7715dfdadc5c9cee8f0e3e8b00bb308928b4f4b5fe2e4f5d2fb75ab9d2a3"
+      ],
+      "overlay_sha256": "088b72173da69c1143b9c4f398ed89df27b5666b0734d456656df1aa65adda79",
+      "size_bytes": 5122,
+      "operation": "replace",
+      "replace_even_if_modified": true
+    },
+    {
+      "path": "TASKS.md",
+      "accepted_base_sha256": [
+        "e3841d45067b131a9fedab340eca250e85c1b33fe9200ff2b476379be2319cba",
+        "4beee446fb3237daada00656a10bed4088946e5edbe53ef7c125fa0b34b941fb"
+      ],
+      "overlay_sha256": "56cc9207d45fba2c029cf5f56160ddaa1430d5759eb09a5386cbcc249700f76f",
+      "size_bytes": 19142,
+      "operation": "replace",
+      "replace_even_if_modified": true
+    },
+    {
+      "path": "TASKS_2_2_ADDENDUM.md",
+      "accepted_base_sha256": [
+        "fb0607d7c2bfcd10f9a6616e6fd2b0d73c174322c7ffae4384b336697dda68f5"
+      ],
+      "overlay_sha256": "e56a6ea8207caf1ac06ece50c85fce1924541e212aeda049666cf8b566cf7790",
+      "size_bytes": 235,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "UPDATE_2_2_0_README.md",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "a531d5c623b1846c2cee1b812362b37aaf93fd6250eba7d620b1406e08179237",
+      "size_bytes": 1255,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "UPDATE_2_2_1_README.md",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "4cd74420ef9491ac624c5c6e5cbd271756bbdf273a2f0d8618564c22f5b2d49d",
+      "size_bytes": 835,
+      "operation": "add",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "UPDATE_2_2_1_VALIDATION_REPORT.md",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "8ace24ed4a35293bbe748a12d73dbcb0ce125c1639ba226c8008150dac271756",
+      "size_bytes": 878,
+      "operation": "add",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "VALIDATION_REPORT.md",
+      "accepted_base_sha256": [
+        "a94a1f4ef8961f5d6824a5aa32f82386153dd896be9652a70c46359a6ee89219",
+        "e42bdaa9f08c1c4623a4bc49c6e43663c82b7a4bb8ff0cdd475753f426cc1094",
+        "918fd15905527e970d922a1d4cd4aa79f74c90eba0fdbed74d70e3c95201158a"
+      ],
+      "overlay_sha256": "d68e8efcfb740d80dc9d2053820ea40aafb2fbcf838f38b8bcbdf3e4c1d2caa7",
+      "size_bytes": 1126,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "WORKFLOW.md",
+      "accepted_base_sha256": [
+        "424e661cb597d09bd0f1014e161d5d137c6e6d8064eafcb627e7b5203f56a2b4",
+        "79026ffdcd5fdea62a0d7314b9949043dbd7a7b8af54626a15022111c5e829b7"
+      ],
+      "overlay_sha256": "eff9f33d110a1908dc31f00152bec543c853d3bef01e67372a4dbc5b7147654a",
+      "size_bytes": 15197,
+      "operation": "replace",
+      "replace_even_if_modified": true
+    },
+    {
+      "path": "checklists/cut-join-qa-checklist.md",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "ece5fd7a8837e45c9aaadaf73fb65533ddd15179f919d5c3a4c7960644666f5f",
+      "size_bytes": 1123,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "checklists/editorial-review-checklist.md",
+      "accepted_base_sha256": [
+        "e73167f69b00674716157a6adf23154b48fe3b911dfa0980ee9973f2535903c3",
+        "5e1719fecf60a3ca5ebdc3fadaabec634efdf87939b371aea0c2fdae81d63616"
+      ],
+      "overlay_sha256": "76b442732a4bf5acff78cd6e004abae3ad4698be353ef756d899faf656dc4652",
+      "size_bytes": 2194,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "checklists/media-qa-checklist.md",
+      "accepted_base_sha256": [
+        "964d6ea0a55fbe566bb1e98ec0e1f7c8b97e976eba62e826817229cf267da6f7",
+        "dcbc3c355bbe8394c15d90719ae6fa33528b93abe8a561c2a2a668b1b3574863"
+      ],
+      "overlay_sha256": "f7fbf68684375bafb0ea88b1b4690e218796c60cd8237cce935fc1274d278eea",
+      "size_bytes": 1964,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "checklists/transition-sound-qa-checklist.md",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "9b145d2897caf6959cd5b1def43aa309d669d1edca9f34b4cbf197da2ff742f7",
+      "size_bytes": 873,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "config/assets.example.yaml",
+      "accepted_base_sha256": [
+        "820d452baa46504ff42f54ceaf277b33e727f09de3029a18005d7878ba02afeb"
+      ],
+      "overlay_sha256": "27813cc9e8a7f19e50fcc4373c92f19391d74387815c6cde22f986331795b792",
+      "size_bytes": 1595,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "config/editing-policy.example.yaml",
+      "accepted_base_sha256": [
+        "7c4dfe00fa56a3a95729dc60a8479522fcdd9972d62b5d6f979da9eccccbcb70",
+        "17138a71f37ff131ca89b897a5eaf36567a2f09d3c85f32c9321d7c968218faa"
+      ],
+      "overlay_sha256": "453676808166da22813b9c94020e46f65d6fdd26342a06bbbb1cdfb9df3d46f0",
+      "size_bytes": 4046,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "config/effects.example.yaml",
+      "accepted_base_sha256": [
+        "a60258a258163c7792b645529d3e9c65944dbb3b1b00bbf53f29b409fe694cf5",
+        "0d7155f24e85457acdabc4e27dfc9110c1b6c975f9e21f878ffb86924b463816"
+      ],
+      "overlay_sha256": "1104b35275713582fce7b04604464b938e355a7e98657baef02809e815e7ff5f",
+      "size_bytes": 3188,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "config/transitions.example.yaml",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "f63b69410af3504eba787e974edf3d03b3a89007da4972c7b87433891e3f343e",
+      "size_bytes": 2259,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "docs/01_product_requirements.md",
+      "accepted_base_sha256": [
+        "3ddf47285903f5fdfef970ff51e3d7cf98410b1bf64f23c61954e48fe43fb71c",
+        "4a8f73720798e33c6e16ba24ea8e02a6d27f59a58a2d59f7ef3a269f3cc1b824"
+      ],
+      "overlay_sha256": "7b06f688833f9071ddeed611563e8922eb41166bbbbc9708ccb49de9de96061e",
+      "size_bytes": 15057,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "docs/03_pipeline_spec.md",
+      "accepted_base_sha256": [
+        "8c43bf34b210e0eba2cd5c1169bd1c337f096cf1fc79e716e2fe08b347ac7b47",
+        "d079aa10a5bf20d17f1c988e377ceae31a24a4e0a59f73972b8990df9334fd68"
+      ],
+      "overlay_sha256": "ef4d93c02652fa8062a85b0306ea94bd97e650a73faf308fa0e84952fa85ffb9",
+      "size_bytes": 6355,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "docs/04_data_contracts.md",
+      "accepted_base_sha256": [
+        "c421b940d4199ba708fa53dc1c275cec81be86816dda8f8147663fd88b215f9a",
+        "15714cd75cc13630b9c80ba67679ccb0cdcdb219ef4a02b3174724e1eaad94ee"
+      ],
+      "overlay_sha256": "2a631f36ad05fd050989605d5397d9040d67e65e2352578dd990a8485be348ac",
+      "size_bytes": 8946,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "docs/05_editing_policy.md",
+      "accepted_base_sha256": [
+        "4c09c9a811a635c0e4942fcf739cca670568385204e24f13521bf611f09eb452",
+        "5876dabb392c8e41ae3c3ccc1efdb0a037ebf61976d4d79eba93b27e604fa6c1"
+      ],
+      "overlay_sha256": "37e9d05f8eb3cbe8713b8ee72b3cb2bfd035c914fba11af24f9041de520a1538",
+      "size_bytes": 8175,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "docs/09_testing_and_evaluation.md",
+      "accepted_base_sha256": [
+        "048ee0cc97cf04c10524fdc334397c82a4702160e3b7954dd364115f9e8626b2",
+        "cde99b6a4130b8502fd6c9d6ee9845b92758d1cb638c72586d67a51166245635"
+      ],
+      "overlay_sha256": "1032a82d4e261b0383a68b939e7890a5cd3d8e953c458d29f548760e64e7dc68",
+      "size_bytes": 14609,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "docs/11_runbook.md",
+      "accepted_base_sha256": [
+        "15820f5d9332080904f3573c370d80cb1351059375f51926780d5b0597998770",
+        "d77be519fc7427d5f692dcc7a94acec9c04d0d930e5e621ddaa513ba3d99d81e"
+      ],
+      "overlay_sha256": "5301ba8e566057683a3da73bf62d3eff7201a97213f7c3585e1bf1fb5d345b7f",
+      "size_bytes": 9254,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "docs/12_definition_of_done.md",
+      "accepted_base_sha256": [
+        "548d7786b355bc5ea41a3fb920690d04cec7c8fcafbcf499521f95f3bd5c7ea9",
+        "e25c83ce81eb987a120e7684d3b1ed88a7c0d3b64236424f850568693750e048"
+      ],
+      "overlay_sha256": "b5b42c89b1a26b2f35382e2f8c82b27bec9c03e231afd8e15faca1f231ab87ff",
+      "size_bytes": 7727,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "docs/19_review_contract.md",
+      "accepted_base_sha256": [
+        "ca300606efde42ed9b4066a5aad3fdfad6332aabff3aa523fe7a7e0a5e81827d",
+        "abd5371850f6317dfa1a4b7b1211ccc9eb3607c0fc4fde5a4f0acbe62bbe8f87"
+      ],
+      "overlay_sha256": "545241839a12fef91574107c21794932629838339166d4c1a246296ffd91131a",
+      "size_bytes": 5865,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "docs/20_traceability_matrix.md",
+      "accepted_base_sha256": [
+        "58b269c605bd804cfe2fecb6e0ead78508d2e1d8f6361538a8fcb79ced2f948f",
+        "7fcac44856364c267432a8db53183b7a0f573c5df8f0e6f15029232777f5291d"
+      ],
+      "overlay_sha256": "d7ada61636a7b4d923c1796be3d981d5d259245427ca33cdcfe5934087ca6b81",
+      "size_bytes": 11234,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "docs/21_remotion_and_layering.md",
+      "accepted_base_sha256": [
+        "cc2d3444db8c93a7a925b9bbea0e4c9bc7befa428949b621c4e3e1a2665bab2c",
+        "bf6148ad8e081ba8ea8041158762c4691d00f854d6876279bb81d97046a46596"
+      ],
+      "overlay_sha256": "d3dd9c9fb2cb915f625514c4ae2236fe717d9c3060f5065b24a4ca17dc183d00",
+      "size_bytes": 1471,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "docs/24_visual_effect_recipes.md",
+      "accepted_base_sha256": [
+        "5a15c08410e6d98dd6afec276132f7b7bd50ca441a821cc2b45bfda7eec0a319",
+        "5cdab6d8d13064f5b5fe621fedfc8d665613e52a8d331c7443a8ceaa614a15df"
+      ],
+      "overlay_sha256": "23c33c22d13cfd957f0b2f34a254e27b30e7e0b924d6f07e0d92da0d215bbcfe",
+      "size_bytes": 2554,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "docs/30_smart_micro_edits_and_transitions.md",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "0883fefc5c828b0df1267a4f8d39556637b8984c4d8911fe53edcd18049b053f",
+      "size_bytes": 5980,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "docs/adr/0011-smart-dense-editing-and-purposeful-transitions.md",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "2f63cf76f9857458a1a9ac212098ace65bd790c8ae9157696a5b8af4ee6170d3",
+      "size_bytes": 1449,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "examples/edit_proposals.example.json",
+      "accepted_base_sha256": [
+        "1a5085d1f4873e1270d868f4e458c6aefcab54e60c7dd16187b555049b04bc1c",
+        "9a1637fdfbac8dfb000d5fee31d86fbbe7b45ab3855eba63644a856802af1a4c"
+      ],
+      "overlay_sha256": "0e8bd0ed1851adbe2c778a5c5d693d4b7529ead71d0a525331ab2a2a8a13e91a",
+      "size_bytes": 6471,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "examples/index.json",
+      "accepted_base_sha256": [
+        "12a8de164860251362b01e0287408f41cbfe4d685e60f630e904ec817a575a49",
+        "13cf7b5caa6c088ed5d082294e2ef69e30943b5214fab42e5812aafa52e02af8"
+      ],
+      "overlay_sha256": "02a936e156ea17d72487aa4c46d1d331dd01f11f552bcfee86fe14e02e5f8c9f",
+      "size_bytes": 4023,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "examples/join_qa_report.example.json",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "dc5ac25339ef81b52ddf50125b11a522c952d6ad9db486a743a681c4df62bbea",
+      "size_bytes": 2283,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "examples/sound_plan.example.json",
+      "accepted_base_sha256": [
+        "59a0b422b822afaad4ada1f19cf4c90d3565ff116620210ce54faf8b54287ee5"
+      ],
+      "overlay_sha256": "e227735e9282dd4409661fe45a8d01e58bebbe73a15e7e1d60a93149b3e364f0",
+      "size_bytes": 1357,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "examples/transition_plan.example.json",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "dca98c69fb52061c70f9d436c2a9ccec20372a331527ab43e2ec2ce143271faf",
+      "size_bytes": 2276,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "prompts/03_edit_planning_review.md",
+      "accepted_base_sha256": [
+        "ce8b65c42ae53d838b7d72cb4cf15064fc948efd2d8d999b068591831aa8b24a",
+        "aee70b5ba6a352985149b6f727254375881bbb01f1b19ebf6bf5c409d09cbdc6"
+      ],
+      "overlay_sha256": "910b2c0e609860abfdddd0d8e86572eb325f761744336587a6dbd490960abc6d",
+      "size_bytes": 1326,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "prompts/04_base_edit_audio.md",
+      "accepted_base_sha256": [
+        "d0da8327b23b6cc5d1d68122d7d7dd303856a75e61e356e455d1260b43b002b1",
+        "b77ffa05020c69f91d0f48b9e3de965dc25df79c2a997fda620ff98d431dddea"
+      ],
+      "overlay_sha256": "97259c74b950e9ebcc53bdb3b3722d5a3b9845ed7de266fdfd2f470de5b932b0",
+      "size_bytes": 1961,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "prompts/05_remotion_captions_motion.md",
+      "accepted_base_sha256": [
+        "20a0536ab24d530d842994cb9b5f05d7c5c320a4d9ac079b1edec246c7415833",
+        "44a8bb867b2cdb0673dd85cba8ef7238fd0b17ec0071c2afa098c86c5a7deea4"
+      ],
+      "overlay_sha256": "1680d9d0306147bb050fd39298d976609daaf92926f0cc98437d03f48a87b960",
+      "size_bytes": 2080,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "prompts/09_object_effects_assets_sound.md",
+      "accepted_base_sha256": [
+        "9083324b57f8c006c11d73348686bf45f2bc3f36aa791f6fc8b8e4e30cbe3ac2"
+      ],
+      "overlay_sha256": "14aa9f877b9979d5ba9ddf56336122b7d1727b23a3f785d475492e9fc97d8de2",
+      "size_bytes": 1980,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "prompts/10_preview_self_verify.md",
+      "accepted_base_sha256": [
+        "ae5edef9717e06014642e944879ea0a401f275264d1c6824b1c9340c5e3cfa3e",
+        "2ac47c134a2a07dbdc7d1df3fae98a242f7426e02f033b493dac5cbf34b2d5a8"
+      ],
+      "overlay_sha256": "49f463c9e83e4cadbd55f2ba632bad781ce4da82f8a1ea7c0684fb015a40b427",
+      "size_bytes": 1408,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "prompts/13_smart_micro_edits_transitions.md",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "881a21b6f6743866b4c32e036294fa5f50ee2e99630e31f503dc51a99fcbabb4",
+      "size_bytes": 1573,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "schemas/approval_record.schema.json",
+      "accepted_base_sha256": [
+        "6ed248f3ccb7c6804d2e31800638edf38c1e4826e4c8157809be4e5b1010b5f4",
+        "d36b1e904ed790399e0a022681561e2e5fc647a2803d5cf0beb4f569ce8ab863"
+      ],
+      "overlay_sha256": "5cf58796de703e93c66f971a4208aeb0df010a1bbafae379b25ea001c56ca47c",
+      "size_bytes": 5115,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "schemas/asset_catalog.schema.json",
+      "accepted_base_sha256": [
+        "9818d4e89b7da252be8a75e51787456e5147cdf9cfd45edd3a52cd460e9f4ae1"
+      ],
+      "overlay_sha256": "6af40d29ddf7287a71bc0954637aef5c5733ecf56c7b9ce894199a4023b32942",
+      "size_bytes": 6527,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "schemas/composition_plan.schema.json",
+      "accepted_base_sha256": [
+        "77b56dc98e6549b9146187d3be98898f5ff47467e5615d468cf89859b18adc19"
+      ],
+      "overlay_sha256": "f63b7354ed4c82aee91c7bbec4e9cefa329f3f24a41f00a75a64e1ced543c75f",
+      "size_bytes": 6257,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "schemas/edit_proposals.schema.json",
+      "accepted_base_sha256": [
+        "3c9ec4d362ce941abfbafe5a688b2b452b11269274e2f80be8dbcbd18613a352",
+        "340267cedd9761761bb9cfb5d8fd855990a7115eaf85cc460c8bc3d7540dc179"
+      ],
+      "overlay_sha256": "a147019ad73e61a411f4ad4e7136ab0d44146b60929ef3e5e72a967723722753",
+      "size_bytes": 9714,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "schemas/join_qa_report.schema.json",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "fdd52eeb2e79a8fd4e4ebf22e289af0273dd11082f1465ae40afe19b66a225ff",
+      "size_bytes": 9803,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "schemas/sound_plan.schema.json",
+      "accepted_base_sha256": [
+        "9a66946856723250e7f494e0716bb9ccd817901d2c0075eb972c3f30bcb75012"
+      ],
+      "overlay_sha256": "a23a15b9736138670347edfb512fb5f08fa8b35734649434962365de4a597da7",
+      "size_bytes": 6271,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    },
+    {
+      "path": "schemas/transition_plan.schema.json",
+      "accepted_base_sha256": [],
+      "overlay_sha256": "8486b4bc8e51701182069200a22b4d2d1312bf44505caba3e95029487fc7466c",
+      "size_bytes": 10409,
+      "operation": "replace",
+      "replace_even_if_modified": false
+    }
+  ]
+}

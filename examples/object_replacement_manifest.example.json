@@ -1,0 +1,60 @@
+{
+  "schema_name": "object_replacement_manifest",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_object_replacement_manifest",
+  "project_id": "demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-24T12:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "object-replacement",
+    "adapter": "core-assets",
+    "adapter_version": "1"
+  },
+  "keyframes": {
+    "path": "/absolute/path/to/object-track-keyframes.json",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "size_bytes": 3000
+  },
+  "asset_catalog": {
+    "path": "/absolute/path/to/asset-catalog.json",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "size_bytes": 2000
+  },
+  "asset_manifest": {
+    "path": "/absolute/path/to/asset-manifest.json",
+    "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "size_bytes": 1000
+  },
+  "asset": {
+    "asset_id": "asset_apple",
+    "asset_type": "replacement_object",
+    "file": {
+      "path": "replacement-objects/apple.png",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+      "size_bytes": 245760
+    },
+    "licence_status": "owned",
+    "licence_reference": "license_internal_001",
+    "permitted_uses": [
+      "commercial video",
+      "social media"
+    ],
+    "approval_ids": [
+      "apr_gate1_001"
+    ]
+  },
+  "layer": {
+    "layer_id": "tracked-replacement",
+    "z_index": 30,
+    "fit": "contain",
+    "start_frame": 0,
+    "duration_frames": 90
+  },
+  "fallback": {
+    "mode": "original_shot",
+    "on_uncertain": "keep_original"
+  },
+  "status": "complete",
+  "warnings": []
+}

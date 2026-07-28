@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/backup_verification.schema.json",
+  "title": "Backup Verification Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "status",
+    "items"
+  ],
+  "properties": {
+    "schema_name": {"const": "backup_verification"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/id"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "status": {"enum": ["pass", "fail", "partial"]},
+    "items": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/item"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "source_path",
+        "source_sha256",
+        "source_size_bytes",
+        "backup_path",
+        "backup_sha256",
+        "backup_size_bytes",
+        "verified_at",
+        "status"
+      ],
+      "properties": {
+        "role": {"enum": ["source", "master", "sidecar", "manifest"]},
+        "source_path": {"type": "string", "minLength": 1},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "source_size_bytes": {"type": "integer", "minimum": 0},
+        "backup_path": {"type": "string", "minLength": 1},
+        "backup_sha256": {"$ref": "#/$defs/sha256"},
+        "backup_size_bytes": {"type": "integer", "minimum": 0},
+        "verified_at": {"$ref": "#/$defs/timestamp"},
+        "status": {"enum": ["pass", "fail"]},
+        "message": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

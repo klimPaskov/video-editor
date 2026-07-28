@@ -1,0 +1,64 @@
+{
+  "schema_name": "asset_catalog",
+  "schema_version": "1.0.0",
+  "catalog_id": "catalog_local",
+  "created_at": "2026-07-23T10:00:00Z",
+  "updated_at": "2026-07-23T10:05:00Z",
+  "root_path": "private-assets",
+  "assets": [
+    {
+      "asset_id": "asset_apple",
+      "asset_type": "replacement_object",
+      "file": {
+        "path": "replacement-objects/apple.png",
+        "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "size_bytes": 245760,
+        "mime_type": "image/png",
+        "width": 1024,
+        "height": 1024,
+        "duration_us": null
+      },
+      "description": "Transparent red apple replacement image",
+      "tags": ["apple", "fruit", "replacement"],
+      "source": "Commissioned brand asset",
+      "licence_status": "owned",
+      "licence_reference": "licence/commission-2026-04.pdf",
+      "permitted_uses": ["commercial video", "social media"],
+      "attribution": null,
+      "sensitive_content": [],
+      "usage_history": []
+    },
+    {
+      "asset_id": "snd_soft_whoosh",
+      "asset_type": "sound_effect",
+      "file": {
+        "path": "sound-effects/soft-whoosh.wav",
+        "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "size_bytes": 144000,
+        "mime_type": "audio/wav",
+        "width": null,
+        "height": null,
+        "duration_us": 300000
+      },
+      "description": "Subtle licensed whoosh for a purposeful structural transition",
+      "tags": ["transition", "whoosh", "subtle", "speech-safe"],
+      "source": "Owned local sound library",
+      "licence_status": "owned",
+      "licence_reference": "license_internal_001",
+      "permitted_uses": ["commercial video", "social media"],
+      "attribution": null,
+      "sensitive_content": [],
+      "usage_history": [],
+      "audio_metadata": {
+        "integrated_loudness_lufs": -28.0,
+        "true_peak_dbtp": -6.0,
+        "transient_peak_offset_us": 120000,
+        "intended_transition_types": ["swipe_left", "push_left", "blur_swipe", "chapter_transition"],
+        "intensity": "subtle",
+        "speech_safe": true,
+        "minimum_reuse_interval_us": 45000000,
+        "brand_contexts": ["education", "demo"]
+      }
+    }
+  ]
+}

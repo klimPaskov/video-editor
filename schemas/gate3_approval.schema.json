@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/gate3_approval.schema.json",
+  "title": "Gate 3 Final Delivery Approval",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_name", "schema_version", "artifact_id", "project_id", "revision_id", "created_at", "bound_hashes", "decision", "reviewer", "notes"],
+  "properties": {
+    "schema_name": {"const": "gate3_approval"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/revision"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "bound_hashes": {"$ref": "#/$defs/bound_hashes"},
+    "decision": {"enum": ["approved", "changes_requested", "rejected"]},
+    "reviewer": {"$ref": "#/$defs/reviewer"},
+    "notes": {"type": "string"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "revision": {"type": "string", "pattern": "^rev_[0-9]{3,}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "bound_hashes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_sha256", "final_qa_sha256", "watchthrough_sha256", "plan_bundle_sha256", "asset_manifest_sha256", "composition_bundle_sha256", "delivery_profile_sha256", "gate2_approval_set_sha256"],
+      "properties": {
+        "candidate_sha256": {"$ref": "#/$defs/sha256"},
+        "final_qa_sha256": {"$ref": "#/$defs/sha256"},
+        "watchthrough_sha256": {"$ref": "#/$defs/sha256"},
+        "plan_bundle_sha256": {"$ref": "#/$defs/sha256"},
+        "asset_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "composition_bundle_sha256": {"$ref": "#/$defs/sha256"},
+        "delivery_profile_sha256": {"$ref": "#/$defs/sha256"},
+        "gate2_approval_set_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "role", "reviewed_at"],
+      "properties": {
+        "actor": {"type": "string", "minLength": 1},
+        "role": {"type": "string", "minLength": 1},
+        "reviewed_at": {"$ref": "#/$defs/timestamp"}
+      }
+    }
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/qa_review_packet.schema.json",
+  "title": "Hash-Bound QA Operator Review Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name", "schema_version", "artifact_id", "project_id", "revision_id",
+    "created_at", "producer", "inputs", "candidate", "review_gate", "status",
+    "summary", "items"
+  ],
+  "properties": {
+    "schema_name": {"const": "qa_review_packet"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/revision"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "inputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/artifact_input"}
+    },
+    "candidate": {"$ref": "#/$defs/file_ref"},
+    "review_gate": {"enum": ["gate2", "gate3"]},
+    "status": {"const": "review_required"},
+    "summary": {"$ref": "#/$defs/summary"},
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/item"}
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "revision": {"type": "string", "pattern": "^rev_[0-9]{3,}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "time_us": {"type": "integer", "minimum": 0},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "artifact_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "sha256", "size_bytes"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 1}
+      }
+    },
+    "range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_us", "end_us"],
+      "properties": {
+        "start_us": {"$ref": "#/$defs/time_us"},
+        "end_us": {"$ref": "#/$defs/time_us"}
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total_items", "join_item_count", "segment_item_count", "final_item_count", "high_severity_count",
+        "pending_item_count", "join_preview_count", "join_warning_by_code", "segment_warning_by_code",
+        "source_warning_finding_ids"
+      ],
+      "properties": {
+        "total_items": {"type": "integer", "minimum": 1},
+        "join_item_count": {"type": "integer", "minimum": 0},
+        "segment_item_count": {"type": "integer", "minimum": 0},
+        "final_item_count": {"type": "integer", "minimum": 0},
+        "high_severity_count": {"type": "integer", "minimum": 0},
+        "pending_item_count": {"type": "integer", "minimum": 1},
+        "join_preview_count": {"type": "integer", "minimum": 0},
+        "join_warning_by_code": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        },
+        "segment_warning_by_code": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        },
+        "source_warning_finding_ids": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/id"},
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id", "scope", "check_code", "severity", "source_finding_id", "status",
+        "title", "recommendation", "decision_options", "decision", "time_range",
+        "evidence", "details"
+      ],
+      "properties": {
+        "item_id": {"$ref": "#/$defs/id"},
+        "scope": {"enum": ["join", "segment", "final"]},
+        "check_code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$"},
+        "severity": {"enum": ["info", "low", "medium", "high", "critical"]},
+        "source_finding_id": {"$ref": "#/$defs/id"},
+        "status": {"const": "warning"},
+        "title": {"type": "string", "minLength": 1},
+        "recommendation": {"type": "string", "minLength": 1},
+        "decision_options": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "repair", "reviewed_non_defect", "intentional_static", "false_positive",
+              "accepted_risk", "reject_candidate"
+            ]
+          }
+        },
+        "decision": {"const": "pending"},
+        "time_range": {
+          "anyOf": [{"$ref": "#/$defs/range"}, {"type": "null"}]
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/file_ref"}
+        },
+        "details": {"type": "object"}
+      }
+    }
+  }
+}

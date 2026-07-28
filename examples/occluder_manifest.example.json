@@ -1,0 +1,121 @@
+{
+  "schema_name": "occluder_manifest",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_object_occluder_1",
+  "project_id": "occluder_fixture",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-24T00:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "object-occluder",
+    "adapter": "ffmpeg",
+    "adapter_version": "7.0"
+  },
+  "inputs": [
+    {"artifact_id": "art_source", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    {"artifact_id": "art_segmentation_result", "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+    {"artifact_id": "art_segmentation_validation", "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+    {"artifact_id": "art_object_track_review", "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"}
+  ],
+  "status": "complete",
+  "source": {
+    "path": "/projects/occluder_fixture/raw/source.mp4",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "size_bytes": 12000
+  },
+  "source_range": {"start_frame": 0, "end_frame": 30},
+  "track": {
+    "source_result": {
+      "path": "/projects/occluder_fixture/work/segmentation-result.json",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "size_bytes": 24000
+    },
+    "segmentation_validation": {
+      "path": "/projects/occluder_fixture/work/segmentation-validation.json",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "size_bytes": 1800
+    },
+    "review": {
+      "path": "/projects/occluder_fixture/work/object-track-review.json",
+      "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "size_bytes": 1600
+    },
+    "object_id": 1,
+    "decision": "approved",
+    "findings": {
+      "identity": "pass",
+      "continuity": "pass",
+      "geometry": "pass",
+      "occlusion": "pass"
+    }
+  },
+  "mask": {
+    "pattern": "/projects/occluder_fixture/work/staging/masks/%06d.png",
+    "encoding": "png_gray8",
+    "polarity": "white_foreground",
+    "frames": [
+      {
+        "frame_index": 0,
+        "visible": true,
+        "source": {
+          "path": "/projects/occluder_fixture/work/masks/000000.png",
+          "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "size_bytes": 900
+        },
+        "staged": {
+          "path": "/projects/occluder_fixture/state/staging/masks/000000.png",
+          "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "size_bytes": 900
+        }
+      }
+    ]
+  },
+  "output": {
+    "path": "/projects/occluder_fixture/work/occluder.mov",
+    "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "size_bytes": 80000
+  },
+  "video": {
+    "codec": "prores",
+    "width": 1280,
+    "height": 720,
+    "frame_rate": {"numerator": 30, "denominator": 1},
+    "pixel_format": "yuva444p10le",
+    "frame_count": 30,
+    "duration_us": 1000000
+  },
+  "alpha": {
+    "min": 0,
+    "max": 255,
+    "mean": 8.5,
+    "polarity": "mixed",
+    "sampled_frames": 3
+  },
+  "validation": {
+    "source_identity": "pass",
+    "source_range": "pass",
+    "track_review": "pass",
+    "mask_sequence": "pass",
+    "full_decode": "pass",
+    "alpha_plane": "pass",
+    "alpha_range": "pass",
+    "alpha_polarity": "pass",
+    "dimensions": "pass",
+    "frame_count": "pass",
+    "frame_rate": "pass",
+    "duration": "pass"
+  },
+  "layer": {
+    "layer_id": "tracked-occluder",
+    "asset_id": "asset_tracked-occluder",
+    "role": "front",
+    "z_index": 40,
+    "start_frame": 0,
+    "duration_frames": 30
+  },
+  "fallback": {"mode": "original_shot", "on_uncertain": "keep_original"},
+  "commands": [],
+  "warnings": [
+    "original_shot_fallback_remains_when_track_or_alpha_review_is_stale"
+  ]
+}

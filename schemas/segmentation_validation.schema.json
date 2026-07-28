@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/segmentation_validation.schema.json",
+  "title": "SAM segmentation validation report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "source",
+    "result",
+    "source_range",
+    "status",
+    "validation",
+    "diagnostics",
+    "review_frame_indices",
+    "contact_sheets",
+    "warnings"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "segmentation_validation"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/id"
+    },
+    "project_id": {
+      "$ref": "#/$defs/id"
+    },
+    "revision_id": {
+      "type": "string",
+      "pattern": "^rev_[0-9]{3,}$"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "source": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "result": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "source_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_frame",
+        "end_frame"
+      ],
+      "properties": {
+        "start_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_frame": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "pass",
+        "warning",
+        "fail"
+      ]
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_schema",
+        "source_identity",
+        "frame_range",
+        "frame_continuity",
+        "mask_files",
+        "mask_dimensions",
+        "mask_format",
+        "geometry"
+      ],
+      "properties": {
+        "result_schema": {
+          "enum": [
+            "pass",
+            "fail"
+          ]
+        },
+        "source_identity": {
+          "enum": [
+            "pass",
+            "fail"
+          ]
+        },
+        "frame_range": {
+          "enum": [
+            "pass",
+            "fail"
+          ]
+        },
+        "frame_continuity": {
+          "enum": [
+            "pass",
+            "warning",
+            "fail"
+          ]
+        },
+        "mask_files": {
+          "enum": [
+            "pass",
+            "fail"
+          ]
+        },
+        "mask_dimensions": {
+          "enum": [
+            "pass",
+            "fail"
+          ]
+        },
+        "mask_format": {
+          "enum": [
+            "pass",
+            "fail"
+          ]
+        },
+        "geometry": {
+          "enum": [
+            "pass",
+            "warning",
+            "fail"
+          ]
+        }
+      }
+    },
+    "diagnostics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "missing_frames",
+        "identity_warnings",
+        "area_jump_frames",
+        "centroid_jump_frames",
+        "leak_warnings"
+      ],
+      "properties": {
+        "missing_frames": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "identity_warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "area_jump_frames": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "centroid_jump_frames": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "leak_warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "review_frame_indices": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "uniqueItems": true
+    },
+    "contact_sheets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/file_ref"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

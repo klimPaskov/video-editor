@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/operator_edit_instructions.schema.json",
+  "title": "Hash-bound Operator Editorial Instructions",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "source_sha256",
+    "operator",
+    "request_text",
+    "edits"
+  ],
+  "properties": {
+    "schema_name": {"const": "operator_edit_instructions"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/revision"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "source_sha256": {"$ref": "#/$defs/sha256"},
+    "operator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "role"],
+      "properties": {
+        "actor": {"type": "string", "minLength": 1},
+        "role": {"type": "string", "minLength": 1}
+      }
+    },
+    "request_text": {"type": "string", "minLength": 1},
+    "edits": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["edit_id", "label", "start_us", "end_us", "reason"],
+        "properties": {
+          "edit_id": {"$ref": "#/$defs/id"},
+          "label": {"type": "string", "minLength": 1},
+          "start_us": {"$ref": "#/$defs/time_us"},
+          "end_us": {"$ref": "#/$defs/time_us"},
+          "reason": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "revision": {"type": "string", "pattern": "^rev_[0-9]{3,}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "time_us": {"type": "integer", "minimum": 0}
+  }
+}

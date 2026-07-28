@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/edit_metrics_qa.schema.json",
+  "title": "Smart-Dense Edit Metrics QA",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_name": { "const": "edit_metrics_qa" },
+    "schema_version": { "const": "1.0.0" },
+    "artifact_id": { "$ref": "#/$defs/identifier" },
+    "project_id": { "$ref": "#/$defs/identifier" },
+    "revision_id": { "$ref": "#/$defs/identifier" },
+    "created_at": { "$ref": "#/$defs/timestamp" },
+    "producer": { "$ref": "#/$defs/producer" },
+    "inputs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/artifact_input" },
+      "minItems": 3
+    },
+    "config_sha256": { "$ref": "#/$defs/sha256" },
+    "source_duration_us": { "$ref": "#/$defs/time_us" },
+    "output_duration_us": { "$ref": "#/$defs/time_us" },
+    "cut_density": { "$ref": "#/$defs/cut_density" },
+    "retained_fragment": { "$ref": "#/$defs/retained_fragment" },
+    "cadence": { "$ref": "#/$defs/cadence" },
+    "transition_frequency": { "$ref": "#/$defs/transition_frequency" },
+    "repetition": { "$ref": "#/$defs/repetition" },
+    "overall_status": { "enum": ["pass", "warning"] },
+    "blocking": { "const": false },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "source_duration_us",
+    "output_duration_us",
+    "cut_density",
+    "retained_fragment",
+    "cadence",
+    "transition_frequency",
+    "repetition",
+    "overall_status",
+    "blocking",
+    "warnings"
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_us": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "application_version": { "type": "string", "minLength": 1 },
+        "stage": { "type": "string", "minLength": 1 },
+        "adapter": { "type": "string", "minLength": 1 },
+        "adapter_version": { "type": "string", "minLength": 1 }
+      },
+      "required": ["application_version", "stage", "adapter", "adapter_version"]
+    },
+    "artifact_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/identifier" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      },
+      "required": ["artifact_id", "sha256"]
+    },
+    "cut_density": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cut_count": { "type": "integer", "minimum": 0 },
+        "cuts_per_minute": { "type": "number", "minimum": 0 },
+        "warning_threshold_cuts_per_minute": { "type": "number", "minimum": 0 },
+        "status": { "enum": ["pass", "warning", "not_measured"] },
+        "signal_only": { "const": true }
+      },
+      "required": [
+        "cut_count",
+        "cuts_per_minute",
+        "warning_threshold_cuts_per_minute",
+        "status",
+        "signal_only"
+      ]
+    },
+    "retained_fragment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fragment_count": { "type": "integer", "minimum": 1 },
+        "minimum_fragment_us": { "$ref": "#/$defs/time_us" },
+        "average_fragment_us": { "$ref": "#/$defs/time_us" },
+        "median_fragment_us": { "$ref": "#/$defs/time_us" },
+        "warning_average_fragment_us": { "$ref": "#/$defs/time_us" },
+        "warning_minimum_fragment_us": { "$ref": "#/$defs/time_us" },
+        "status": { "enum": ["pass", "warning", "not_measured"] },
+        "signal_only": { "const": true }
+      },
+      "required": [
+        "fragment_count",
+        "minimum_fragment_us",
+        "average_fragment_us",
+        "median_fragment_us",
+        "warning_average_fragment_us",
+        "warning_minimum_fragment_us",
+        "status",
+        "signal_only"
+      ]
+    },
+    "cadence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_word_count": { "type": "integer", "minimum": 0 },
+        "output_word_count": { "type": "integer", "minimum": 0 },
+        "source_wpm": {
+          "anyOf": [{ "type": "number", "minimum": 0 }, { "type": "null" }]
+        },
+        "output_wpm": {
+          "anyOf": [{ "type": "number", "minimum": 0 }, { "type": "null" }]
+        },
+        "speech_rate_change_percent": {
+          "anyOf": [{ "type": "number" }, { "type": "null" }]
+        },
+        "warning_speech_rate_change_percent": { "type": "number", "minimum": 0 },
+        "join_pacing_warning_count": { "type": "integer", "minimum": 0 },
+        "status": { "enum": ["pass", "warning", "not_measured"] },
+        "signal_only": { "const": true }
+      },
+      "required": [
+        "source_word_count",
+        "output_word_count",
+        "source_wpm",
+        "output_wpm",
+        "speech_rate_change_percent",
+        "warning_speech_rate_change_percent",
+        "join_pacing_warning_count",
+        "status",
+        "signal_only"
+      ]
+    },
+    "transition_frequency": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "motion_transition_count": { "type": "integer", "minimum": 0 },
+        "transitions_per_minute": { "type": "number", "minimum": 0 },
+        "warning_threshold_per_minute": { "type": "number", "minimum": 0 },
+        "minimum_spacing_us": {
+          "anyOf": [{ "$ref": "#/$defs/time_us" }, { "type": "null" }]
+        },
+        "configured_minimum_spacing_us": { "$ref": "#/$defs/time_us" },
+        "repeated_transition_type_count": { "type": "integer", "minimum": 0 },
+        "repeated_sound_count": { "type": "integer", "minimum": 0 },
+        "status": { "enum": ["pass", "warning", "not_measured"] },
+        "signal_only": { "const": true }
+      },
+      "required": [
+        "motion_transition_count",
+        "transitions_per_minute",
+        "warning_threshold_per_minute",
+        "minimum_spacing_us",
+        "configured_minimum_spacing_us",
+        "repeated_transition_type_count",
+        "repeated_sound_count",
+        "status",
+        "signal_only"
+      ]
+    },
+    "repetition": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "candidate_counts": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "applied_counts": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "candidate_count": { "type": "integer", "minimum": 0 },
+        "applied_count": { "type": "integer", "minimum": 0 },
+        "review_required_count": { "type": "integer", "minimum": 0 },
+        "status": { "enum": ["pass", "warning", "not_measured"] },
+        "signal_only": { "const": true }
+      },
+      "required": [
+        "candidate_counts",
+        "applied_counts",
+        "candidate_count",
+        "applied_count",
+        "review_required_count",
+        "status",
+        "signal_only"
+      ]
+    }
+  }
+}

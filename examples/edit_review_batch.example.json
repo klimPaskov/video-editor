@@ -1,0 +1,89 @@
+{
+  "schema_name": "edit_review_batch",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_smart_dense_batch_example",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-24T10:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "example",
+    "adapter": "fixture",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_proposals",
+      "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    }
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "batch_id": "bat_smart_dense_example",
+  "proposal_set_artifact_id": "art_proposals",
+  "proposal_set_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "policy_id": "pol_smart_dense",
+  "policy_version": 3,
+  "policy_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "policy_approval": {
+    "state": "pending",
+    "approval_id": null,
+    "approval_sha256": null
+  },
+  "maximum_questions_per_round": 5,
+  "policy_batch": [
+    {
+      "proposal_id": "prp_filler_001",
+      "proposal_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "proposal_type": "filler_word",
+      "source_range": { "start_us": 1000000, "end_us": 1300000 },
+      "proposed_cut_range": { "start_us": 990000, "end_us": 1310000 },
+      "confidence": 0.98,
+      "meaning_risk": "low",
+      "continuity_risk": "low",
+      "evidence_ids": ["ev_word_001"],
+      "safe_fallback": "keep_original",
+      "execution": "awaiting_policy_approval",
+      "join_strategy": "hard_cut_with_micro_audio_crossfade",
+      "join_preview_required": true,
+      "recommendation": "Hold until explicit smart_dense policy approval; render and QA the join."
+    }
+  ],
+  "questions": [
+    {
+      "proposal_id": "prp_semantic_001",
+      "proposal_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "proposal_type": "semantic_repetition",
+      "source_range": { "start_us": 2000000, "end_us": 2600000 },
+      "proposed_cut_range": { "start_us": 2000000, "end_us": 2600000 },
+      "confidence": 0.74,
+      "meaning_risk": "medium",
+      "continuity_risk": "low",
+      "evidence_ids": ["ev_semantic_001"],
+      "safe_fallback": "keep_original",
+      "question_id": "q_prp_semantic_001",
+      "priority": "high",
+      "reason": "The second sentence may add useful specificity.",
+      "recommendation": "Keep both sentences unless the reviewer confirms the repeated point adds no detail.",
+      "transcript_before": "",
+      "transcript_inside": "This saves editing time. It reduces editing time.",
+      "transcript_after": "",
+      "decision_options": ["approve", "reject", "modify"]
+    }
+  ],
+  "deferred_questions": [],
+  "fallbacks": [],
+  "summary": {
+    "total_proposals": 2,
+    "policy_batch_count": 1,
+    "policy_authorized_count": 0,
+    "policy_pending_count": 1,
+    "question_count": 1,
+    "deferred_question_count": 0,
+    "fallback_count": 0,
+    "total_proposed_cut_us": 920000,
+    "policy_batch_cut_us": 320000,
+    "question_cut_us": 600000,
+    "fallback_cut_us": 0
+  },
+  "warnings": ["smart_dense_policy_approval_required"]
+}

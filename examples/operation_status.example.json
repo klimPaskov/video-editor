@@ -1,0 +1,11 @@
+{
+  "schema_name": "operation_status",
+  "schema_version": "1.0.0",
+  "project_id": "prj_demo",
+  "active_revision_id": "rev_002",
+  "source_integrity": "pass",
+  "stages": [{"stage": "final_qa", "revision_id": "rev_002", "status": "complete", "attempt": 1, "stage_key": "1111111111111111111111111111111111111111111111111111111111111111", "error": null}],
+  "qa_ready": true,
+  "delivery_paths": ["output/delivery/rev_002/master.mp4"],
+  "warnings": []
+}

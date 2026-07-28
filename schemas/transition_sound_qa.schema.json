@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/transition_sound_qa.schema.json",
+  "title": "Transition sound QA report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "cue_id",
+    "asset_sha256",
+    "output",
+    "qa_status",
+    "failures",
+    "warnings",
+    "full_decode_status",
+    "clipped_samples",
+    "loudness",
+    "speech_priority"
+  ],
+  "properties": {
+    "schema_name": {"const": "transition_sound_qa"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/identifier"},
+    "project_id": {"$ref": "#/$defs/identifier"},
+    "revision_id": {"$ref": "#/$defs/identifier"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "inputs": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/input"}
+    },
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "cue_id": {"$ref": "#/$defs/identifier"},
+    "asset_sha256": {"$ref": "#/$defs/sha256"},
+    "output": {"$ref": "#/$defs/file_ref"},
+    "qa_status": {"enum": ["pass", "warning", "fail"]},
+    "failures": {"type": "array", "items": {"type": "string"}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "full_decode_status": {"enum": ["pass", "fail"]},
+    "clipped_samples": {"type": "integer", "minimum": 0},
+    "loudness": {
+      "anyOf": [
+        {"$ref": "#/$defs/loudness"},
+        {"type": "null"}
+      ]
+    },
+    "speech_priority": {"type": "boolean"}
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/identifier"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size_bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 1}
+      }
+    },
+    "loudness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["integrated_lufs", "threshold_lufs", "loudness_range_lu", "true_peak_dbfs"],
+      "properties": {
+        "integrated_lufs": {"type": "number"},
+        "threshold_lufs": {"type": "number"},
+        "loudness_range_lu": {"type": "number", "minimum": 0},
+        "true_peak_dbfs": {"type": "number"}
+      }
+    }
+  }
+}

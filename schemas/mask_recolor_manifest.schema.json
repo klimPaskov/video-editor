@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/mask_recolor_manifest.schema.json",
+  "title": "Mask-driven recolor manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_name", "schema_version", "artifact_id", "project_id", "revision_id", "created_at", "producer", "inputs", "config_sha256", "status", "source", "mask", "output", "configuration", "video", "audio", "validation", "commands", "warnings"],
+  "properties": {
+    "schema_name": {"const": "mask_recolor_manifest"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/identifier"},
+    "project_id": {"$ref": "#/$defs/identifier"},
+    "revision_id": {"$ref": "#/$defs/identifier"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "inputs": {"type": "array", "items": {"$ref": "#/$defs/artifact_input"}},
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "status": {"const": "complete"},
+    "source": {"$ref": "#/$defs/file_ref"},
+    "mask": {"$ref": "#/$defs/file_ref"},
+    "output": {"$ref": "#/$defs/file_ref"},
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hue_degrees"],
+      "properties": {"hue_degrees": {"type": "number", "minimum": -360, "maximum": 360}}
+    },
+    "video": {"$ref": "#/$defs/video"},
+    "audio": {"$ref": "#/$defs/audio"},
+    "validation": {"$ref": "#/$defs/validation"},
+    "commands": {"type": "array", "items": {"$ref": "#/$defs/process_command"}},
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "identifier": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "rational": {"type": "object", "additionalProperties": false, "required": ["numerator", "denominator"], "properties": {"numerator": {"type": "integer", "minimum": 1}, "denominator": {"type": "integer", "minimum": 1}}},
+    "artifact_input": {"type": "object", "additionalProperties": false, "required": ["artifact_id", "sha256"], "properties": {"artifact_id": {"$ref": "#/$defs/identifier"}, "sha256": {"$ref": "#/$defs/sha256"}}},
+    "producer": {"type": "object", "additionalProperties": false, "required": ["application_version", "stage", "adapter", "adapter_version"], "properties": {"application_version": {"type": "string", "minLength": 1}, "stage": {"type": "string", "minLength": 1}, "adapter": {"type": "string", "minLength": 1}, "adapter_version": {"type": "string", "minLength": 1}}},
+    "file_ref": {"type": "object", "additionalProperties": false, "required": ["path", "sha256", "size_bytes"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"}, "size_bytes": {"type": "integer", "minimum": 0}}},
+    "video": {"type": "object", "additionalProperties": false, "required": ["codec", "width", "height", "frame_rate", "pixel_format", "frame_count", "duration_us"], "properties": {"codec": {"type": "string", "minLength": 1}, "width": {"type": "integer", "minimum": 1}, "height": {"type": "integer", "minimum": 1}, "frame_rate": {"$ref": "#/$defs/rational"}, "pixel_format": {"type": "string", "minLength": 1}, "frame_count": {"type": "integer", "minimum": 1}, "duration_us": {"type": "integer", "minimum": 0}}},
+    "audio": {"type": "object", "additionalProperties": false, "required": ["codec", "sample_rate_hz", "channels", "duration_us"], "properties": {"codec": {"type": "string", "minLength": 1}, "sample_rate_hz": {"type": "integer", "minimum": 1}, "channels": {"type": "integer", "minimum": 1}, "duration_us": {"type": "integer", "minimum": 0}}},
+    "validation": {"type": "object", "additionalProperties": false, "required": ["full_decode", "frame_count", "frame_rate", "duration", "production_audio"], "properties": {"full_decode": {"enum": ["pass", "fail"]}, "frame_count": {"enum": ["pass", "fail"]}, "frame_rate": {"enum": ["pass", "fail"]}, "duration": {"enum": ["pass", "fail"]}, "production_audio": {"enum": ["pass", "fail"]}}},
+    "process_command": {"type": "object", "additionalProperties": false, "required": ["executable", "arguments", "working_directory", "exit_code", "elapsed_ms", "version"], "properties": {"executable": {"type": "string", "minLength": 1}, "arguments": {"type": "array", "items": {"type": "string"}}, "working_directory": {"type": "string", "minLength": 1}, "exit_code": {"type": "integer"}, "elapsed_ms": {"type": "integer", "minimum": 0}, "version": {"type": "string", "minLength": 1}}}
+  }
+}

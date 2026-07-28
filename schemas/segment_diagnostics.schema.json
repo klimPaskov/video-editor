@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/segment_diagnostics.schema.json",
+  "title": "Segment Mask and Matte Diagnostics",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "segment_id",
+    "created_at",
+    "producer",
+    "planning_key",
+    "preview_sha256",
+    "mask_matte",
+    "warnings",
+    "status"
+  ],
+  "properties": {
+    "schema_name": {"const": "segment_diagnostics"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/id"},
+    "segment_id": {"$ref": "#/$defs/id"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "planning_key": {"$ref": "#/$defs/sha256"},
+    "preview_sha256": {"$ref": "#/$defs/sha256"},
+    "mask_matte": {"type": "array", "items": {"$ref": "#/$defs/diagnostic"}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "status": {"enum": ["complete", "warning"]}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "kind", "path", "sha256", "status", "warnings"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "kind": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "status": {"enum": ["pass", "warning", "fail", "not_present"]},
+        "warnings": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}

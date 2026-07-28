@@ -1,0 +1,59 @@
+{
+  "schema_name": "qa_review_decision",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_qa_review_decision_example",
+  "project_id": "example_project",
+  "revision_id": "rev_002",
+  "created_at": "2026-01-01T00:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "qa-review-decision",
+    "adapter": "human-review",
+    "adapter_version": "p11-qa-review-decision-1"
+  },
+  "inputs": [
+    {"artifact_id": "art_qa_review_packet", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    {"artifact_id": "art_join_preview_000001", "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}
+  ],
+  "packet": {
+    "artifact_id": "art_qa_review_packet",
+    "path": "projects/example_project/review/qa-review-packet.json",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "size_bytes": 100
+  },
+  "decision_record": "recorded",
+  "reviewer": {
+    "actor": "operator",
+    "role": "editor",
+    "reviewed_at": "2026-01-01T00:05:00Z"
+  },
+  "decisions": [
+    {
+      "item_id": "qa_join_join_000001",
+      "check_code": "JOIN_REVIEW",
+      "source_finding_id": "qa_join_warning_join_000001",
+      "packet_item_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "decision": "reviewed_non_defect",
+      "reason": "The retained preview shows an intentional static screen state.",
+      "time_range": {"start_us": 1000000, "end_us": 2000000},
+      "evidence": [
+        {
+          "artifact_id": "art_join_preview_000001",
+          "path": "projects/example_project/review/join-previews/join_000001.mp4",
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "size_bytes": 100
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "packet_item_count": 1,
+    "decided_item_count": 1,
+    "pending_item_count": 0,
+    "repair_count": 0,
+    "reject_count": 0,
+    "classification_counts": {"reviewed_non_defect": 1}
+  },
+  "status": "reviewed",
+  "notes": "This record is not a Gate 3 approval."
+}

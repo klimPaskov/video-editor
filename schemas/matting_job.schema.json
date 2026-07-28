@@ -1,0 +1,676 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "matting_job.schema.json",
+  "title": "MatAnyone 2 job",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_id",
+    "input_path",
+    "initial_mask_path",
+    "output_dir"
+  ],
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0",
+        "1.1"
+      ]
+    },
+    "job_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "input": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "input_video": {
+      "$ref": "#/$defs/video"
+    },
+    "initial_mask_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "initial_mask_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "initial_mask": {
+      "$ref": "#/$defs/initial_mask"
+    },
+    "initial_mask_validation": {
+      "$ref": "#/$defs/initial_mask_validation"
+    },
+    "mask_approval": {
+      "$ref": "#/$defs/approval"
+    },
+    "output_dir": {
+      "type": "string",
+      "minLength": 1
+    },
+    "config_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "revision_id": {
+      "type": "string",
+      "pattern": "^rev_[0-9]{3,}$"
+    },
+    "source_range": {
+      "$ref": "#/$defs/frame_range"
+    },
+    "approval": {
+      "$ref": "#/$defs/approval"
+    },
+    "worker": {
+      "$ref": "#/$defs/worker"
+    },
+    "runtime": {
+      "$ref": "#/$defs/runtime"
+    },
+    "output_contract": {
+      "$ref": "#/$defs/output_contract"
+    },
+    "parameters": {
+      "$ref": "#/$defs/parameters"
+    },
+    "model_id": {
+      "type": "string",
+      "default": "PeiqingYang/MatAnyone2"
+    },
+    "device": {
+      "type": "string",
+      "default": "cuda:0"
+    },
+    "max_size": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 64
+    },
+    "start_frame": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+    },
+    "end_frame": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "schema_version": {
+            "const": "1.1"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "config_sha256",
+          "project_id",
+          "revision_id",
+          "input_sha256",
+          "input",
+          "input_video",
+          "source_range",
+          "initial_mask_sha256",
+          "initial_mask",
+          "mask_approval",
+          "approval",
+          "worker",
+          "runtime",
+          "output_contract",
+          "parameters",
+          "start_frame",
+          "end_frame"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "video": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height",
+        "frame_count",
+        "frame_rate"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "frame_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "frame_rate": {
+          "type": "string",
+          "pattern": "^[0-9]+/[0-9]+$"
+        },
+        "duration_us": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "initial_mask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "width",
+        "height",
+        "frame_index",
+        "polarity",
+        "source"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "frame_index": {
+          "const": 0
+        },
+        "polarity": {
+          "const": "white_foreground"
+        },
+        "source": {
+          "enum": [
+            "sam3",
+            "interactive",
+            "manual"
+          ]
+        }
+      }
+    },
+    "initial_mask_validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "mask_video",
+        "mask_statistics",
+        "validation",
+        "warnings",
+        "commands"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pass",
+            "pending",
+            "fail"
+          ]
+        },
+        "mask_video": {
+          "$ref": "#/$defs/mask_video"
+        },
+        "mask_statistics": {
+          "$ref": "#/$defs/mask_statistics"
+        },
+        "validation": {
+          "$ref": "#/$defs/initial_mask_checks"
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/process_command"
+          }
+        }
+      }
+    },
+    "mask_video": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height",
+        "frame_count",
+        "frame_rate",
+        "duration_us",
+        "codec",
+        "pixel_format"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "frame_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "frame_rate": {
+          "type": "string",
+          "pattern": "^[0-9]+/[0-9]+$"
+        },
+        "duration_us": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "codec": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pixel_format": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "mask_statistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "min",
+        "max",
+        "mean",
+        "polarity",
+        "sampled_frames"
+      ],
+      "properties": {
+        "min": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "max": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "mean": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "polarity": {
+          "enum": [
+            "white_foreground",
+            "opaque",
+            "transparent",
+            "unknown"
+          ]
+        },
+        "sampled_frames": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "initial_mask_checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "full_decode",
+        "lossless",
+        "pixel_format",
+        "dimensions",
+        "frame_count",
+        "frame_rate",
+        "range",
+        "polarity",
+        "frame_index",
+        "audio"
+      ],
+      "properties": {
+        "full_decode": {
+          "enum": ["pass", "pending", "fail"]
+        },
+        "lossless": {
+          "enum": ["pass", "pending", "fail"]
+        },
+        "pixel_format": {
+          "enum": ["pass", "pending", "fail"]
+        },
+        "dimensions": {
+          "enum": ["pass", "pending", "fail"]
+        },
+        "frame_count": {
+          "enum": ["pass", "pending", "fail"]
+        },
+        "frame_rate": {
+          "enum": ["pass", "pending", "fail"]
+        },
+        "range": {
+          "enum": ["pass", "pending", "fail"]
+        },
+        "polarity": {
+          "enum": ["pass", "pending", "fail"]
+        },
+        "frame_index": {
+          "enum": ["pass", "pending", "fail"]
+        },
+        "audio": {
+          "enum": ["pass", "pending", "fail"]
+        }
+      }
+    },
+    "process_command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "arguments",
+        "working_directory",
+        "exit_code",
+        "elapsed_ms",
+        "version"
+      ],
+      "properties": {
+        "executable": {
+          "type": "string",
+          "minLength": 1
+        },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "working_directory": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exit_code": {
+          "type": "integer"
+        },
+        "elapsed_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "frame_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_frame",
+        "end_frame"
+      ],
+      "properties": {
+        "start_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_frame": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "sha256"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "worker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "contract_version",
+        "implementation_version"
+      ],
+      "properties": {
+        "name": {
+          "const": "matanyone2"
+        },
+        "contract_version": {
+          "const": "1.1"
+        },
+        "implementation_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "upstream_repository",
+        "upstream_commit",
+        "checkpoint_id",
+        "checkpoint_sha256",
+        "checkpoint_path",
+        "python",
+        "pytorch",
+        "cuda",
+        "device",
+        "access"
+      ],
+      "properties": {
+        "upstream_repository": {
+          "type": "string",
+          "format": "uri"
+        },
+        "upstream_commit": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "checkpoint_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "checkpoint_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "checkpoint_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "python": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pytorch": {
+          "type": "string"
+        },
+        "cuda": {
+          "type": "string"
+        },
+        "device": {
+          "type": "string",
+          "minLength": 1
+        },
+        "access": {
+          "enum": [
+            "pending",
+            "approved",
+            "blocked"
+          ]
+        },
+        "runtime_approval": {
+          "anyOf": [
+            {"$ref": "#/$defs/runtime_approval"},
+            {"type": "null"}
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "access": {
+                "const": "approved"
+              }
+            }
+          },
+          "then": {
+            "required": ["runtime_approval"],
+            "properties": {
+              "runtime_approval": {
+                "$ref": "#/$defs/runtime_approval"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "runtime_approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "sha256"],
+      "properties": {
+        "artifact_id": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "output_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "foreground_format",
+        "alpha_format",
+        "alpha_polarity"
+      ],
+      "properties": {
+        "foreground_format": {
+          "const": "video_rgb"
+        },
+        "alpha_format": {
+          "const": "video_gray"
+        },
+        "alpha_polarity": {
+          "const": "white_foreground"
+        }
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_size",
+        "n_warmup",
+        "r_erode",
+        "r_dilate"
+      ],
+      "properties": {
+        "max_size": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 64
+        },
+        "n_warmup": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "r_erode": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "r_dilate": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

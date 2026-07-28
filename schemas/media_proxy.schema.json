@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/media_proxy.schema.json",
+  "title": "Media Proxy Manifest",
+  "type": "object",
+  "properties": {
+    "schema_name": {"const": "media_proxy"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/identifier"},
+    "project_id": {"$ref": "#/$defs/identifier"},
+    "revision_id": {"$ref": "#/$defs/identifier"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "inputs": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/artifact_input"},
+      "minItems": 1
+    },
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "source_sha256": {"$ref": "#/$defs/sha256"},
+    "stage_key": {"$ref": "#/$defs/sha256"},
+    "kind": {"enum": ["edit", "speech"]},
+    "profile": {"type": "string", "minLength": 1},
+    "duration_us": {"$ref": "#/$defs/time_us"},
+    "output": {"$ref": "#/$defs/file_ref"},
+    "video": {
+      "anyOf": [
+        {"$ref": "#/$defs/video"},
+        {"type": "null"}
+      ]
+    },
+    "audio": {
+      "anyOf": [
+        {"$ref": "#/$defs/audio"},
+        {"type": "null"}
+      ]
+    },
+    "commands": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/process_command"},
+      "minItems": 1
+    },
+    "warnings": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "source_sha256",
+    "stage_key",
+    "kind",
+    "profile",
+    "duration_us",
+    "output",
+    "video",
+    "audio",
+    "commands",
+    "warnings"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_us": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "artifact_input": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/identifier"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["artifact_id", "sha256"],
+      "additionalProperties": false
+    },
+    "producer": {
+      "type": "object",
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      },
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "additionalProperties": false
+    },
+    "file_ref": {
+      "type": "object",
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 1}
+      },
+      "required": ["path", "sha256", "size_bytes"],
+      "additionalProperties": false
+    },
+    "rational": {
+      "type": "object",
+      "properties": {
+        "numerator": {"type": "integer", "minimum": 1},
+        "denominator": {"type": "integer", "minimum": 1}
+      },
+      "required": ["numerator", "denominator"],
+      "additionalProperties": false
+    },
+    "video": {
+      "type": "object",
+      "properties": {
+        "codec": {"type": "string", "minLength": 1},
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1},
+        "frame_rate": {"$ref": "#/$defs/rational"},
+        "pixel_format": {"type": "string", "minLength": 1}
+      },
+      "required": ["codec", "width", "height", "frame_rate", "pixel_format"],
+      "additionalProperties": false
+    },
+    "audio": {
+      "type": "object",
+      "properties": {
+        "codec": {"type": "string", "minLength": 1},
+        "sample_rate_hz": {"type": "integer", "minimum": 1},
+        "channels": {"type": "integer", "minimum": 1}
+      },
+      "required": ["codec", "sample_rate_hz", "channels"],
+      "additionalProperties": false
+    },
+    "process_command": {
+      "type": "object",
+      "properties": {
+        "executable": {"type": "string", "minLength": 1},
+        "arguments": {"type": "array", "items": {"type": "string"}},
+        "working_directory": {"type": "string", "minLength": 1},
+        "exit_code": {"type": "integer"},
+        "elapsed_ms": {"type": "integer", "minimum": 0},
+        "version": {"type": "string", "minLength": 1}
+      },
+      "required": [
+        "executable",
+        "arguments",
+        "working_directory",
+        "exit_code",
+        "elapsed_ms",
+        "version"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

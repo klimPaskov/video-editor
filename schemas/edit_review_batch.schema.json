@@ -1,0 +1,275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/edit_review_batch.schema.json",
+  "title": "Smart-Dense Edit Review Batch",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_name": { "const": "edit_review_batch" },
+    "schema_version": { "const": "1.0.0" },
+    "artifact_id": { "$ref": "#/$defs/identifier" },
+    "project_id": { "$ref": "#/$defs/identifier" },
+    "revision_id": { "$ref": "#/$defs/identifier" },
+    "created_at": { "$ref": "#/$defs/timestamp" },
+    "producer": { "$ref": "#/$defs/producer" },
+    "inputs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/artifact_input" },
+      "minItems": 1
+    },
+    "config_sha256": { "$ref": "#/$defs/sha256" },
+    "batch_id": { "$ref": "#/$defs/identifier" },
+    "proposal_set_artifact_id": { "$ref": "#/$defs/identifier" },
+    "proposal_set_sha256": { "$ref": "#/$defs/sha256" },
+    "policy_id": { "$ref": "#/$defs/identifier" },
+    "policy_version": { "type": "integer", "minimum": 1 },
+    "policy_sha256": { "$ref": "#/$defs/sha256" },
+    "policy_approval": { "$ref": "#/$defs/policy_approval" },
+    "maximum_questions_per_round": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "policy_batch": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/policy_batch_item" }
+    },
+    "questions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/question" },
+      "maxItems": 5
+    },
+    "deferred_questions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/deferred_question" }
+    },
+    "fallbacks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/fallback" }
+    },
+    "summary": { "$ref": "#/$defs/summary" },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "batch_id",
+    "proposal_set_artifact_id",
+    "proposal_set_sha256",
+    "policy_id",
+    "policy_version",
+    "policy_sha256",
+    "policy_approval",
+    "maximum_questions_per_round",
+    "policy_batch",
+    "questions",
+    "deferred_questions",
+    "fallbacks",
+    "summary",
+    "warnings"
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_us": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "time_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "start_us": { "$ref": "#/$defs/time_us" },
+        "end_us": { "$ref": "#/$defs/time_us" }
+      },
+      "required": ["start_us", "end_us"]
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "application_version": { "type": "string", "minLength": 1 },
+        "stage": { "type": "string", "minLength": 1 },
+        "adapter": { "type": "string", "minLength": 1 },
+        "adapter_version": { "type": "string", "minLength": 1 }
+      },
+      "required": ["application_version", "stage", "adapter", "adapter_version"]
+    },
+    "artifact_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/identifier" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      },
+      "required": ["artifact_id", "sha256"]
+    },
+    "policy_approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": { "enum": ["pending", "approved"] },
+        "approval_id": {
+          "anyOf": [{ "$ref": "#/$defs/identifier" }, { "type": "null" }]
+        },
+        "approval_sha256": {
+          "anyOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }]
+        }
+      },
+      "required": ["state", "approval_id", "approval_sha256"]
+    },
+    "proposal_ref": {
+      "type": "object",
+      "properties": {
+        "proposal_id": { "$ref": "#/$defs/identifier" },
+        "proposal_sha256": { "$ref": "#/$defs/sha256" },
+        "proposal_type": { "type": "string", "minLength": 1 },
+        "source_range": { "$ref": "#/$defs/time_range" },
+        "proposed_cut_range": { "$ref": "#/$defs/time_range" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "meaning_risk": { "enum": ["low", "medium", "high"] },
+        "continuity_risk": { "enum": ["low", "medium", "high"] },
+        "evidence_ids": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/identifier" }
+        },
+        "safe_fallback": { "type": "string", "minLength": 1 }
+      },
+      "required": [
+        "proposal_id",
+        "proposal_sha256",
+        "proposal_type",
+        "source_range",
+        "proposed_cut_range",
+        "confidence",
+        "meaning_risk",
+        "continuity_risk",
+        "evidence_ids",
+        "safe_fallback"
+      ]
+    },
+    "policy_batch_item": {
+      "allOf": [
+        { "$ref": "#/$defs/proposal_ref" },
+        {
+          "type": "object",
+          "properties": {
+            "execution": { "enum": ["policy_authorized", "awaiting_policy_approval"] },
+            "join_strategy": { "type": "string", "minLength": 1 },
+            "join_preview_required": { "type": "boolean" },
+            "recommendation": { "type": "string", "minLength": 1 }
+          },
+          "required": ["execution", "join_strategy", "join_preview_required", "recommendation"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "question": {
+      "allOf": [
+        { "$ref": "#/$defs/proposal_ref" },
+        {
+          "type": "object",
+          "properties": {
+            "question_id": { "$ref": "#/$defs/identifier" },
+            "priority": { "enum": ["high", "medium"] },
+            "reason": { "type": "string", "minLength": 1 },
+            "recommendation": { "type": "string", "minLength": 1 },
+            "transcript_before": { "type": "string" },
+            "transcript_inside": { "type": "string" },
+            "transcript_after": { "type": "string" },
+            "decision_options": {
+              "type": "array",
+              "items": { "enum": ["approve", "reject", "modify"] },
+              "minItems": 2,
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "question_id",
+            "priority",
+            "reason",
+            "recommendation",
+            "transcript_before",
+            "transcript_inside",
+            "transcript_after",
+            "decision_options"
+          ]
+        }
+      ]
+    },
+    "deferred_question": {
+      "allOf": [
+        { "$ref": "#/$defs/question" },
+        {
+          "type": "object",
+          "properties": {
+            "deferred_reason": { "const": "question_cap" },
+            "next_round_required": { "const": true }
+          },
+          "required": ["deferred_reason", "next_round_required"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "fallback": {
+      "allOf": [
+        { "$ref": "#/$defs/proposal_ref" },
+        {
+          "type": "object",
+          "properties": {
+            "reason": { "type": "string", "minLength": 1 },
+            "fallback_applied": { "const": "keep_original" }
+          },
+          "required": ["reason", "fallback_applied"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "total_proposals": { "type": "integer", "minimum": 0 },
+        "policy_batch_count": { "type": "integer", "minimum": 0 },
+        "policy_authorized_count": { "type": "integer", "minimum": 0 },
+        "policy_pending_count": { "type": "integer", "minimum": 0 },
+        "question_count": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "deferred_question_count": { "type": "integer", "minimum": 0 },
+        "fallback_count": { "type": "integer", "minimum": 0 },
+        "total_proposed_cut_us": { "type": "integer", "minimum": 0 },
+        "policy_batch_cut_us": { "type": "integer", "minimum": 0 },
+        "question_cut_us": { "type": "integer", "minimum": 0 },
+        "fallback_cut_us": { "type": "integer", "minimum": 0 }
+      },
+      "required": [
+        "total_proposals",
+        "policy_batch_count",
+        "policy_authorized_count",
+        "policy_pending_count",
+        "question_count",
+        "deferred_question_count",
+        "fallback_count",
+        "total_proposed_cut_us",
+        "policy_batch_cut_us",
+        "question_cut_us",
+        "fallback_cut_us"
+      ]
+    }
+  }
+}

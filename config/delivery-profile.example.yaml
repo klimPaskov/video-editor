@@ -1,0 +1,39 @@
+schema_version: 1
+profile:
+  id: youtube-1080p
+  version: 1
+  container: mp4
+
+video:
+  width: 1920
+  height: 1080
+  frame_rate:
+    numerator: 30000
+    denominator: 1001
+  codec: libx264
+  pixel_format: yuv420p
+  rate_control: crf
+  crf: 18
+  preset: medium
+
+audio:
+  codec: aac
+  sample_rate_hz: 48000
+  channels: 2
+  bitrate: 192k
+  integrated_loudness_lufs: -14.0
+  true_peak_dbtp: -1.0
+  loudness_range_lu: 11.0
+
+qa:
+  maximum_av_drift_ms: 50
+  duration_tolerance_frames: 1
+  full_decode_required: true
+  captions_required: true
+  provenance_required: true
+
+safe_areas:
+  caption_left_percent: 8
+  caption_right_percent: 8
+  caption_top_percent: 6
+  caption_bottom_percent: 10

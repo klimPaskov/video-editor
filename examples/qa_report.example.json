@@ -1,0 +1,56 @@
+{
+  "schema_name": "qa_report",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_qa",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-22T10:00:00Z",
+  "producer": {
+    "application_version": "0.1.0",
+    "stage": "example",
+    "adapter": "fixture",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_render_preview",
+      "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    }
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "render_artifact_id": "art_render_preview",
+  "profile_id": "pro_youtube_1080p",
+  "overall_status": "pass",
+  "final_ready": true,
+  "findings": [
+    {
+      "finding_id": "qaf_decode",
+      "check_code": "MEDIA_DECODE",
+      "status": "pass",
+      "severity": "info",
+      "message": "Full output decoded successfully",
+      "time_range": null,
+      "evidence": {
+        "frames_decoded": 109
+      },
+      "repair_hint": null,
+      "required": true
+    },
+    {
+      "finding_id": "qaf_sync",
+      "check_code": "AV_SYNC",
+      "status": "pass",
+      "severity": "info",
+      "message": "Measured drift is within the profile threshold",
+      "time_range": null,
+      "evidence": {
+        "measured_ms": 12,
+        "maximum_ms": 50
+      },
+      "repair_hint": null,
+      "required": true
+    }
+  ],
+  "required_failures": 0,
+  "warnings_count": 0
+}

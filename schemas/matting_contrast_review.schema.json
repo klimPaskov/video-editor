@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/matting_contrast_review.schema.json",
+  "title": "Matting contrasting-background review package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "source",
+    "result",
+    "source_range",
+    "review_frame_indices",
+    "source_contact_sheet",
+    "previews",
+    "validation",
+    "status",
+    "warnings",
+    "commands"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "matting_contrast_review"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/id"
+    },
+    "project_id": {
+      "$ref": "#/$defs/id"
+    },
+    "revision_id": {
+      "type": "string",
+      "pattern": "^rev_[0-9]{3,}$"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "producer": {
+      "$ref": "#/$defs/producer"
+    },
+    "source": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "result": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "source_range": {
+      "$ref": "#/$defs/frame_range"
+    },
+    "review_frame_indices": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "source_contact_sheet": {
+      "$ref": "#/$defs/file_ref"
+    },
+    "previews": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "black",
+        "white"
+      ],
+      "properties": {
+        "black": {
+          "$ref": "#/$defs/preview"
+        },
+        "white": {
+          "$ref": "#/$defs/preview"
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_schema",
+        "source_identity",
+        "source_decode",
+        "foreground_alpha_structure",
+        "black_decode",
+        "white_decode",
+        "dimensions",
+        "frame_count",
+        "frame_rate",
+        "duration",
+        "preview_distinct",
+        "source_contact_sheet",
+        "background_comparison",
+        "operator_review"
+      ],
+      "properties": {
+        "result_schema": {
+          "$ref": "#/$defs/check"
+        },
+        "source_identity": {
+          "$ref": "#/$defs/check"
+        },
+        "source_decode": {
+          "$ref": "#/$defs/check"
+        },
+        "foreground_alpha_structure": {
+          "$ref": "#/$defs/check"
+        },
+        "black_decode": {
+          "$ref": "#/$defs/check"
+        },
+        "white_decode": {
+          "$ref": "#/$defs/check"
+        },
+        "dimensions": {
+          "$ref": "#/$defs/check"
+        },
+        "frame_count": {
+          "$ref": "#/$defs/check"
+        },
+        "frame_rate": {
+          "$ref": "#/$defs/check"
+        },
+        "duration": {
+          "$ref": "#/$defs/check"
+        },
+        "preview_distinct": {
+          "$ref": "#/$defs/check"
+        },
+        "source_contact_sheet": {
+          "$ref": "#/$defs/check"
+        },
+        "background_comparison": {
+          "$ref": "#/$defs/check"
+        },
+        "operator_review": {
+          "$ref": "#/$defs/check"
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "pass",
+        "fail"
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/command"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "source_range": {
+            "type": "object"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "source_range": {
+            "required": [
+              "start_frame",
+              "end_frame"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "application_version",
+        "stage",
+        "adapter",
+        "adapter_version"
+      ],
+      "properties": {
+        "application_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "frame_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_frame",
+        "end_frame"
+      ],
+      "properties": {
+        "start_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_frame": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "preview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "background_color",
+        "preview",
+        "contact_sheet"
+      ],
+      "properties": {
+        "background_color": {
+          "enum": [
+            "black",
+            "white"
+          ]
+        },
+        "preview": {
+          "$ref": "#/$defs/file_ref"
+        },
+        "contact_sheet": {
+          "$ref": "#/$defs/file_ref"
+        }
+      }
+    },
+    "check": {
+      "enum": [
+        "pending",
+        "pass",
+        "fail"
+      ]
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executable",
+        "arguments",
+        "working_directory",
+        "exit_code",
+        "elapsed_ms",
+        "version"
+      ],
+      "properties": {
+        "executable": {
+          "type": "string",
+          "minLength": 1
+        },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "working_directory": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exit_code": {
+          "type": "integer"
+        },
+        "elapsed_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

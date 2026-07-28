@@ -1,0 +1,43 @@
+{
+  "schema_name": "asset_manifest",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_asset_manifest",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-23T10:10:00Z",
+  "catalog_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+  "catalog_id": "catalog_local",
+  "selection_key": "3333333333333333333333333333333333333333333333333333333333333333",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "asset-manifest",
+    "adapter": "licensed-local-catalog",
+    "adapter_version": "0.2.0:asset-manifest-v1"
+  },
+  "inputs": [
+    {"artifact_id": "catalog_local", "sha256": "2222222222222222222222222222222222222222222222222222222222222222"},
+    {"artifact_id": "art_cue_plan_bundle", "sha256": "4444444444444444444444444444444444444444444444444444444444444444"}
+  ],
+  "assets": [
+    {
+      "asset_id": "asset_apple",
+      "asset_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "role": "tracked_object_replacement",
+      "source_range_us": {"start_us": 4000000, "end_us": 6500000},
+      "output_range_us": {"start_us": 3100000, "end_us": 5600000},
+      "effect_ids": ["effect_replace_ball"],
+      "approval_ids": ["apr_gate1_001"],
+      "licence_reference": "licence/commission-2026-04.pdf",
+      "attribution_text": null,
+      "asset_type": "replacement_object",
+      "licence_status": "owned",
+      "source": "Commissioned brand asset",
+      "description": "Transparent red apple replacement image",
+      "tags": ["apple", "fruit", "replacement"],
+      "permitted_uses": ["commercial video", "social media"],
+      "sensitive_content": [],
+      "usage_history": []
+    }
+  ],
+  "warnings": []
+}

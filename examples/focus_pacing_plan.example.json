@@ -1,0 +1,144 @@
+{
+  "schema_name": "focus_pacing_plan",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_focus_pacing",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-23T10:00:00Z",
+  "producer": {
+    "application_version": "0.2.1",
+    "stage": "focus-pacing-plan",
+    "adapter": "fixture",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_transcript",
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "artifact_id": "art_effect_plan",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  ],
+  "config_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+  "operator_request": {
+    "speedups_requested": true,
+    "request_source": "project_brief",
+    "request_text": "Speed up visible prompt-writing sections only."
+  },
+  "zooms": [
+    {
+      "zoom_id": "zoom_prompt_box",
+      "purpose": "prompt_box",
+      "source_range": {
+        "start_us": 8400000,
+        "end_us": 12100000
+      },
+      "target_visible_range": {
+        "start_us": 8200000,
+        "end_us": 12300000
+      },
+      "zoom_in_end_us": 8900000,
+      "zoom_out_start_us": 11650000,
+      "target_description": "Visible prompt editor in the opened application window",
+      "target_track": [
+        {
+          "time_us": 8400000,
+          "bbox": {
+            "x": 0.42,
+            "y": 0.18,
+            "width": 0.52,
+            "height": 0.64
+          }
+        },
+        {
+          "time_us": 11650000,
+          "bbox": {
+            "x": 0.42,
+            "y": 0.18,
+            "width": 0.52,
+            "height": 0.64
+          }
+        }
+      ],
+      "start_scale": 1.0,
+      "peak_scale": 1.35,
+      "centering_mode": "visible_target_center",
+      "easing": "smooth_ease_in_out",
+      "stabilization": "locked_smooth_target",
+      "allow_free_pan": false,
+      "reason": "Make the visible prompt box readable while it is being used.",
+      "confidence": {
+        "target_visibility": 0.99,
+        "target_identity": 0.99,
+        "boundary": 0.97,
+        "stability": 0.99,
+        "overall": 0.985
+      },
+      "policy_result": "auto_eligible",
+      "approval_required": false,
+      "fallback": "no_zoom",
+      "evidence_frames": [
+        "review/focus/zoom_prompt_box_start.jpg",
+        "review/focus/zoom_prompt_box_end.jpg"
+      ],
+      "warnings": []
+    }
+  ],
+  "speedups": [
+    {
+      "speedup_id": "speed_prompt_write",
+      "action_type": "prompt_writing",
+      "source_range": {
+        "start_us": 9100000,
+        "end_us": 11500000
+      },
+      "request_source": "project_brief",
+      "request_text": "Speed up visible prompt-writing sections only.",
+      "playback_rate": 2.5,
+      "audio_mode": "audible_pitch_preserved",
+      "audio_exception_explicit": false,
+      "action_visible": true,
+      "exact_action_boundaries": true,
+      "forbidden_content_check": {
+        "contains_browsing": false,
+        "contains_reading": false,
+        "contains_waiting": false,
+        "contains_other_action": false,
+        "contains_navigation": false,
+        "contains_result_inspection": false,
+        "contains_loading": false,
+        "contains_cursor_wandering": false
+      },
+      "start_evidence_frame": "review/pacing/speed_prompt_write_start.jpg",
+      "end_evidence_frame": "review/pacing/speed_prompt_write_end.jpg",
+      "action_visibility_confidence": 0.99,
+      "boundary_confidence": 0.98,
+      "overall_confidence": 0.985,
+      "policy_result": "auto_eligible",
+      "approval_required": false,
+      "fallback": "normal_speed",
+      "reason": "Condense only the visible prompt-writing action while retaining audible sound.",
+      "warnings": []
+    }
+  ],
+  "skipped_zoom_candidates": [
+    {
+      "candidate_id": "skip_no_target",
+      "source_range": {
+        "start_us": 15000000,
+        "end_us": 17000000
+      },
+      "reason": "No single visible target is important enough to justify a zoom.",
+      "fallback": "no_zoom"
+    }
+  ],
+  "review_policy": {
+    "batch_uncertain_items": true,
+    "maximum_questions_per_round": 5,
+    "use_safe_fallbacks": true,
+    "include_recommendation": true
+  },
+  "warnings": []
+}

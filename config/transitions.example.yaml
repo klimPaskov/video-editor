@@ -1,0 +1,97 @@
+schema_version: 1
+transition_policy:
+  id: purposeful_structural
+  version: 1
+  default_fallback: hard_cut
+  routine_cleanup_transition: hard_cut
+  forbid_random_timing_or_target: true
+  require_structural_boundary: true
+  maximum_motion_transitions_per_minute: 1
+  minimum_motion_transition_spacing_seconds: 12
+
+allowed_purposes:
+  - new_point
+  - new_chapter
+  - mode_change
+  - talking_head_to_major_demo
+  - major_demo_to_talking_head
+  - comparison
+  - before_after
+  - location_change
+  - return_from_visual_explanation
+
+styles:
+  hard_cut:
+    minimum_duration_ms: 0
+    maximum_duration_ms: 0
+    sound: none
+  j_cut:
+    minimum_duration_ms: 80
+    maximum_duration_ms: 500
+    sound: none
+  l_cut:
+    minimum_duration_ms: 80
+    maximum_duration_ms: 500
+    sound: none
+  short_crossfade:
+    minimum_duration_ms: 120
+    maximum_duration_ms: 300
+    sound: optional
+  dip_to_color:
+    minimum_duration_ms: 220
+    maximum_duration_ms: 500
+    sound: optional
+  swipe_left:
+    minimum_duration_ms: 220
+    maximum_duration_ms: 480
+    sound: required
+  swipe_right:
+    minimum_duration_ms: 220
+    maximum_duration_ms: 480
+    sound: required
+  push_left:
+    minimum_duration_ms: 240
+    maximum_duration_ms: 520
+    sound: required
+  push_right:
+    minimum_duration_ms: 240
+    maximum_duration_ms: 520
+    sound: required
+  blur_swipe:
+    minimum_duration_ms: 260
+    maximum_duration_ms: 520
+    sound: required
+  chapter_transition:
+    minimum_duration_ms: 320
+    maximum_duration_ms: 750
+    sound: required
+
+timing:
+  easing: smooth_ease_in_out
+  require_full_frame_coverage: true
+  preserve_first_readable_incoming_frame: true
+  minimum_dialogue_clearance_ms: 60
+  do_not_mask_first_incoming_word: true
+  maximum_transition_overlap_with_important_ui_ms: 0
+
+sound:
+  catalog_required: true
+  align_transient_to_visual_peak: true
+  speech_priority: true
+  default_gain_db: -16
+  maximum_gain_db: -8
+  default_fade_in_ms: 15
+  default_fade_out_ms: 70
+  true_peak_limit_dbtp: -1.0
+  default_minimum_reuse_interval_seconds: 45
+
+confidence:
+  auto_eligible_min: 0.95
+  review_min: 0.82
+  low_confidence_fallback: hard_cut
+  require_components:
+    - structural_boundary
+    - timing
+    - visual_fit
+    - dialogue_safety
+    - sound_sync

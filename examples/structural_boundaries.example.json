@@ -1,0 +1,52 @@
+{
+  "schema_name": "structural_boundaries",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_structural_boundaries",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-23T12:00:00Z",
+  "producer": {
+    "application_version": "0.1.0",
+    "stage": "boundary_detection",
+    "adapter": "fixture",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_transcript",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "timeline_basis": "output",
+  "boundaries": [
+    {
+      "boundary_id": "bnd_new_point_001",
+      "boundary_us": 2400000,
+      "outgoing_segment_id": "seg_intro",
+      "incoming_segment_id": "seg_demo",
+      "purpose": "new_point",
+      "transcript_evidence": "The incoming segment begins with a clear new-point marker.",
+      "visual_evidence": "The incoming segment is an approved major demonstration.",
+      "evidence_ids": ["ev_boundary_001"],
+      "first_incoming_word_us": 2790000,
+      "last_outgoing_word_us": 2310000,
+      "preferred_transition_type": "swipe_left",
+      "direction": "left",
+      "desired_duration_us": 300000,
+      "easing": "smooth_ease_in_out",
+      "full_frame_coverage": true,
+      "confidence_components": {
+        "structural_boundary": 0.98,
+        "timing": 0.97,
+        "visual_fit": 0.96,
+        "dialogue_safety": 0.99,
+        "sound_sync": 0.97
+      },
+      "confidence": 0.96,
+      "explicit": true,
+      "status": "verified"
+    }
+  ],
+  "warnings": []
+}

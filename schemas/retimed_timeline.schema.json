@@ -1,0 +1,312 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/retimed_timeline.schema.json",
+  "title": "Retimed Canonical Timeline",
+  "type": "object",
+  "properties": {
+    "schema_name": {
+      "const": "retimed_timeline"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "project_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "revision_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "producer": {
+      "$ref": "#/$defs/producer"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifact_input"
+      }
+    },
+    "config_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "edit_decision_list_artifact_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "edit_decision_list_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "focus_pacing_plan_artifact_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "focus_pacing_plan_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_duration_us": {
+      "$ref": "#/$defs/time_us"
+    },
+    "output_duration_us": {
+      "$ref": "#/$defs/time_us"
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/retimed_segment"
+      },
+      "minItems": 1
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "edit_decision_list_artifact_id",
+    "edit_decision_list_sha256",
+    "focus_pacing_plan_artifact_id",
+    "focus_pacing_plan_sha256",
+    "source_duration_us",
+    "output_duration_us",
+    "segments",
+    "warnings"
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_us": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "time_range": {
+      "type": "object",
+      "properties": {
+        "start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "end_us": {
+          "$ref": "#/$defs/time_us"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "start_us",
+        "end_us"
+      ]
+    },
+    "artifact_input": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "sha256"
+      ]
+    },
+    "producer": {
+      "type": "object",
+      "properties": {
+        "application_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "application_version",
+        "stage",
+        "adapter",
+        "adapter_version"
+      ]
+    },
+    "retimed_segment": {
+      "type": "object",
+      "properties": {
+        "segment_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "operation": {
+          "enum": [
+            "keep",
+            "prompt_speedup"
+          ]
+        },
+        "source_range": {
+          "$ref": "#/$defs/time_range"
+        },
+        "output_range": {
+          "$ref": "#/$defs/time_range"
+        },
+        "playback_rate": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "audio_mode": {
+          "enum": [
+            "source",
+            "audible_pitch_preserved",
+            "audible",
+            "muted"
+          ]
+        },
+        "speedup_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/identifier"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "command_strategy": {
+          "enum": [
+            "passthrough",
+            "ffmpeg_trim_setpts_atempo"
+          ]
+        },
+        "boundary_confidence": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "segment_id",
+        "operation",
+        "source_range",
+        "output_range",
+        "playback_rate",
+        "audio_mode",
+        "speedup_id",
+        "command_strategy",
+        "boundary_confidence"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "keep"
+              }
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "playback_rate": {
+                "const": 1
+              },
+              "audio_mode": {
+                "const": "source"
+              },
+              "speedup_id": {
+                "type": "null"
+              },
+              "command_strategy": {
+                "const": "passthrough"
+              },
+              "boundary_confidence": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "operation": {
+                "const": "prompt_speedup"
+              }
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "playback_rate": {
+                "type": "number",
+                "exclusiveMinimum": 1,
+                "maximum": 8
+              },
+              "audio_mode": {
+                "enum": [
+                  "audible_pitch_preserved",
+                  "audible",
+                  "muted"
+                ]
+              },
+              "speedup_id": {
+                "$ref": "#/$defs/identifier"
+              },
+              "command_strategy": {
+                "const": "ffmpeg_trim_setpts_atempo"
+              },
+              "boundary_confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

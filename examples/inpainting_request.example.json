@@ -1,0 +1,84 @@
+{
+  "schema_name": "inpainting_request",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_inpainting_request",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-24T10:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "optional-inpainting",
+    "adapter": "inpainting-boundary",
+    "adapter_version": "1.0.0"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_source",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "artifact_id": "art_mask",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    {
+      "artifact_id": "art_mask_validation",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "request_id": "inp_request_001",
+  "idempotency_key": "prj_demo-rev_001-inpainting-001",
+  "provider": "disabled",
+  "model": "operator-configured",
+  "prompt": "Fill the reviewed object region with surrounding background texture.",
+  "source": {
+    "path": "projects/prj_demo/raw/shot.mp4",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "size_bytes": 1000000
+  },
+  "mask": {
+    "path": "projects/prj_demo/work/mask.mkv",
+    "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "size_bytes": 200000
+  },
+  "mask_validation": {
+    "path": "projects/prj_demo/work/mask-validation.json",
+    "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "size_bytes": 3000
+  },
+  "source_video": {
+    "codec": "h264",
+    "width": 1280,
+    "height": 720,
+    "frame_rate": {"numerator": 30, "denominator": 1},
+    "pixel_format": "yuv420p",
+    "frame_count": 30,
+    "duration_us": 1000000
+  },
+  "mask_video": {
+    "codec": "ffv1",
+    "width": 1280,
+    "height": 720,
+    "frame_rate": {"numerator": 30, "denominator": 1},
+    "pixel_format": "gray",
+    "frame_count": 30,
+    "duration_us": 1000000,
+    "lossless": true
+  },
+  "source_range": {"start_frame": 0, "end_frame": 30},
+  "fallback": {
+    "mode": "original_shot",
+    "on_uncertain": "keep_original",
+    "original_visible": true
+  },
+  "network": {"enabled": false, "mode": "disabled"},
+  "status": "awaiting_approval",
+  "request_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "approvals": {"effect": null, "spend": null},
+  "estimated_cost": null,
+  "output": null,
+  "warnings": [
+    "optional_provider_disabled_by_default",
+    "original_shot_is_required_fallback"
+  ]
+}

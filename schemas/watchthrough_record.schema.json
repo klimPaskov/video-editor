@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/watchthrough_record.schema.json",
+  "title": "Final Candidate Watch-Through Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_name", "schema_version", "artifact_id", "project_id", "revision_id", "created_at", "candidate", "protocol", "actor", "role", "status", "decision", "notes", "evidence"],
+  "properties": {
+    "schema_name": {"const": "watchthrough_record"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/revision"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "candidate": {"$ref": "#/$defs/file_ref"},
+    "protocol": {"enum": ["full_watch_through", "approved_equivalent"]},
+    "actor": {"type": "string", "minLength": 1},
+    "role": {"type": "string", "minLength": 1},
+    "status": {"enum": ["complete", "incomplete", "failed"]},
+    "decision": {"enum": ["pass", "fail"]},
+    "notes": {"type": "string"},
+    "evidence": {"type": "array", "items": {"$ref": "#/$defs/file_ref"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "revision": {"type": "string", "pattern": "^rev_[0-9]{3,}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "sha256", "size_bytes"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema_name": "segment_transcript_excerpt",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_segment_transcript_example",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "segment_id": "segment_000001",
+  "created_at": "2026-07-24T12:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "segment-review",
+    "adapter": "fixture",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {"artifact_id": "segment_preview_transcript", "sha256": "1111111111111111111111111111111111111111111111111111111111111111"}
+  ],
+  "preview_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+  "source_range": {"start_us": 0, "end_us": 2000000},
+  "transcript_segment_ids": [],
+  "text": "",
+  "words": [],
+  "warnings": ["no_words_in_segment_range"],
+  "status": "warning"
+}

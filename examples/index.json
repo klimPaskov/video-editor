@@ -1,0 +1,308 @@
+{
+  "examples": [
+    {
+      "example": "approval_record.example.json",
+      "schema": "../schemas/approval_record.schema.json"
+    },
+    {
+      "example": "asset_catalog.example.json",
+      "schema": "../schemas/asset_catalog.schema.json"
+    },
+    {
+      "example": "asset_manifest.example.json",
+      "schema": "../schemas/asset_manifest.schema.json"
+    },
+    {
+      "example": "asset_search_result.example.json",
+      "schema": "../schemas/asset_search_result.schema.json"
+    },
+    {
+      "example": "backup_verification.example.json",
+      "schema": "../schemas/backup_verification.schema.json"
+    },
+    {
+      "example": "broll_plan.example.json",
+      "schema": "../schemas/broll_plan.schema.json"
+    },
+    {
+      "example": "caption_plan.example.json",
+      "schema": "../schemas/caption_plan.schema.json"
+    },
+    {
+      "example": "cleanup_plan.example.json",
+      "schema": "../schemas/cleanup_plan.schema.json"
+    },
+    {
+      "example": "codex_phase_result.example.json",
+      "schema": "../schemas/codex_phase_result.schema.json"
+    },
+    {
+      "example": "composition_plan.example.json",
+      "schema": "../schemas/composition_plan.schema.json"
+    },
+    {
+      "example": "cue_plan_bundle.example.json",
+      "schema": "../schemas/cue_plan_bundle.schema.json"
+    },
+    {
+      "example": "delivery_manifest.example.json",
+      "schema": "../schemas/delivery_manifest.schema.json"
+    },
+    {
+      "example": "final_assembly_manifest.example.json",
+      "schema": "../schemas/final_assembly_manifest.schema.json"
+    },
+    {
+      "example": "final_qa_report.example.json",
+      "schema": "../schemas/final_qa_report.schema.json"
+    },
+    {
+      "example": "qa_override.example.json",
+      "schema": "../schemas/qa_override.schema.json"
+    },
+    {
+      "example": "qa_review_packet.example.json",
+      "schema": "../schemas/qa_review_packet.schema.json"
+    },
+    {
+      "example": "qa_review_decision.example.json",
+      "schema": "../schemas/qa_review_decision.schema.json"
+    },
+    {
+      "example": "qa_review_visual_evidence.example.json",
+      "schema": "../schemas/qa_review_visual_evidence.schema.json"
+    },
+    {
+      "example": "watchthrough_record.example.json",
+      "schema": "../schemas/watchthrough_record.schema.json"
+    },
+    {
+      "example": "gate3_approval.example.json",
+      "schema": "../schemas/gate3_approval.schema.json"
+    },
+    {
+      "example": "publishing_metadata.example.json",
+      "schema": "../schemas/publishing_metadata.schema.json"
+    },
+    {
+      "example": "checksum_manifest.example.json",
+      "schema": "../schemas/checksum_manifest.schema.json"
+    },
+    {
+      "example": "operation_status.example.json",
+      "schema": "../schemas/operation_status.schema.json"
+    },
+    {
+      "example": "retry_request.example.json",
+      "schema": "../schemas/retry_request.schema.json"
+    },
+    {
+      "example": "edit_decision_list.example.json",
+      "schema": "../schemas/edit_decision_list.schema.json"
+    },
+    {
+      "example": "edit_proposals.example.json",
+      "schema": "../schemas/edit_proposals.schema.json"
+    },
+    {
+      "example": "edit_review_decisions.example.json",
+      "schema": "../schemas/edit_review_decisions.schema.json"
+    },
+    {
+      "example": "edit_review_batch.example.json",
+      "schema": "../schemas/edit_review_batch.schema.json"
+    },
+    {
+      "example": "edit_metrics_qa.example.json",
+      "schema": "../schemas/edit_metrics_qa.schema.json"
+    },
+    {
+      "example": "effect_plan.example.json",
+      "schema": "../schemas/effect_plan.schema.json"
+    },
+    {
+      "example": "focus_pacing_plan.example.json",
+      "schema": "../schemas/focus_pacing_plan.schema.json"
+    },
+    {
+      "example": "join_qa_report.example.json",
+      "schema": "../schemas/join_qa_report.schema.json"
+    },
+    {
+      "example": "join_plan.example.json",
+      "schema": "../schemas/join_plan.schema.json"
+    },
+    {
+      "example": "inpainting_request.example.json",
+      "schema": "../schemas/inpainting_request.schema.json"
+    },
+    {
+      "example": "matting_job.example.json",
+      "schema": "../schemas/matting_job.schema.json"
+    },
+    {
+      "example": "matting_job_v1_1.example.json",
+      "schema": "../schemas/matting_job.schema.json"
+    },
+    {
+      "example": "matting_result.example.json",
+      "schema": "../schemas/matting_result.schema.json"
+    },
+    {
+      "example": "matting_result_v1_1.example.json",
+      "schema": "../schemas/matting_result.schema.json"
+    },
+    {
+      "example": "matting_contrast_review.example.json",
+      "schema": "../schemas/matting_contrast_review.schema.json"
+    },
+    {
+      "example": "matting_quality_review.example.json",
+      "schema": "../schemas/matting_quality_review.schema.json"
+    },
+    {
+      "example": "object_track_keyframes.example.json",
+      "schema": "../schemas/object_track_keyframes.schema.json"
+    },
+    {
+      "example": "object_track_review.example.json",
+      "schema": "../schemas/object_track_review.schema.json"
+    },
+    {
+      "example": "object_replacement_manifest.example.json",
+      "schema": "../schemas/object_replacement_manifest.schema.json"
+    },
+    {
+      "example": "occluder_manifest.example.json",
+      "schema": "../schemas/occluder_manifest.schema.json"
+    },
+    {
+      "example": "media_probe.example.json",
+      "schema": "../schemas/media_probe.schema.json"
+    },
+    {
+      "example": "motion_plan.example.json",
+      "schema": "../schemas/motion_plan.schema.json"
+    },
+    {
+      "example": "project_manifest.example.json",
+      "schema": "../schemas/project_manifest.schema.json"
+    },
+    {
+      "example": "provider_job.example.json",
+      "schema": "../schemas/provider_job.schema.json"
+    },
+    {
+      "example": "qa_report.example.json",
+      "schema": "../schemas/qa_report.schema.json"
+    },
+    {
+      "example": "render_manifest.example.json",
+      "schema": "../schemas/render_manifest.schema.json"
+    },
+    {
+      "example": "retimed_timeline.example.json",
+      "schema": "../schemas/retimed_timeline.schema.json"
+    },
+    {
+      "example": "segment_review.example.json",
+      "schema": "../schemas/segment_review.schema.json"
+    },
+    {
+      "example": "segment_preview.example.json",
+      "schema": "../schemas/segment_preview.schema.json"
+    },
+    {
+      "example": "segment_transcript_excerpt.example.json",
+      "schema": "../schemas/segment_transcript_excerpt.schema.json"
+    },
+    {
+      "example": "segment_effect_summary.example.json",
+      "schema": "../schemas/segment_effect_summary.schema.json"
+    },
+    {
+      "example": "segment_diagnostics.example.json",
+      "schema": "../schemas/segment_diagnostics.schema.json"
+    },
+    {
+      "example": "segment_review_package.example.json",
+      "schema": "../schemas/segment_review_package.schema.json"
+    },
+    {
+      "example": "review_markers.example.json",
+      "schema": "../schemas/review_markers.schema.json"
+    },
+    {
+      "example": "revision_request.example.json",
+      "schema": "../schemas/revision_request.schema.json"
+    },
+    {
+      "example": "revision_media_manifest.example.json",
+      "schema": "../schemas/revision_media_manifest.schema.json"
+    },
+    {
+      "example": "segment_transcript_comparison.example.json",
+      "schema": "../schemas/segment_transcript_comparison.schema.json"
+    },
+    {
+      "example": "segment_qa_report.example.json",
+      "schema": "../schemas/segment_qa_report.schema.json"
+    },
+    {
+      "example": "segment_visual_qa_report.example.json",
+      "schema": "../schemas/segment_visual_qa_report.schema.json"
+    },
+    {
+      "example": "segment_lock.example.json",
+      "schema": "../schemas/segment_lock.schema.json"
+    },
+    {
+      "example": "segmentation_job.example.json",
+      "schema": "../schemas/segmentation_job.schema.json"
+    },
+    {
+      "example": "segmentation_result.example.json",
+      "schema": "../schemas/segmentation_result.schema.json"
+    },
+    {
+      "example": "worker_runtime_approval.example.json",
+      "schema": "../schemas/worker_runtime_approval.schema.json"
+    },
+    {
+      "example": "silence_intervals.example.json",
+      "schema": "../schemas/silence_intervals.schema.json"
+    },
+    {
+      "example": "sound_plan.example.json",
+      "schema": "../schemas/sound_plan.schema.json"
+    },
+    {
+      "example": "sound_mix_qa.example.json",
+      "schema": "../schemas/sound_mix_qa.schema.json"
+    },
+    {
+      "example": "structural_boundaries.example.json",
+      "schema": "../schemas/structural_boundaries.schema.json"
+    },
+    {
+      "example": "source_manifest.example.json",
+      "schema": "../schemas/source_manifest.schema.json"
+    },
+    {
+      "example": "transcript.example.json",
+      "schema": "../schemas/transcript.schema.json"
+    },
+    {
+      "example": "transition_plan.example.json",
+      "schema": "../schemas/transition_plan.schema.json"
+    },
+    {
+      "example": "transition_sound_qa.example.json",
+      "schema": "../schemas/transition_sound_qa.schema.json"
+    },
+    {
+      "example": "visual_timeline.example.json",
+      "schema": "../schemas/visual_timeline.schema.json"
+    }
+  ]
+}

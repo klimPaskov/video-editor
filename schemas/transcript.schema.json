@@ -1,0 +1,426 @@
+{
+  "type": "object",
+  "properties": {
+    "schema_name": {
+      "const": "transcript"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "project_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "revision_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "producer": {
+      "$ref": "#/$defs/producer"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifact_input"
+      }
+    },
+    "config_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_duration_us": {
+      "$ref": "#/$defs/time_us"
+    },
+    "output_duration_us": {
+      "$ref": "#/$defs/time_us"
+    },
+    "rebased_from_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_to_output_mapping": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/mapping_range"
+      }
+    },
+    "language": {
+      "type": "string",
+      "minLength": 2
+    },
+    "model": {
+      "type": "string",
+      "minLength": 1
+    },
+    "text": {
+      "type": "string"
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/transcript_segment"
+      }
+    },
+    "words": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/transcript_word"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "model_identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "device": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "confidence_summary": {
+      "type": "object",
+      "properties": {
+        "word_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mean_word_probability": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "minimum_word_probability": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "low_confidence_word_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "uncertain_word_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "speaker_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "word_count",
+        "mean_word_probability",
+        "minimum_word_probability",
+        "low_confidence_word_ids",
+        "uncertain_word_count",
+        "speaker_count"
+      ]
+    },
+    "raw_result": {
+      "type": "object"
+    },
+    "status": {
+      "enum": [
+        "complete",
+        "warning"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "source_duration_us",
+    "language",
+    "model",
+    "text",
+    "segments",
+    "words",
+    "warnings"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/transcript.schema.json",
+  "title": "Canonical Transcript",
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_us": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "time_range": {
+      "type": "object",
+      "properties": {
+        "start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "end_us": {
+          "$ref": "#/$defs/time_us"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "start_us",
+        "end_us"
+      ]
+    },
+    "rational": {
+      "type": "object",
+      "properties": {
+        "numerator": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "denominator": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "numerator",
+        "denominator"
+      ]
+    },
+    "artifact_input": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "sha256"
+      ]
+    },
+    "producer": {
+      "type": "object",
+      "properties": {
+        "application_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "application_version",
+        "stage",
+        "adapter",
+        "adapter_version"
+      ]
+    },
+    "file_ref": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ]
+    },
+    "money": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)(\\.[0-9]{1,4})?$"
+    },
+    "mapping_range": {
+      "type": "object",
+      "properties": {
+        "source_start_us": {"$ref": "#/$defs/time_us"},
+        "source_end_us": {"$ref": "#/$defs/time_us"},
+        "output_start_us": {"$ref": "#/$defs/time_us"},
+        "output_end_us": {"$ref": "#/$defs/time_us"}
+      },
+      "additionalProperties": false,
+      "required": [
+        "source_start_us",
+        "source_end_us",
+        "output_start_us",
+        "output_end_us"
+      ]
+    },
+    "transcript_word": {
+      "type": "object",
+      "properties": {
+        "word_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "segment_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "end_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "probability": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timing_status": {
+          "enum": [
+            "original",
+            "adjusted",
+            "uncertain"
+          ]
+        },
+        "source_start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "source_end_us": {
+          "$ref": "#/$defs/time_us"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "word_id",
+        "segment_id",
+        "text",
+        "start_us",
+        "end_us",
+        "probability",
+        "timing_status"
+      ]
+    },
+    "transcript_segment": {
+      "type": "object",
+      "properties": {
+        "segment_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "text": {
+          "type": "string"
+        },
+        "start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "end_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "word_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "average_log_probability": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "no_speech_probability": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "segment_id",
+        "text",
+        "start_us",
+        "end_us",
+        "word_ids",
+        "average_log_probability",
+        "no_speech_probability"
+      ]
+    }
+  }
+}

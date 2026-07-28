@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/project_revision.schema.json",
+  "title": "Project Revision",
+  "type": "object",
+  "properties": {
+    "schema_name": {"const": "project_revision"},
+    "schema_version": {"const": "1.0.0"},
+    "project_id": {"$ref": "#/$defs/identifier"},
+    "revision_id": {"$ref": "#/$defs/identifier"},
+    "parent_revision_id": {
+      "anyOf": [
+        {"$ref": "#/$defs/identifier"},
+        {"type": "null"}
+      ]
+    },
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "active": {"type": "boolean"},
+    "directories": {
+      "type": "object",
+      "properties": {
+        "artifacts": {"type": "string", "minLength": 1},
+        "review": {"type": "string", "minLength": 1},
+        "work": {"type": "string", "minLength": 1},
+        "output": {"type": "string", "minLength": 1}
+      },
+      "required": ["artifacts", "review", "work", "output"],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "project_id",
+    "revision_id",
+    "parent_revision_id",
+    "created_at",
+    "active",
+    "directories"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

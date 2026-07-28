@@ -1,0 +1,290 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/asset_catalog.schema.json",
+  "title": "Licensed Local Asset Catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "catalog_id",
+    "created_at",
+    "updated_at",
+    "root_path",
+    "assets"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "asset_catalog"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "catalog_id": {
+      "$ref": "#/$defs/id"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "root_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/asset"
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "mime_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "width": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "height": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "duration_us": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "project_id",
+        "revision_id",
+        "used_at",
+        "role"
+      ],
+      "properties": {
+        "project_id": {
+          "$ref": "#/$defs/id"
+        },
+        "revision_id": {
+          "$ref": "#/$defs/id"
+        },
+        "used_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "asset_id",
+        "asset_type",
+        "file",
+        "description",
+        "tags",
+        "source",
+        "licence_status",
+        "licence_reference",
+        "permitted_uses",
+        "attribution",
+        "sensitive_content",
+        "usage_history"
+      ],
+      "properties": {
+        "asset_id": {
+          "$ref": "#/$defs/id"
+        },
+        "asset_type": {
+          "enum": [
+            "font",
+            "image",
+            "background",
+            "replacement_object",
+            "broll",
+            "sound_effect",
+            "music",
+            "logo",
+            "intro",
+            "outro"
+          ]
+        },
+        "file": {
+          "$ref": "#/$defs/file_ref"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "licence_status": {
+          "enum": [
+            "owned",
+            "licensed",
+            "public_domain",
+            "generated_with_recorded_terms"
+          ]
+        },
+        "licence_reference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "permitted_uses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "attribution": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sensitive_content": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "usage_history": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/usage"
+          }
+        },
+        "audio_metadata": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "integrated_loudness_lufs",
+                "true_peak_dbtp",
+                "transient_peak_offset_us",
+                "intended_transition_types",
+                "intensity",
+                "speech_safe",
+                "minimum_reuse_interval_us",
+                "brand_contexts"
+              ],
+              "properties": {
+                "integrated_loudness_lufs": {
+                  "type": "number",
+                  "minimum": -80,
+                  "maximum": 0
+                },
+                "true_peak_dbtp": {
+                  "type": "number",
+                  "minimum": -20,
+                  "maximum": 6
+                },
+                "transient_peak_offset_us": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "intended_transition_types": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                },
+                "intensity": {
+                  "enum": [
+                    "subtle",
+                    "medium",
+                    "strong"
+                  ]
+                },
+                "speech_safe": {
+                  "type": "boolean"
+                },
+                "minimum_reuse_interval_us": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "brand_contexts": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

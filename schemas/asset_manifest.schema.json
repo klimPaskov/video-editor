@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/asset_manifest.schema.json",
+  "title": "Project Asset Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "catalog_sha256",
+    "assets"
+  ],
+  "properties": {
+    "schema_name": {"const": "asset_manifest"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/id"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "catalog_sha256": {"$ref": "#/$defs/sha256"},
+    "catalog_id": {"$ref": "#/$defs/id"},
+    "selection_key": {"$ref": "#/$defs/sha256"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "inputs": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/input"}
+    },
+    "warnings": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "assets": {"type": "array", "items": {"$ref": "#/$defs/selection"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["project_id", "revision_id", "used_at", "role"],
+      "properties": {
+        "project_id": {"$ref": "#/$defs/id"},
+        "revision_id": {"$ref": "#/$defs/id"},
+        "used_at": {"$ref": "#/$defs/timestamp"},
+        "role": {"type": "string", "minLength": 1}
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "asset_id",
+        "asset_sha256",
+        "role",
+        "source_range_us",
+        "output_range_us",
+        "effect_ids",
+        "approval_ids",
+        "licence_reference"
+      ],
+      "properties": {
+        "asset_id": {"$ref": "#/$defs/id"},
+        "asset_sha256": {"$ref": "#/$defs/sha256"},
+        "role": {"type": "string", "minLength": 1},
+        "source_range_us": {"$ref": "#/$defs/nullable_range"},
+        "output_range_us": {"$ref": "#/$defs/nullable_range"},
+        "effect_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "approval_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "licence_reference": {"type": "string", "minLength": 1},
+        "attribution_text": {"type": ["string", "null"]},
+        "asset_type": {"type": "string", "minLength": 1},
+        "licence_status": {
+          "enum": ["owned", "licensed", "public_domain", "generated_with_recorded_terms"]
+        },
+        "source": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1},
+        "tags": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "permitted_uses": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "sensitive_content": {"type": "array", "items": {"type": "string"}},
+        "usage_history": {"type": "array", "items": {"$ref": "#/$defs/usage"}}
+      }
+    },
+    "nullable_range": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["start_us", "end_us"],
+          "properties": {
+            "start_us": {"type": "integer", "minimum": 0},
+            "end_us": {"type": "integer", "minimum": 0}
+          }
+        }
+      ]
+    }
+  }
+}

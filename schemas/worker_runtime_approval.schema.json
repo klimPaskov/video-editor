@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/worker_runtime_approval.schema.json",
+  "title": "Worker Runtime Approval",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "config_sha256",
+    "approval_id",
+    "worker",
+    "upstream_repository",
+    "upstream_commit",
+    "checkpoint_id",
+    "checkpoint_sha256",
+    "license_id",
+    "python",
+    "pytorch",
+    "cuda",
+    "device",
+    "actor",
+    "role",
+    "decision",
+    "reason",
+    "identity_sha256",
+    "expires_at"
+  ],
+  "properties": {
+    "schema_name": {"const": "worker_runtime_approval"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/identifier"},
+    "project_id": {"$ref": "#/$defs/identifier"},
+    "revision_id": {"$ref": "#/$defs/revision"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "approval_id": {"$ref": "#/$defs/identifier"},
+    "worker": {"enum": ["sam3", "matanyone2"]},
+    "upstream_repository": {"type": "string", "format": "uri"},
+    "upstream_commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+    "checkpoint_id": {"type": "string", "minLength": 1},
+    "checkpoint_sha256": {"$ref": "#/$defs/sha256"},
+    "license_id": {"type": "string", "minLength": 1},
+    "python": {"type": "string", "minLength": 1},
+    "pytorch": {"type": "string", "minLength": 1},
+    "cuda": {"type": "string", "minLength": 1},
+    "device": {"type": "string", "minLength": 1},
+    "actor": {"type": "string", "minLength": 1},
+    "role": {"type": "string", "minLength": 1},
+    "decision": {"const": "approved"},
+    "reason": {"type": "string", "minLength": 1},
+    "identity_sha256": {"$ref": "#/$defs/sha256"},
+    "expires_at": {
+      "anyOf": [
+        {"$ref": "#/$defs/timestamp"},
+        {"type": "null"}
+      ]
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "revision": {
+      "type": "string",
+      "pattern": "^rev_[0-9]{3,}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

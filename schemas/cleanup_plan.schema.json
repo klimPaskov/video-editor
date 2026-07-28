@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/cleanup_plan.schema.json",
+  "title": "Safe Cleanup Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "status",
+    "derived_only",
+    "source_paths_excluded",
+    "backup_verification_sha256",
+    "entries",
+    "approval_id"
+  ],
+  "properties": {
+    "schema_name": {"const": "cleanup_plan"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/id"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "status": {"enum": ["draft", "approved", "executed", "blocked"]},
+    "derived_only": {"const": true},
+    "source_paths_excluded": {"const": true},
+    "backup_verification_sha256": {"$ref": "#/$defs/sha256"},
+    "entries": {"type": "array", "items": {"$ref": "#/$defs/entry"}},
+    "approval_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+    "executed_at": {"type": ["string", "null"], "format": "date-time"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "size_bytes", "retention_class", "eligible", "reason"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "retention_class": {"enum": ["temporary", "cache", "preview", "inactive_revision"]},
+        "eligible": {"type": "boolean"},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

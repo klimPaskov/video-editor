@@ -1,0 +1,395 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "segmentation_result.schema.json",
+  "title": "SAM segmentation result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_id",
+    "status",
+    "worker"
+  ],
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "1.0",
+        "1.1"
+      ]
+    },
+    "job_id": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "complete",
+        "failed"
+      ]
+    },
+    "worker": {
+      "const": "sam3"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "revision_id": {
+      "type": "string",
+      "pattern": "^rev_[0-9]{3,}$"
+    },
+    "input_path": {
+      "type": "string"
+    },
+    "input_sha256": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "source_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_frame",
+        "end_frame"
+      ],
+      "properties": {
+        "start_frame": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_frame": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "input_video": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height",
+        "frame_count",
+        "frame_rate"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "frame_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "frame_rate": {
+          "type": "string",
+          "pattern": "^[0-9]+/[0-9]+$"
+        },
+        "duration_us": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "prompt": {
+      "type": "object"
+    },
+    "mask_pattern": {
+      "type": "string"
+    },
+    "frame_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "frames": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "frame_index",
+          "combined_mask_path",
+          "objects"
+        ],
+        "properties": {
+          "frame_index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "combined_mask_path": {
+            "type": "string"
+          },
+          "combined_mask_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "objects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "object_id",
+                "mask_path",
+                "visible",
+                "area_pixels",
+                "bbox_xywh",
+                "centroid_xy"
+              ],
+              "properties": {
+                "object_id": {
+                  "type": "integer"
+                },
+                "mask_path": {
+                  "type": "string"
+                },
+                "mask_sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "area_pixels": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "bbox_xywh": {
+                  "type": [
+                    "array",
+                    "null"
+                  ],
+                  "prefixItems": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  ],
+                  "minItems": 4,
+                  "maxItems": 4
+                },
+                "centroid_xy": {
+                  "type": [
+                    "array",
+                    "null"
+                  ],
+                  "prefixItems": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ],
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "confidence": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "area_ratio": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "software": {
+      "type": "object"
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mask_format",
+        "lossless",
+        "mask_pattern",
+        "mask_count"
+      ],
+      "properties": {
+        "mask_format": {
+          "const": "png_gray8"
+        },
+        "lossless": {
+          "const": true
+        },
+        "mask_pattern": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mask_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "raw_metadata_path": {
+          "type": "string"
+        },
+        "raw_metadata_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "diagnostics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "missing_frames": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "identity_warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "area_jump_frames": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "centroid_jump_frames": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "leak_warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "review_frame_indices": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "warning",
+            "fail"
+          ]
+        }
+      }
+    },
+    "raw_worker_metadata": {
+      "type": "object"
+    },
+    "error": {
+      "type": "string"
+    },
+    "traceback": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "schema_version": {
+            "const": "1.1"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "project_id",
+          "revision_id",
+          "input",
+          "input_video",
+          "source_range",
+          "output",
+          "diagnostics",
+          "raw_worker_metadata"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "complete"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "input_path",
+          "prompt",
+          "mask_pattern",
+          "frame_count",
+          "frames",
+          "software"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "failed"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "error"
+        ]
+      }
+    }
+  ]
+}

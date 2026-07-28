@@ -1,0 +1,131 @@
+schema_version: 1
+
+effects:
+  require_gate1_approval: true
+  default_fallback: keep_original
+  preview_handle_ms: 1200
+  maximum_effects_per_minute: 4
+  fail_on_unknown_effect: true
+
+triggers:
+  source: transcript_word_ids
+  allow_explicit_source_ranges: true
+  minimum_lead_ms: 100
+  minimum_tail_ms: 100
+  maximum_word_boundary_error_ms: 80
+
+purposeful_zoom:
+  enabled: true
+  allowed_purposes:
+    - opened_window
+    - prompt_box
+    - relevant_cursor_action
+    - important_ui
+  require_visible_target: true
+  center_visible_target: true
+  start_after_target_appears: true
+  end_before_unrelated_content: true
+  easing: smooth_ease_in_out
+  stabilization: locked_smooth_target
+  allow_free_pan: false
+  minimum_peak_scale: 1.05
+  maximum_peak_scale: 1.60
+  auto_eligible_min_confidence: 0.96
+  review_min_confidence: 0.85
+  low_confidence_fallback: no_zoom
+
+prompt_speedup:
+  enabled: true
+  require_explicit_operator_request: true
+  allowed_actions:
+    - prompt_writing
+    - prompt_dictation
+  forbidden_actions:
+    - browsing
+    - reading
+    - waiting
+    - navigation
+    - result_inspection
+    - loading
+    - cursor_wandering
+    - other_action
+  exact_action_boundaries: true
+  default_audio_mode: audible_pitch_preserved
+  retain_audio_by_default: true
+  preserve_pitch_by_default: true
+  minimum_playback_rate: 1.10
+  maximum_playback_rate: 4.00
+  auto_eligible_min_boundary_confidence: 0.97
+  review_min_confidence: 0.85
+  low_confidence_fallback: normal_speed
+
+chroma_key:
+  enabled: true
+  key_color: "#00B140"
+  similarity: 0.18
+  blend: 0.08
+  despill: 0.30
+  crop_to_subject: false
+  alpha_intermediate_codec: prores_ks
+  alpha_intermediate_profile: 4444
+
+object_recolor:
+  enabled: true
+  mask_required: true
+  preserve_luminance: true
+  preserve_texture: true
+  feather_px_at_1080p: 2
+  invalid_mask_action: keep_original
+
+object_replacement:
+  enabled: false
+  asset_catalog: config/assets.example.yaml
+  smoothing_window_frames: 5
+  maximum_center_jump_percent: 12
+  maximum_area_ratio_change: 1.8
+  require_occluder_review: true
+  uncertain_track_action: keep_original
+
+subject_layering:
+  green_screen_first: true
+  normal_background_worker: matanyone2
+  render_order:
+    - background
+    - middle
+    - subject
+    - front
+  require_contrasting_background_preview: true
+
+qa:
+  contact_sheet_frames:
+    - first
+    - middle
+    - last
+    - highest_motion
+    - entry
+    - exit
+    - occlusion
+  fail_on_missing_mask_frame: true
+  warn_on_border_leak_percent: 2.0
+  warn_on_centroid_jump_percent: 10.0
+  warn_on_area_ratio_change: 1.6
+  require_zoom_target_evidence: true
+  require_zoom_centering_check: true
+  require_zoom_relevance_boundary_check: true
+  require_zoom_stability_check: true
+  require_speedup_request_evidence: true
+  require_speedup_excluded_activity_check: true
+  require_speedup_audio_and_transcript_check: true
+
+structural_transitions:
+  config: config/transitions.example.yaml
+  require_transition_plan: true
+  default_cleanup_join: hard_cut
+  forbid_motion_on_routine_micro_edits: true
+  require_sound_for_motion_styles:
+    - swipe_left
+    - swipe_right
+    - push_left
+    - push_right
+    - blur_swipe
+    - chapter_transition

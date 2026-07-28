@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/structural_boundaries.schema.json",
+  "title": "Structural Boundary Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "timeline_basis",
+    "boundaries",
+    "warnings"
+  ],
+  "properties": {
+    "schema_name": {"const": "structural_boundaries"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/identifier"},
+    "project_id": {"$ref": "#/$defs/identifier"},
+    "revision_id": {"$ref": "#/$defs/identifier"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "inputs": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/artifact_input"}
+    },
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "timeline_basis": {"const": "output"},
+    "boundaries": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/boundary"}
+    },
+    "warnings": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_us": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "artifact_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/identifier"},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "application_version",
+        "stage",
+        "adapter",
+        "adapter_version"
+      ],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "confidence_components": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "structural_boundary",
+        "timing",
+        "visual_fit",
+        "dialogue_safety",
+        "sound_sync"
+      ],
+      "properties": {
+        "structural_boundary": {"type": "number", "minimum": 0, "maximum": 1},
+        "timing": {"type": "number", "minimum": 0, "maximum": 1},
+        "visual_fit": {"type": "number", "minimum": 0, "maximum": 1},
+        "dialogue_safety": {"type": "number", "minimum": 0, "maximum": 1},
+        "sound_sync": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "boundary_id",
+        "boundary_us",
+        "outgoing_segment_id",
+        "incoming_segment_id",
+        "purpose",
+        "transcript_evidence",
+        "visual_evidence",
+        "evidence_ids",
+        "first_incoming_word_us",
+        "last_outgoing_word_us",
+        "preferred_transition_type",
+        "direction",
+        "desired_duration_us",
+        "easing",
+        "full_frame_coverage",
+        "confidence_components",
+        "confidence",
+        "explicit",
+        "status"
+      ],
+      "properties": {
+        "boundary_id": {"$ref": "#/$defs/identifier"},
+        "boundary_us": {"$ref": "#/$defs/time_us"},
+        "outgoing_segment_id": {"$ref": "#/$defs/identifier"},
+        "incoming_segment_id": {"$ref": "#/$defs/identifier"},
+        "purpose": {
+          "enum": [
+            "new_point",
+            "new_chapter",
+            "mode_change",
+            "talking_head_to_major_demo",
+            "major_demo_to_talking_head",
+            "comparison",
+            "before_after",
+            "location_change",
+            "return_from_visual_explanation"
+          ]
+        },
+        "transcript_evidence": {"type": "string", "minLength": 1},
+        "visual_evidence": {"type": "string", "minLength": 1},
+        "evidence_ids": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/identifier"},
+          "minItems": 1
+        },
+        "first_incoming_word_us": {
+          "anyOf": [{"$ref": "#/$defs/time_us"}, {"type": "null"}]
+        },
+        "last_outgoing_word_us": {
+          "anyOf": [{"$ref": "#/$defs/time_us"}, {"type": "null"}]
+        },
+        "preferred_transition_type": {
+          "enum": [
+            "hard_cut",
+            "j_cut",
+            "l_cut",
+            "short_crossfade",
+            "dip_to_color",
+            "swipe_left",
+            "swipe_right",
+            "push_left",
+            "push_right",
+            "blur_swipe",
+            "chapter_transition"
+          ]
+        },
+        "direction": {"enum": ["none", "left", "right", "up", "down"]},
+        "desired_duration_us": {"$ref": "#/$defs/time_us"},
+        "easing": {
+          "enum": [
+            "linear",
+            "ease_in",
+            "ease_out",
+            "ease_in_out",
+            "smooth_ease_in_out"
+          ]
+        },
+        "full_frame_coverage": {"type": "boolean"},
+        "confidence_components": {"$ref": "#/$defs/confidence_components"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "explicit": {"type": "boolean"},
+        "status": {"enum": ["verified", "review_required", "rejected"]}
+      }
+    }
+  }
+}

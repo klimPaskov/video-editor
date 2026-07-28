@@ -1,0 +1,95 @@
+{
+  "schema_name": "edit_metrics_qa",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_edit_metrics_qa",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-24T10:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "example",
+    "adapter": "fixture",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_edl",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "artifact_id": "art_proposals",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    {
+      "artifact_id": "art_transcript",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    {
+      "artifact_id": "art_transition_plan",
+      "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    }
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "source_duration_us": 12000000,
+  "output_duration_us": 8800000,
+  "cut_density": {
+    "cut_count": 3,
+    "cuts_per_minute": 20.455,
+    "warning_threshold_cuts_per_minute": 30.0,
+    "status": "pass",
+    "signal_only": true
+  },
+  "retained_fragment": {
+    "fragment_count": 4,
+    "minimum_fragment_us": 500000,
+    "average_fragment_us": 2200000,
+    "median_fragment_us": 1900000,
+    "warning_average_fragment_us": 700000,
+    "warning_minimum_fragment_us": 360000,
+    "status": "pass",
+    "signal_only": true
+  },
+  "cadence": {
+    "source_word_count": 42,
+    "output_word_count": 42,
+    "source_wpm": 210.0,
+    "output_wpm": 286.364,
+    "speech_rate_change_percent": 36.364,
+    "warning_speech_rate_change_percent": 28.0,
+    "join_pacing_warning_count": 1,
+    "status": "warning",
+    "signal_only": true
+  },
+  "transition_frequency": {
+    "motion_transition_count": 1,
+    "transitions_per_minute": 6.818,
+    "warning_threshold_per_minute": 1.0,
+    "minimum_spacing_us": null,
+    "configured_minimum_spacing_us": 12000000,
+    "repeated_transition_type_count": 0,
+    "repeated_sound_count": 0,
+    "status": "warning",
+    "signal_only": true
+  },
+  "repetition": {
+    "candidate_counts": {
+      "exact_repetition": 1,
+      "semantic_repetition": 1
+    },
+    "applied_counts": {
+      "exact_repetition": 1
+    },
+    "candidate_count": 2,
+    "applied_count": 1,
+    "review_required_count": 1,
+    "status": "warning",
+    "signal_only": true
+  },
+  "overall_status": "warning",
+  "blocking": false,
+  "warnings": [
+    "cadence_change_above_warning_threshold",
+    "transition_frequency_above_configured_limit",
+    "repetition_candidates_present"
+  ]
+}

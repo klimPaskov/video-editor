@@ -1,0 +1,60 @@
+{
+  "schema_name": "broll_plan",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_broll_plan",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-22T10:00:00Z",
+  "producer": {
+    "application_version": "0.1.0",
+    "stage": "example",
+    "adapter": "fixture",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_edl",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "currency": "USD",
+  "estimated_total": "2.00",
+  "reserve_percent": 20,
+  "requests": [
+    {
+      "request_id": "brr_001",
+      "start_us": 2400000,
+      "end_us": 3400000,
+      "transcript_context": "cleanly",
+      "rationale": "Show a clear media pipeline diagram",
+      "mode": "diagram",
+      "prompt": "A clean video editing pipeline diagram with labeled stages",
+      "negative_constraints": [
+        "No logos",
+        "No unreadable text",
+        "No people"
+      ],
+      "duration_us": 1000000,
+      "aspect_ratio": "16:9",
+      "factual_sensitivity": "low",
+      "fallback": "local_motion",
+      "asset_id": null,
+      "asset_sha256": null,
+      "license_id": null,
+      "collision_group": "picture_full_frame",
+      "minimum_spacing_us": 15000000,
+      "provider": "higgsfield",
+      "model": "configured-video-model",
+      "estimated_cost": {
+        "currency": "USD",
+        "amount": "2.00",
+        "estimate_id": "est_001"
+      },
+      "approval_state": "proposed"
+    }
+  ],
+  "warnings": [
+    "Provider estimate must be refreshed before submission"
+  ]
+}

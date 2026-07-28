@@ -1,0 +1,86 @@
+{
+  "schema_name": "composition_plan",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_composition",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-22T10:00:00Z",
+  "producer": {
+    "application_version": "0.1.0",
+    "stage": "example",
+    "adapter": "fixture",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_edl",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "artifact_id": "art_captions",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    {
+      "artifact_id": "art_motion_plan",
+      "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "duration_us": 3640000,
+  "width": 1920,
+  "height": 1080,
+  "frame_rate": {
+    "numerator": 30000,
+    "denominator": 1001
+  },
+  "video_layers": [
+    {
+      "layer_id": "lay_base",
+      "layer_type": "base_video",
+      "start_us": 0,
+      "end_us": 3640000,
+      "source_artifact_id": "art_rough",
+      "z_index": 0,
+      "region": "full"
+    },
+    {
+      "layer_id": "lay_motion",
+      "layer_type": "motion",
+      "start_us": 2400000,
+      "end_us": 3400000,
+      "source_artifact_id": "art_motion_asset",
+      "z_index": 20,
+      "region": "right"
+    },
+    {
+      "layer_id": "lay_captions",
+      "layer_type": "captions",
+      "start_us": 0,
+      "end_us": 3640000,
+      "source_artifact_id": "art_captions",
+      "z_index": 40,
+      "region": "bottom"
+    }
+  ],
+  "audio_tracks": [
+    {
+      "track_id": "aud_production",
+      "track_type": "production",
+      "source_artifact_id": "art_rough_audio",
+      "start_us": 0,
+      "end_us": 3640000,
+      "gain_db": 0.0,
+      "ducking_group": null
+    },
+    {
+      "track_id": "aud_sfx",
+      "track_type": "sound_effect",
+      "source_artifact_id": "art_sound_asset",
+      "start_us": 2400000,
+      "end_us": 2700000,
+      "gain_db": -16.0,
+      "ducking_group": "speech_priority"
+    }
+  ],
+  "warnings": []
+}

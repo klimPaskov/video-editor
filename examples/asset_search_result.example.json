@@ -1,0 +1,43 @@
+{
+  "schema_name": "asset_search_result",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_asset_search",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-24T10:15:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "asset-search",
+    "adapter": "licensed-local-catalog",
+    "adapter_version": "1.0.0"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_asset_catalog",
+      "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  ],
+  "catalog_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+  "query": "replace the tracked object",
+  "effect_intent": "tracked object replacement",
+  "asset_type": "replacement_object",
+  "required_tags": ["replacement"],
+  "limit": 5,
+  "search_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+  "status": "complete",
+  "results": [
+    {
+      "asset_id": "asset_apple",
+      "asset_type": "replacement_object",
+      "asset_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "path": "replacement-objects/apple.png",
+      "description": "Transparent red apple replacement image",
+      "tags": ["apple", "fruit", "replacement"],
+      "score": 8,
+      "matched_terms": ["replacement"],
+      "licence_status": "owned",
+      "licence_reference": "licence/commission-2026-04.pdf"
+    }
+  ],
+  "warnings": []
+}

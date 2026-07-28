@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "job_id": "segment-ball-v1",
+  "input_path": "/absolute/path/to/input.mp4",
+  "output_dir": "/absolute/path/to/artifacts/sam3/segment-ball-v1",
+  "prompt": {
+    "text": "the ball in the speaker's hand",
+    "frame_index": 0
+  },
+  "start_frame": 0,
+  "end_frame": 180,
+  "gpus": [
+    0
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/join_qa_progress.schema.json",
+  "title": "Resumable Rendered Cut Join QA Progress",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "project_id",
+    "revision_id",
+    "stage_key",
+    "join_ids",
+    "completed"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "join_qa_progress"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "project_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "revision_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "stage_key": {
+      "$ref": "#/$defs/sha256"
+    },
+    "join_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/identifier"
+      }
+    },
+    "completed": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/completed_join"
+      }
+    },
+    "transcription_provenance": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "completed_join": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "index",
+        "join_id",
+        "item"
+      ],
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "join_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "item": {
+          "type": "object",
+          "minProperties": 1
+        }
+      }
+    }
+  }
+}

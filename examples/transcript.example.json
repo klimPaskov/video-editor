@@ -1,0 +1,116 @@
+{
+  "schema_name": "transcript",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_transcript",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-22T10:00:00Z",
+  "producer": {
+    "application_version": "0.1.0",
+    "stage": "example",
+    "adapter": "fixture",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_audio_proxy",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "source_duration_us": 12000000,
+  "language": "en",
+  "model": "whisper-small",
+  "model_identifier": "whisper-small",
+  "model_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "device": "cpu",
+  "text": "This workflow edits video cleanly",
+  "segments": [
+    {
+      "segment_id": "seg_001",
+      "text": "This workflow edits video",
+      "start_us": 500000,
+      "end_us": 2180000,
+      "word_ids": [
+        "wrd_001",
+        "wrd_002",
+        "wrd_003",
+        "wrd_004"
+      ],
+      "average_log_probability": -0.12,
+      "no_speech_probability": 0.01
+    },
+    {
+      "segment_id": "seg_002",
+      "text": "cleanly",
+      "start_us": 6500000,
+      "end_us": 7100000,
+      "word_ids": [
+        "wrd_005"
+      ],
+      "average_log_probability": -0.2,
+      "no_speech_probability": 0.02
+    }
+  ],
+  "words": [
+    {
+      "word_id": "wrd_001",
+      "segment_id": "seg_001",
+      "text": "This",
+      "start_us": 500000,
+      "end_us": 780000,
+      "probability": 0.98,
+      "timing_status": "original"
+    },
+    {
+      "word_id": "wrd_002",
+      "segment_id": "seg_001",
+      "text": "workflow",
+      "start_us": 800000,
+      "end_us": 1350000,
+      "probability": 0.97,
+      "timing_status": "original"
+    },
+    {
+      "word_id": "wrd_003",
+      "segment_id": "seg_001",
+      "text": "edits",
+      "start_us": 1400000,
+      "end_us": 1750000,
+      "probability": 0.96,
+      "timing_status": "original"
+    },
+    {
+      "word_id": "wrd_004",
+      "segment_id": "seg_001",
+      "text": "video",
+      "start_us": 1780000,
+      "end_us": 2180000,
+      "probability": 0.96,
+      "timing_status": "original"
+    },
+    {
+      "word_id": "wrd_005",
+      "segment_id": "seg_002",
+      "text": "cleanly",
+      "start_us": 6500000,
+      "end_us": 7100000,
+      "probability": 0.94,
+      "timing_status": "original"
+    }
+  ],
+  "warnings": [],
+  "confidence_summary": {
+    "word_count": 5,
+    "mean_word_probability": 0.964,
+    "minimum_word_probability": 0.94,
+    "low_confidence_word_ids": [],
+    "uncertain_word_count": 0,
+    "speaker_count": 0
+  },
+  "raw_result": {
+    "language": "en",
+    "word_timestamps": true
+  },
+  "status": "complete"
+}

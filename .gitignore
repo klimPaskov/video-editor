@@ -1,0 +1,81 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node
+remotion/node_modules/
+remotion/.cache/
+remotion/out/
+remotion/public/generated/
+
+# Local configuration and credentials
+.env
+*.token
+*.key
+
+# Local media, project data, and runtime evidence. Keep these out of the
+# public repository; source media and generated deliverables belong on the
+# operator's machine or in an approved delivery store.
+projects/
+outputs/
+source/
+.codex/evidence/
+.p11*/
+.p10*/
+.p7*/
+p10-*/
+p7-*/
+.pytest-*/
+.videoedit-update-backups/
+.uv-cache/
+assets/private/
+*.mp4
+*.mov
+*.mkv
+*.wav
+*.flac
+*.webm
+*.png
+*.jpg
+*.jpeg
+!tests/fixtures/.gitkeep
+
+# GPU worker environments and upstream clones
+workers/*/.venv/
+workers/*/upstream/
+workers/*/models/
+workers/*/outputs/
+
+# Codex results are local by default
+.codex/results/*.json
+!.codex/results/.gitkeep
+
+# Local agent instructions, prompts, and update-package bookkeeping are not
+# part of the public user-facing distribution.
+.agents/
+.codex/
+AGENTS.md
+AGENTS_*_ADDENDUM.md
+GOAL_PROMPT.md
+PLANNING_PACKAGE.md
+prompts/
+APPLY_UPDATE.md
+CODEX_START_HERE.md
+FOLLOW_UP_PROMPT_*.md
+PACKAGE_CONTENTS.md
+PACKAGE_MANIFEST.json
+CHECKSUMS.sha256
+OVERLAY_CHECKSUMS.sha256
+OVERLAY_CONTENTS.md
+OVERLAY_MANIFEST.json
+UPDATE_*.md
+VALIDATION_REPORT.md
+COST_AND_SUBSCRIPTIONS.md
+DEPENDENCY_MATRIX.md
+MANUAL_INSTALL_CHECKLIST.md

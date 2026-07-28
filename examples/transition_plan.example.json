@@ -1,0 +1,85 @@
+{
+  "schema_name": "transition_plan",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_transition_plan",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-23T12:00:00Z",
+  "producer": {
+    "application_version": "0.1.0",
+    "stage": "transition_planning",
+    "adapter": "fixture",
+    "adapter_version": "1"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_edl",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "artifact_id": "art_sound_plan",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    }
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "timeline_basis": "output",
+  "transitions": [
+    {
+      "transition_id": "trn_new_point_001",
+      "outgoing_segment_id": "seg_intro",
+      "incoming_segment_id": "seg_demo",
+      "purpose": "new_point",
+      "transition_type": "swipe_left",
+      "range": {
+        "start_us": 2400000,
+        "end_us": 2700000
+      },
+      "duration_us": 300000,
+      "direction": "left",
+      "easing": "smooth_ease_in_out",
+      "full_frame_coverage": true,
+      "incoming_first_readable_frame_us": 2700000,
+      "sound_sync_status": "pass",
+      "reason": "The speaker finishes the setup and begins the first major demonstration.",
+      "evidence_ids": [
+        "ev_boundary_001"
+      ],
+      "dialogue_protection": {
+        "speech_overlaps": false,
+        "first_incoming_word_us": 2790000,
+        "last_outgoing_word_us": 2310000,
+        "minimum_clearance_us": 90000,
+        "intelligibility_risk": "low"
+      },
+      "sound": {
+        "cue_id": "sfx_001",
+        "asset_id": "snd_soft_whoosh",
+        "asset_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "license_id": "license_internal_001",
+        "start_us": 2400000,
+        "end_us": 2700000,
+        "sync_peak_us": 2520000,
+        "gain_db": -16.0,
+        "fade_in_us": 15000,
+        "fade_out_us": 70000,
+        "duck_speech": true,
+        "transient_alignment_tolerance_us": 30000,
+        "speech_clearance_us": 90000,
+        "mix_policy": "speech_priority",
+        "qa_status": "pass"
+      },
+      "confidence_components": {
+        "structural_boundary": 0.98,
+        "timing": 0.97,
+        "visual_fit": 0.96,
+        "dialogue_safety": 0.99,
+        "sound_sync": 0.97
+      },
+      "confidence": 0.96,
+      "policy_result": "auto_eligible",
+      "approval_required": false,
+      "fallback": "hard_cut"
+    }
+  ],
+  "warnings": []
+}

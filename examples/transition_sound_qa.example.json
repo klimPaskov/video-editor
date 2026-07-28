@@ -1,0 +1,44 @@
+{
+  "schema_name": "transition_sound_qa",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_transition_sound_qa",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-24T12:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "transition_sound_qa",
+    "adapter": "ffmpeg",
+    "adapter_version": "fixture"
+  },
+  "inputs": [
+    {
+      "artifact_id": "art_sound_plan",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    {
+      "artifact_id": "art_source",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "cue_id": "sfx_001",
+  "asset_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "output": {
+    "path": "review/transition-sound/sfx_001-mix.mp4",
+    "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "size_bytes": 123456
+  },
+  "qa_status": "pass",
+  "failures": [],
+  "warnings": [],
+  "full_decode_status": "pass",
+  "clipped_samples": 0,
+  "loudness": {
+    "integrated_lufs": -22.0,
+    "threshold_lufs": -32.8,
+    "loudness_range_lu": 2.9,
+    "true_peak_dbfs": -19.2
+  },
+  "speech_priority": true
+}

@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/segment_transcript_comparison.schema.json",
+  "title": "Rendered Segment Transcript Comparison",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name", "schema_version", "artifact_id", "project_id", "revision_id",
+    "created_at", "producer", "scope", "intended_transcript", "rendered_transcript",
+    "revision_media", "expected_words", "rendered_words", "expected_sequence",
+    "rendered_sequence", "missing_words", "unexpected_words", "duplicate_words",
+    "ordering_match", "sequence_status", "warnings", "status"
+  ],
+  "properties": {
+    "schema_name": {"const": "segment_transcript_comparison"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/revision"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "scope": {"$ref": "#/$defs/scope"},
+    "intended_transcript": {"$ref": "#/$defs/file_ref"},
+    "rendered_transcript": {"$ref": "#/$defs/file_ref"},
+    "revision_media": {"$ref": "#/$defs/file_ref"},
+    "expected_words": {"type": "array", "items": {"$ref": "#/$defs/expected_word"}},
+    "rendered_words": {"type": "array", "items": {"$ref": "#/$defs/rendered_word"}},
+    "expected_sequence": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "rendered_sequence": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "missing_words": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "unexpected_words": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "duplicate_words": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "ordering_match": {"type": "boolean"},
+    "sequence_status": {"enum": ["pass", "fail"]},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "status": {"enum": ["complete", "warning"]}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "revision": {"type": "string", "pattern": "^rev_[0-9]{3,}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "time_us": {"type": "integer", "minimum": 0},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_us", "end_us"],
+      "properties": {
+        "start_us": {"$ref": "#/$defs/time_us"},
+        "end_us": {"$ref": "#/$defs/time_us"}
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["segment_id", "source_range"],
+      "properties": {
+        "segment_id": {"$ref": "#/$defs/id"},
+        "source_range": {"$ref": "#/$defs/range"}
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "expected_word": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_word_id", "text", "source_start_us", "source_end_us",
+        "output_start_us", "output_end_us"
+      ],
+      "properties": {
+        "source_word_id": {"$ref": "#/$defs/id"},
+        "text": {"type": "string", "minLength": 1},
+        "source_start_us": {"$ref": "#/$defs/time_us"},
+        "source_end_us": {"$ref": "#/$defs/time_us"},
+        "output_start_us": {"$ref": "#/$defs/time_us"},
+        "output_end_us": {"$ref": "#/$defs/time_us"}
+      }
+    },
+    "rendered_word": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["word_id", "text", "start_us", "end_us"],
+      "properties": {
+        "word_id": {"$ref": "#/$defs/id"},
+        "text": {"type": "string", "minLength": 1},
+        "start_us": {"$ref": "#/$defs/time_us"},
+        "end_us": {"$ref": "#/$defs/time_us"}
+      }
+    }
+  }
+}

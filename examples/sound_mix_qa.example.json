@@ -1,0 +1,60 @@
+{
+  "schema_name": "sound_mix_qa",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_sound_mix_qa",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-24T10:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "sound-mix-qa",
+    "adapter": "ffmpeg",
+    "adapter_version": "fixture"
+  },
+  "inputs": [
+    {"artifact_id": "art_source", "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    {"artifact_id": "art_asset_catalog", "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+    {"artifact_id": "art_sound_plan", "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"},
+    {"artifact_id": "art_cue_plan_bundle", "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"},
+    {"artifact_id": "art_cue_approval", "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}
+  ],
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "asset_catalog_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "sound_plan_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "cue_plan_bundle_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "cue_approval_id": "apr_cue_fixture",
+  "output": {
+    "path": "review/sound-mix.mp4",
+    "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "size_bytes": 1024
+  },
+  "cue_results": [
+    {
+      "cue_id": "sfx_001",
+      "asset_id": "snd_soft_whoosh",
+      "asset_sha256": "9999999999999999999999999999999999999999999999999999999999999999",
+      "start_us": 2400000,
+      "end_us": 2700000,
+      "gain_db": -14.0,
+      "fade_in_us": 20000,
+      "fade_out_us": 80000,
+      "duck_speech": true,
+      "mix_policy": "speech_priority",
+      "status": "pass"
+    }
+  ],
+  "qa_status": "pass",
+  "failures": [],
+  "warnings": [],
+  "full_decode_status": "pass",
+  "clipped_samples": 0,
+  "clipping_status": "pass",
+  "loudness": {
+    "integrated_lufs": -18.0,
+    "threshold_lufs": -28.0,
+    "loudness_range_lu": 5.0,
+    "true_peak_dbfs": -2.0
+  },
+  "speech_priority": true
+}

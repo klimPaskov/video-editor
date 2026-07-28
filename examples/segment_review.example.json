@@ -1,0 +1,38 @@
+{
+  "schema_name": "segment_review",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_segment_review_001",
+  "project_id": "prj_demo",
+  "revision_id": "rev_002",
+  "segment_id": "segment_intro",
+  "created_at": "2026-07-23T12:00:00Z",
+  "bound_hashes": {
+    "preview_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+    "transcript_comparison_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+    "effect_assets_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+    "composition_bundle_sha256": "6666666666666666666666666666666666666666666666666666666666666666",
+    "qa_report_sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+  },
+  "decision": "changes_requested",
+  "reviewer": {
+    "actor": "operator@example.com",
+    "role": "editorial_owner",
+    "reviewed_at": "2026-07-23T12:00:00Z"
+  },
+  "notes": "The repeated phrase should be removed and the text should remain longer.",
+  "fixes": [
+    {
+      "fix_id": "fix_duplicate_phrase",
+      "kind": "FIX",
+      "instruction": "Remove the first repeated phrase and preserve the second complete take.",
+      "range_us": {"start_us": 2200000, "end_us": 3900000}
+    },
+    {
+      "fix_id": "fix_text_duration",
+      "kind": "RETIME",
+      "instruction": "Extend the middle text plate by twelve frames.",
+      "range_us": {"start_us": 4500000, "end_us": 6200000}
+    }
+  ],
+  "locked": false
+}

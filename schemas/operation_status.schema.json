@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/operation_status.schema.json",
+  "title": "Project Operation Status",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_name", "schema_version", "project_id", "active_revision_id", "source_integrity", "stages", "qa_ready", "delivery_paths", "warnings"],
+  "properties": {
+    "schema_name": {"const": "operation_status"},
+    "schema_version": {"const": "1.0.0"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "active_revision_id": {"$ref": "#/$defs/revision"},
+    "source_integrity": {"enum": ["pass", "fail", "unknown"]},
+    "stages": {"type": "array", "items": {"$ref": "#/$defs/stage"}},
+    "qa_ready": {"type": "boolean"},
+    "delivery_paths": {"type": "array", "items": {"type": "string"}},
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "revision": {"type": "string", "pattern": "^rev_[0-9]{3,}$"},
+    "stage": {"type": "object", "additionalProperties": false, "required": ["stage", "revision_id", "status", "attempt", "stage_key"], "properties": {"stage": {"type": "string", "minLength": 1}, "revision_id": {"$ref": "#/$defs/revision"}, "status": {"enum": ["running", "complete", "failed", "cancelled"]}, "attempt": {"type": "integer", "minimum": 1}, "stage_key": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "error": {"type": ["string", "null"]}}}
+  }
+}

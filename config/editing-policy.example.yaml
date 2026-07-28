@@ -1,0 +1,190 @@
+schema_version: 1
+policy:
+  id: smart_dense
+  version: 3
+  default_mode: smart_dense
+  prefer_many_small_safe_edits: true
+  cut_count_is_not_a_failure: true
+  require_rendered_join_qa: true
+
+cut_taxonomy:
+  version: 1
+  mechanical:
+    - leading_silence
+    - trailing_silence
+    - long_pause
+    - dead_air
+    - filler_word
+    - filler_phrase
+    - stutter
+    - false_start
+    - abandoned_phrase
+    - self_correction
+    - immediate_repetition
+    - exact_repetition
+    - accidental_noise
+  semantic:
+    - near_repetition
+    - semantic_repetition
+    - duplicate_take
+    - weak_take
+    - tangent
+    - housekeeping
+    - hook_tightening
+  protected_content_requires_review:
+    - facts
+    - names
+    - numbers
+    - negation
+    - qualifications
+    - warnings
+    - emotional_intent
+    - overlapping_speakers
+
+candidate_generation:
+  scan_every_transcript_span: true
+  scan_every_silence_interval: true
+  emit_all_qualifying_mechanical_candidates: true
+  mechanical_proposal_limit_per_minute: null
+  semantic_proposal_limit_per_minute: 4
+  merge_only_when_combined_risk_does_not_increase: true
+
+mechanical:
+  allow_leading_silence: true
+  allow_trailing_silence: true
+  allow_inter_sentence_silence: true
+  minimum_silence_ms: 420
+  target_inter_sentence_pause_ms: 220
+  preserve_minimum_natural_pause_ms: 120
+  pre_handle_ms: 80
+  post_handle_ms: 110
+  minimum_cut_ms: 90
+  minimum_kept_segment_ms: 360
+  word_overlap_tolerance_ms: 35
+  low_confidence_requires_review: true
+  require_join_strategy: true
+
+micro_edits:
+  enabled: true
+  allowed_types:
+    - filler_word
+    - filler_phrase
+    - stutter
+    - false_start
+    - abandoned_phrase
+    - self_correction
+    - exact_repetition
+    - immediate_repetition
+    - dead_air
+    - accidental_noise
+  preserve_useful_breaths: true
+  trim_excess_pause_before_full_removal: true
+  permit_multiple_nearby_micro_cuts: true
+  maximum_consecutive_micro_cuts_before_pacing_warning: 6
+  minimum_average_kept_phrase_ms: 650
+
+semantic:
+  enabled: true
+  safe_fallback: keep_original
+  require_item_approval: true
+  allowed_proposal_types:
+    - near_repetition
+    - semantic_repetition
+    - duplicate_take
+    - weak_take
+    - tangent
+    - housekeeping
+    - hook_tightening
+  maximum_total_deleted_percent_soft_warning: 24
+  maximum_total_deleted_percent_hard_stop: 40
+
+confidence_policy:
+  filler_word:
+    auto_apply_min: 0.95
+    review_min: 0.78
+    require_audio_join_check: true
+  filler_phrase:
+    auto_apply_min: 0.96
+    review_min: 0.82
+  stutter:
+    auto_apply_min: 0.96
+    review_min: 0.82
+  false_start:
+    auto_apply_min: 0.95
+    review_min: 0.82
+    require_complete_replacement_take: true
+  long_pause:
+    auto_apply_min: 0.97
+    review_min: 0.82
+    require_audio_transcript_agreement: true
+  dead_air:
+    auto_apply_min: 0.98
+    review_min: 0.85
+  exact_repetition:
+    auto_apply_min: 0.96
+    review_min: 0.82
+    require_continuity_check: true
+  near_repetition:
+    always_require_review: true
+  semantic_repetition:
+    always_require_review: true
+  duplicate_take:
+    always_require_review_when_take_scores_are_close: true
+    score_margin_for_auto_selection: 0.18
+
+protected:
+  protect_numbers: true
+  protect_dates: true
+  protect_names: true
+  protect_negation: true
+  protect_qualifications: true
+  protect_quotations: true
+  protect_disclosures: true
+  protect_warnings: true
+  protect_low_confidence_words: true
+  protect_overlapping_speakers: true
+  protect_emotional_or_deliberate_pauses: true
+  custom_terms: []
+
+join_repair:
+  default_strategy: hard_cut_with_micro_audio_crossfade
+  allowed_strategies:
+    - hard_cut
+    - hard_cut_with_micro_audio_crossfade
+    - adjusted_handles
+    - room_tone
+    - j_cut
+    - l_cut
+    - broll_cover
+    - alternate_coverage
+    - purposeful_punch_in
+  audio_crossfade_ms: 24
+  room_tone_minimum_ms: 80
+  preview_handle_ms: 2000
+  retranscribe_each_join: true
+  fail_on_clipped_syllable: true
+  fail_on_duplicate_or_missing_word: true
+  fail_on_black_flash_or_freeze: true
+  fail_on_unexplained_screen_state_jump: true
+
+pacing_qa:
+  local_window_seconds: 15
+  cuts_per_minute_warning_only: true
+  warn_when_cuts_per_minute: 30
+  warn_when_average_kept_fragment_ms_below: 700
+  warn_when_minimum_kept_fragment_ms: 360
+  warn_when_speech_rate_increase_percent_above: 28
+  fail_only_on_detected_quality_defect: true
+
+review:
+  batch_approval_for_mechanical_only: true
+  allow_policy_authorized_micro_edits: true
+  batch_uncertain_items: true
+  maximum_questions_per_round: 5
+  sort_by_material_risk: true
+  include_recommendation: true
+  use_safe_fallback_when_available: true
+  avoid_low_impact_questions: true
+  show_context_words: 18
+  preview_handle_ms: 2000
+  sample_passing_auto_edits_per_segment: 3

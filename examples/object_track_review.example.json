@@ -1,0 +1,50 @@
+{
+  "schema_name": "object_track_review",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_object_track_review_7",
+  "project_id": "demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-24T12:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "object-track-review",
+    "adapter": "human-review",
+    "adapter_version": "1"
+  },
+  "source_result": {
+    "path": "/absolute/path/to/segmentation-result.json",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "size_bytes": 1234
+  },
+  "segmentation_validation": {
+    "path": "/absolute/path/to/segmentation-validation.json",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "size_bytes": 987
+  },
+  "source_range": {
+    "start_frame": 4,
+    "end_frame": 7
+  },
+  "object_id": 7,
+  "reviewed_frame_indices": [
+    4,
+    5,
+    6
+  ],
+  "decision": "approved",
+  "actor": "fixture-reviewer",
+  "role": "editor",
+  "findings": {
+    "identity": "pass",
+    "continuity": "pass",
+    "geometry": "pass",
+    "occlusion": "pass"
+  },
+  "fallback": {
+    "mode": "original_shot",
+    "on_uncertain": "keep_original"
+  },
+  "notes": [
+    "Synthetic example only; production approval must be made by an operator after frame review."
+  ]
+}

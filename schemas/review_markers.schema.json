@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/review_markers.schema.json",
+  "title": "Imported Segment Review Markers",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "segment_id",
+    "created_at",
+    "producer",
+    "marker_key",
+    "source_markdown",
+    "source_package",
+    "bound_hashes",
+    "markers",
+    "warnings",
+    "status"
+  ],
+  "properties": {
+    "schema_name": {"const": "review_markers"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/id"},
+    "segment_id": {"$ref": "#/$defs/id"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "producer": {"$ref": "#/$defs/producer"},
+    "marker_key": {"$ref": "#/$defs/sha256"},
+    "source_markdown": {"$ref": "#/$defs/file_ref"},
+    "source_package": {"$ref": "#/$defs/file_ref"},
+    "bound_hashes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preview_sha256",
+        "contact_sheet_sha256",
+        "transcript_excerpt_sha256",
+        "effect_summary_sha256",
+        "diagnostics_sha256",
+        "fixes_template_sha256"
+      ],
+      "properties": {
+        "preview_sha256": {"$ref": "#/$defs/sha256"},
+        "contact_sheet_sha256": {"$ref": "#/$defs/sha256"},
+        "transcript_excerpt_sha256": {"$ref": "#/$defs/sha256"},
+        "effect_summary_sha256": {"$ref": "#/$defs/sha256"},
+        "diagnostics_sha256": {"$ref": "#/$defs/sha256"},
+        "fixes_template_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "markers": {"type": "array", "items": {"$ref": "#/$defs/marker"}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "status": {"enum": ["complete", "warning"]}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["application_version", "stage", "adapter", "adapter_version"],
+      "properties": {
+        "application_version": {"type": "string", "minLength": 1},
+        "stage": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "sha256"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_us", "end_us"],
+      "properties": {
+        "start_us": {"type": "integer", "minimum": 0},
+        "end_us": {"type": "integer", "minimum": 0}
+      }
+    },
+    "marker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["marker_id", "kind", "instruction", "range_us", "line_number", "raw"],
+      "properties": {
+        "marker_id": {"$ref": "#/$defs/id"},
+        "kind": {
+          "enum": [
+            "FIX",
+            "KEEP",
+            "REMOVE",
+            "RETIME",
+            "MASK",
+            "TEXT",
+            "AUDIO",
+            "ZOOM",
+            "SPEED"
+          ]
+        },
+        "instruction": {"type": "string", "minLength": 1},
+        "range_us": {"$ref": "#/$defs/range"},
+        "line_number": {"type": "integer", "minimum": 1},
+        "raw": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/segment_review.schema.json",
+  "title": "Segment Review and Gate 2 Decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "segment_id",
+    "created_at",
+    "bound_hashes",
+    "decision",
+    "reviewer",
+    "notes",
+    "fixes",
+    "locked"
+  ],
+  "properties": {
+    "schema_name": {"const": "segment_review"},
+    "schema_version": {"const": "1.0.0"},
+    "artifact_id": {"$ref": "#/$defs/id"},
+    "project_id": {"$ref": "#/$defs/id"},
+    "revision_id": {"$ref": "#/$defs/id"},
+    "segment_id": {"$ref": "#/$defs/id"},
+    "created_at": {"$ref": "#/$defs/timestamp"},
+    "bound_hashes": {"$ref": "#/$defs/bound_hashes"},
+    "decision": {"enum": ["approved", "changes_requested", "rejected"]},
+    "reviewer": {"$ref": "#/$defs/reviewer"},
+    "notes": {"type": "string"},
+    "fixes": {"type": "array", "items": {"$ref": "#/$defs/fix"}},
+    "qa_override": {"$ref": "#/$defs/file_ref"},
+    "locked": {"type": "boolean"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{2,127}$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "bound_hashes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preview_sha256",
+        "transcript_comparison_sha256",
+        "effect_assets_sha256",
+        "composition_bundle_sha256",
+        "qa_report_sha256"
+      ],
+      "properties": {
+        "preview_sha256": {"$ref": "#/$defs/sha256"},
+        "transcript_comparison_sha256": {"$ref": "#/$defs/sha256"},
+        "effect_assets_sha256": {"$ref": "#/$defs/sha256"},
+        "composition_bundle_sha256": {"$ref": "#/$defs/sha256"},
+        "qa_report_sha256": {"$ref": "#/$defs/sha256"},
+        "review_package_sha256": {"$ref": "#/$defs/sha256"},
+        "visual_qa_sha256": {"$ref": "#/$defs/sha256"},
+        "segment_qa_sha256": {"$ref": "#/$defs/sha256"},
+        "qa_override_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor", "role", "reviewed_at"],
+      "properties": {
+        "actor": {"type": "string", "minLength": 1},
+        "role": {"type": "string", "minLength": 1},
+        "reviewed_at": {"$ref": "#/$defs/timestamp"}
+      }
+    },
+    "fix": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fix_id", "kind", "instruction", "range_us"],
+      "properties": {
+        "fix_id": {"$ref": "#/$defs/id"},
+        "kind": {
+          "enum": [
+            "FIX", "KEEP", "REMOVE", "RETIME", "MASK", "TEXT", "AUDIO", "ZOOM", "SPEED"
+          ]
+        },
+        "instruction": {"type": "string", "minLength": 1},
+        "range_us": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["start_us", "end_us"],
+              "properties": {
+                "start_us": {"type": "integer", "minimum": 0},
+                "end_us": {"type": "integer", "minimum": 0}
+              }
+            }
+          ]
+        }
+      }
+    },
+    "file_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "path", "sha256", "size_bytes"],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/id"},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

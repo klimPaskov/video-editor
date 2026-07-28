@@ -1,0 +1,32 @@
+{
+  "schema_name": "worker_runtime_approval",
+  "schema_version": "1.0.0",
+  "artifact_id": "art_worker_runtime_approval_sam3",
+  "project_id": "prj_demo",
+  "revision_id": "rev_001",
+  "created_at": "2026-07-25T10:00:00Z",
+  "producer": {
+    "application_version": "0.2.0",
+    "stage": "worker-runtime-approval",
+    "adapter": "human-review",
+    "adapter_version": "p7-p8-runtime-approval-v1"
+  },
+  "config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "approval_id": "apr_worker_runtime_sam3_001",
+  "worker": "sam3",
+  "upstream_repository": "https://github.com/facebookresearch/sam3",
+  "upstream_commit": "46957e47805eaa273f4aa7bbbd25a88bca9108ce",
+  "checkpoint_id": "facebook/sam3.1/sam3.1_multiplex.pt",
+  "checkpoint_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "license_id": "meta-sam-2025-11-19",
+  "python": "3.12",
+  "pytorch": "2.7.0+cu126",
+  "cuda": "12.6",
+  "device": "cuda:0",
+  "actor": "operator@example.com",
+  "role": "licence-owner",
+  "decision": "approved",
+  "reason": "Example only; replace with current licence, checkpoint, and hardware acceptance.",
+  "identity_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+  "expires_at": null
+}

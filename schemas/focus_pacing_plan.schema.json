@@ -1,0 +1,798 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://videoedit.local/schemas/focus_pacing_plan.schema.json",
+  "title": "Purposeful Focus and Prompt Pacing Plan",
+  "type": "object",
+  "properties": {
+    "schema_name": {
+      "const": "focus_pacing_plan"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "project_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "revision_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "producer": {
+      "$ref": "#/$defs/producer"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/artifact_input"
+      }
+    },
+    "config_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "operator_request": {
+      "type": "object",
+      "properties": {
+        "speedups_requested": {
+          "type": "boolean"
+        },
+        "request_source": {
+          "enum": [
+            "none",
+            "project_brief",
+            "gate1_review",
+            "fix_marker"
+          ]
+        },
+        "request_text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "speedups_requested",
+        "request_source",
+        "request_text"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "speedups_requested": {
+                "const": false
+              }
+            },
+            "required": [
+              "speedups_requested"
+            ]
+          },
+          "then": {
+            "properties": {
+              "request_source": {
+                "const": "none"
+              },
+              "request_text": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "speedups_requested": {
+                "const": true
+              }
+            },
+            "required": [
+              "speedups_requested"
+            ]
+          },
+          "then": {
+            "properties": {
+              "request_source": {
+                "enum": [
+                  "project_brief",
+                  "gate1_review",
+                  "fix_marker"
+                ]
+              },
+              "request_text": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "zooms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/purposeful_zoom"
+      }
+    },
+    "speedups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/prompt_speedup"
+      }
+    },
+    "skipped_zoom_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "candidate_id": {
+            "$ref": "#/$defs/identifier"
+          },
+          "source_range": {
+            "$ref": "#/$defs/time_range"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fallback": {
+            "const": "no_zoom"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "candidate_id",
+          "source_range",
+          "reason",
+          "fallback"
+        ]
+      }
+    },
+    "review_policy": {
+      "type": "object",
+      "properties": {
+        "batch_uncertain_items": {
+          "const": true
+        },
+        "maximum_questions_per_round": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "use_safe_fallbacks": {
+          "const": true
+        },
+        "include_recommendation": {
+          "const": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "batch_uncertain_items",
+        "maximum_questions_per_round",
+        "use_safe_fallbacks",
+        "include_recommendation"
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "artifact_id",
+    "project_id",
+    "revision_id",
+    "created_at",
+    "producer",
+    "inputs",
+    "config_sha256",
+    "operator_request",
+    "zooms",
+    "speedups",
+    "skipped_zoom_candidates",
+    "review_policy",
+    "warnings"
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{2,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "time_us": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "time_range": {
+      "type": "object",
+      "properties": {
+        "start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "end_us": {
+          "$ref": "#/$defs/time_us"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "start_us",
+        "end_us"
+      ]
+    },
+    "artifact_input": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "sha256"
+      ]
+    },
+    "producer": {
+      "type": "object",
+      "properties": {
+        "application_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "application_version",
+        "stage",
+        "adapter",
+        "adapter_version"
+      ]
+    },
+    "normalized_bbox": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "height": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ]
+    },
+    "confidence": {
+      "type": "object",
+      "properties": {
+        "target_visibility": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "target_identity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "boundary": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "stability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "overall": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "target_visibility",
+        "target_identity",
+        "boundary",
+        "stability",
+        "overall"
+      ]
+    },
+    "target_sample": {
+      "type": "object",
+      "properties": {
+        "time_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "bbox": {
+          "$ref": "#/$defs/normalized_bbox"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "time_us",
+        "bbox"
+      ]
+    },
+    "purposeful_zoom": {
+      "type": "object",
+      "properties": {
+        "zoom_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "purpose": {
+          "enum": [
+            "opened_window",
+            "prompt_box",
+            "relevant_cursor_action",
+            "important_ui"
+          ]
+        },
+        "source_range": {
+          "$ref": "#/$defs/time_range"
+        },
+        "target_visible_range": {
+          "$ref": "#/$defs/time_range"
+        },
+        "zoom_in_end_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "zoom_out_start_us": {
+          "$ref": "#/$defs/time_us"
+        },
+        "target_description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_track": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/target_sample"
+          },
+          "minItems": 1
+        },
+        "start_scale": {
+          "const": 1.0
+        },
+        "peak_scale": {
+          "type": "number",
+          "exclusiveMinimum": 1,
+          "maximum": 2.5
+        },
+        "centering_mode": {
+          "const": "visible_target_center"
+        },
+        "easing": {
+          "const": "smooth_ease_in_out"
+        },
+        "stabilization": {
+          "const": "locked_smooth_target"
+        },
+        "allow_free_pan": {
+          "const": false
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "policy_result": {
+          "enum": [
+            "auto_eligible",
+            "review_required",
+            "skipped",
+            "blocked"
+          ]
+        },
+        "approval_required": {
+          "type": "boolean"
+        },
+        "fallback": {
+          "const": "no_zoom"
+        },
+        "evidence_frames": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 2
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "zoom_id",
+        "purpose",
+        "source_range",
+        "target_visible_range",
+        "zoom_in_end_us",
+        "zoom_out_start_us",
+        "target_description",
+        "target_track",
+        "start_scale",
+        "peak_scale",
+        "centering_mode",
+        "easing",
+        "stabilization",
+        "allow_free_pan",
+        "reason",
+        "confidence",
+        "policy_result",
+        "approval_required",
+        "fallback",
+        "evidence_frames",
+        "warnings"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "policy_result": {
+                "const": "auto_eligible"
+              }
+            },
+            "required": [
+              "policy_result"
+            ]
+          },
+          "then": {
+            "properties": {
+              "approval_required": {
+                "const": false
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "policy_result": {
+                "const": "review_required"
+              }
+            },
+            "required": [
+              "policy_result"
+            ]
+          },
+          "then": {
+            "properties": {
+              "approval_required": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "prompt_speedup": {
+      "type": "object",
+      "properties": {
+        "speedup_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "action_type": {
+          "enum": [
+            "prompt_writing",
+            "prompt_dictation"
+          ]
+        },
+        "source_range": {
+          "$ref": "#/$defs/time_range"
+        },
+        "request_source": {
+          "enum": [
+            "project_brief",
+            "gate1_review",
+            "fix_marker"
+          ]
+        },
+        "request_text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "playback_rate": {
+          "type": "number",
+          "exclusiveMinimum": 1,
+          "maximum": 8
+        },
+        "audio_mode": {
+          "enum": [
+            "audible_pitch_preserved",
+            "audible",
+            "muted"
+          ]
+        },
+        "audio_exception_explicit": {
+          "type": "boolean"
+        },
+        "action_visible": {
+          "const": true
+        },
+        "exact_action_boundaries": {
+          "const": true
+        },
+        "forbidden_content_check": {
+          "type": "object",
+          "properties": {
+            "contains_browsing": {
+              "const": false
+            },
+            "contains_reading": {
+              "const": false
+            },
+            "contains_waiting": {
+              "const": false
+            },
+            "contains_other_action": {
+              "const": false
+            },
+            "contains_navigation": {
+              "const": false
+            },
+            "contains_result_inspection": {
+              "const": false
+            },
+            "contains_loading": {
+              "const": false
+            },
+            "contains_cursor_wandering": {
+              "const": false
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "contains_browsing",
+            "contains_reading",
+            "contains_waiting",
+            "contains_other_action",
+            "contains_navigation",
+            "contains_result_inspection",
+            "contains_loading",
+            "contains_cursor_wandering"
+          ]
+        },
+        "start_evidence_frame": {
+          "type": "string",
+          "minLength": 1
+        },
+        "end_evidence_frame": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action_visibility_confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "boundary_confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "overall_confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "policy_result": {
+          "enum": [
+            "auto_eligible",
+            "review_required",
+            "skipped",
+            "blocked"
+          ]
+        },
+        "approval_required": {
+          "type": "boolean"
+        },
+        "fallback": {
+          "const": "normal_speed"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "speedup_id",
+        "action_type",
+        "source_range",
+        "request_source",
+        "request_text",
+        "playback_rate",
+        "audio_mode",
+        "audio_exception_explicit",
+        "action_visible",
+        "exact_action_boundaries",
+        "forbidden_content_check",
+        "start_evidence_frame",
+        "end_evidence_frame",
+        "action_visibility_confidence",
+        "boundary_confidence",
+        "overall_confidence",
+        "policy_result",
+        "approval_required",
+        "fallback",
+        "reason",
+        "warnings"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "audio_mode": {
+                "const": "muted"
+              }
+            },
+            "required": [
+              "audio_mode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "audio_exception_explicit": {
+                "const": true
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "audio_mode": {
+                "enum": [
+                  "audible_pitch_preserved",
+                  "audible"
+                ]
+              }
+            },
+            "required": [
+              "audio_mode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "audio_exception_explicit": {
+                "const": false
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "policy_result": {
+                "const": "auto_eligible"
+              }
+            },
+            "required": [
+              "policy_result"
+            ]
+          },
+          "then": {
+            "properties": {
+              "approval_required": {
+                "const": false
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "policy_result": {
+                "const": "review_required"
+              }
+            },
+            "required": [
+              "policy_result"
+            ]
+          },
+          "then": {
+            "properties": {
+              "approval_required": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "operator_request": {
+            "properties": {
+              "speedups_requested": {
+                "const": false
+              }
+            },
+            "required": [
+              "speedups_requested"
+            ]
+          }
+        },
+        "required": [
+          "operator_request"
+        ]
+      },
+      "then": {
+        "properties": {
+          "speedups": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ]
+}
