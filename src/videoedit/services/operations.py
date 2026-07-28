@@ -82,6 +82,31 @@ def _source_integrity(
     return "pass"
 
 
+def _gate1_approval_snapshot(
+    package_root: Path,
+    layout: ProjectLayout,
+    revision_id: str,
+    warnings: list[str],
+) -> None:
+    """Add a fail-closed status warning when the active revision lacks Gate 1."""
+
+    for approval_path in sorted(layout.review.glob("gate1-approval-*.json")):
+        try:
+            approval = _read_object(approval_path, "Gate 1 approval")
+            validate_artifact(package_root, "approval_record", approval)
+        except (PlanningValidationError, ValueError) as exc:
+            warnings.append(f"invalid_gate1_approval {approval_path.name}: {exc}")
+            continue
+        if (
+            approval.get("project_id") == layout.root.name
+            and approval.get("revision_id") == revision_id
+            and approval.get("approval_type") == "edit"
+            and approval.get("decision") == "approved"
+        ):
+            return
+    warnings.append("gate1_approval_missing_or_stale")
+
+
 def _stage_snapshot(
     package_root: Path,
     layout: ProjectLayout,
@@ -177,6 +202,7 @@ def read_project_status(
     active_revision_id = str(revision_id or manifest["active_revision_id"])
     warnings: list[str] = []
     source_state = _source_integrity(package_root, layout, active_revision_id, warnings)
+    _gate1_approval_snapshot(package_root, layout, active_revision_id, warnings)
     stages, state_hashes = _stage_snapshot(package_root, layout, warnings)
 
     qa_ready = False

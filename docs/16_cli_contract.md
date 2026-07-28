@@ -536,6 +536,8 @@ flag. Source integrity is checked against the immutable ingest manifest and mana
 hash, independent of the later edit revision. Final QA is selected from the current project
 or review artifacts for the requested revision, while a non-ready report remains an explicit
 `final_qa_not_ready` warning and never implies Gate 3 approval.
+The warnings include `gate1_approval_missing_or_stale` when the active revision has no
+schema-valid approved Gate 1 edit record. An approval for another revision is stale.
 
 ### `videoedit retry PROJECT`
 
