@@ -19,6 +19,7 @@
 |-- docs/
 |   `-- adr/
 |-- examples/
+|   `-- input-prompts/       filled-in creator prompts and templates
 |-- prompts/
 |-- remotion/
 |   |-- src/
@@ -57,3 +58,12 @@
 - `state/` contains resumable stage records, staging paths, locks, and cache records.
 
 Large media and private assets are ignored. Schemas, examples, reusable components, tests, skills, and documentation are versioned.
+
+For people using the workflow rather than developing it, read in this order:
+
+1. `README.md` for the overview and copy/paste commands;
+2. `docs/31_user_quickstart.md` for one complete local project;
+3. `docs/README.md` for the documentation map;
+4. `examples/input-prompts/` for realistic prompts;
+5. `INSTALL.md` for platform troubleshooting;
+6. `docs/11_runbook.md` for recovery, gates, and delivery operations.

@@ -1,5 +1,33 @@
 # Command Line Contract
 
+This is the maintainer-facing behavior contract. For a copy/paste user path,
+start with [`README.md`](../README.md), [`docs/31_user_quickstart.md`](31_user_quickstart.md),
+and [`docs/11_runbook.md`](11_runbook.md). The executable help is the final
+authority when an implementation detail and an older contract example differ:
+
+```bash
+uv run videoedit --help
+uv run videoedit COMMAND --help
+```
+
+The current worker-free production path uses the command names below. The
+optional SAM 3.1 and MatAnyone 2 sections remain contract boundaries only and
+are not part of the public setup path.
+
+| Purpose | Current command |
+| --- | --- |
+| Check the machine | `uv run videoedit doctor --json` |
+| Create and ingest | `uv run videoedit init`, `ingest`, `probe` |
+| Transcribe and detect silence | `uv run videoedit transcribe`, `detect-silence` |
+| Create review proposals | `uv run videoedit plan-review`, `plan-focus-pacing` |
+| Import reviewed decisions | `uv run videoedit import-edit-decisions` |
+| Approve Gate 1 | `uv run videoedit approve-gate1` |
+| Compile and render the edit | `uv run videoedit compile-edl`, `compile-retimed-timeline`, `render-retimed` |
+| Compose and preview visuals | `uv run videoedit compose-visual`, `render`, `render-segment` |
+| Review and rework segments | `uv run videoedit preview-segments`, `review-segments`, `recut-revision` |
+| Final QA and delivery | `uv run videoedit assemble-final`, `qa-final`, `approve-gate3`, `publish-delivery` |
+| Verify backup and clean safely | `uv run videoedit backup-verify`, `cleanup-plan`, `approve-cleanup`, `execute-cleanup` |
+
 ## General behavior
 
 Executable name:
@@ -116,7 +144,7 @@ timeline duration before atomic promotion. Frame-range and still renders do not 
 this full-render audio finalization. A successful process exit still does not replace
 decoded-frame visual review.
 
-### `videoedit project init PATH`
+### `videoedit init PROJECT`
 
 Options:
 
@@ -139,36 +167,34 @@ Options:
 --dry-run
 ```
 
-### `videoedit plan PROJECT`
+### `videoedit plan-edits PROJECT`
 
-Runs missing analysis and creates edit proposals.
+Runs the implemented local edit-planning stages and creates proposal artifacts.
+Use `plan-review` afterward to create the operator-facing review packet.
 
 Options:
 
 ```text
---through STAGE
---policy NAME
---planner none|configured
---force-stage NAME
+--workspace PATH
 ```
 
-### `videoedit review export PROJECT`
+### `videoedit plan-review PROJECT`
 
 Options:
 
 ```text
---format markdown|json|all
---output PATH
+--revision-id TEXT
+--workspace PATH
 ```
 
-### `videoedit approve edits PROJECT`
+### `videoedit import-edit-decisions PROJECT`
 
 Options:
 
 ```text
---from PATH
---actor TEXT
---role TEXT
+--decisions PATH
+--revision-id TEXT
+--workspace PATH
 ```
 
 Imports explicit decisions. It does not infer approval from a modified proposal file.
@@ -185,17 +211,16 @@ Writes a hash-bound `edit_review_batch` artifact and Markdown summary. High-conf
 
 Writes a non-blocking `edit_metrics_qa` artifact from the canonical EDL, proposals, transcript, and optional transition and join-QA artifacts. It reports cut density, retained fragments, cadence, transition frequency, and repetition signals; high cut density is a warning signal and is never an automatic failure.
 
-### `videoedit render rough PROJECT`
+### `videoedit render-base PROJECT`
 
 Options:
 
 ```text
---profile NAME
---revision ID
---dry-run
+--output PATH
+--workspace PATH
 ```
 
-### `videoedit plan assets PROJECT`
+### Asset and provider planning policy
 
 Options:
 
@@ -206,11 +231,11 @@ Options:
 --provider NAME
 ```
 
-### `videoedit costs PROJECT`
+### Provider cost policy
 
 Shows planned requests, estimates, reserve, approved amount, committed amount, and actual amount.
 
-### `videoedit approve spend PROJECT`
+### Bounded spend approval policy
 
 Options:
 
@@ -223,7 +248,7 @@ Options:
 
 Currency should come from project configuration when more than USD is supported.
 
-### `videoedit generate assets PROJECT`
+### Provider asset submission policy
 
 Options:
 
@@ -236,24 +261,23 @@ Options:
 
 The `--network` flag is an additional explicit intent signal. It does not replace policy and configuration.
 
-### `videoedit render preview PROJECT`
+### `videoedit render-segment TIMELINE OUTPUT`
 
 Options:
 
 ```text
---profile NAME
---revision ID
---watermark-review
+--start-frame INTEGER
+--end-frame INTEGER
+--remotion-directory PATH
 ```
 
-### `videoedit qa PROJECT`
+### `videoedit qa-project PROJECT`
 
 Options:
 
 ```text
---render preview|final|PATH
---profile NAME
---report PATH
+--render-manifest PATH
+--workspace PATH
 ```
 
 Returns exit code 10 when required checks fail.
@@ -500,26 +524,23 @@ Options:
 --network-enabled
 ```
 
-### `videoedit approve final PROJECT`
+### `videoedit approve-final PROJECT`
 
 Options:
 
 ```text
---preview ID|active
---qa-report ID|active
 --actor TEXT
---role TEXT
+--render-manifest PATH
 --reason TEXT
+--workspace PATH
 ```
 
-### `videoedit render final PROJECT`
+### `videoedit render TIMELINE OUTPUT`
 
 Options:
 
 ```text
---profile NAME
---revision ID
---output-dir PATH
+--remotion-directory PATH
 ```
 
 ### `videoedit status PROJECT`
@@ -545,25 +566,27 @@ Options:
 
 ```text
 --stage NAME
+--reason TEXT
 --run ID
 ```
 
 Retry validates eligibility and does not resubmit a remote paid request without resolving its job state.
 
-### `videoedit clean PROJECT`
+### `videoedit cleanup-plan PROJECT`
 
 Options:
 
 ```text
---derived-only
---cache
---inactive-revisions
---dry-run
+--backup-verification PATH
+--revision-id TEXT
+--workspace PATH
 ```
 
-At least one cleanup scope is required.
+The cleanup plan is generated only from retained derived artifacts and, when
+provided, a passing backup-verification report. It never includes the
+immutable registered source.
 
-### `videoedit project export PROJECT`
+### Project export contract
 
 Options:
 
@@ -604,21 +627,26 @@ Human mode can show progress. JSON mode should keep standard output valid JSON. 
 
 ## Planned focus and pacing commands
 
-### `videoedit focus plan PROJECT`
+### `videoedit plan-focus-pacing PROJECT`
 
 Creates or revises a schema-valid focus and pacing plan. It records visible zoom targets, exact relevance ranges, explicit speed-up request evidence, exact prompt-action boundaries, confidence components, safe fallbacks, and review requirements.
 
-### `videoedit approve focus PROJECT`
+### Gate 1 focus and pacing approval
 
-Imports operator decisions and writes a hash-bound focus and pacing approval. It cannot approve its own proposals and cannot modify the proposal artifact in place.
+The focus and pacing plan is bound into the normal `approve-gate1 PROJECT`
+record. There is no separate focus approval command. The command cannot approve
+its own proposal and cannot modify the proposal artifact in place.
 
-### `videoedit timeline retime PROJECT`
+### `videoedit compile-retimed-timeline PROJECT`
 
 Compiles approved prompt speed-ups into a contiguous retimed timeline before the base render. It fails when ranges overlap, contain forbidden activity, lack request evidence, omit required audio policy, or leave gaps in the canonical map.
 
-### `videoedit focus preview PROJECT`
+### `videoedit qa-focus-pacing PROJECT`
 
-Renders short proof clips and evidence frames for zoom and speed-up candidates. It reports target centering, easing, stability, edge coverage, exact action boundaries, audible audio, A/V synchronization, expected duration, and downstream cue mapping.
+Validates target centering, easing, stability, edge coverage, exact action
+boundaries, audible audio, A/V synchronization, expected duration, and
+downstream cue mapping from the current focus/pacing plan and available proof
+artifacts.
 
 ### Segment self-verification commands
 
@@ -799,42 +827,51 @@ It creates a schema-valid, hash-bound logical segment plan and low-cost FFmpeg p
 each preview is rendered from a half-open integer-microsecond range, decoded, probed, and promoted
 atomically. The full `preview segment` package remains the Gate 2 command described below.
 
-### `videoedit review import-fixes PROJECT PATH`
+### `videoedit import-review-markers PROJECT` and `videoedit recut-revision PROJECT`
 
 Imports timestamped fix markers into a new immutable revision. It does not modify an approved revision in place.
 
-### `videoedit verify speech PROJECT`
+### `videoedit retranscribe-revision PROJECT` and `videoedit qa-segment PROJECT`
 
 Re-transcribes an edited segment or final candidate and compares it with the intended approved speech sequence.
 
-### `videoedit backup verify PROJECT`
+### `videoedit backup-verify PROJECT`
 
 Checks that configured source and delivery backups exist and match recorded checksums. A hash-keyed cached report is reused only when its project, revision, target paths, sizes, hashes, statuses, and messages still match the freshly recomputed evidence; schema-valid stale contents fail closed. Cleanup remains blocked until this command passes and a cleanup approval exists.
 
-### `videoedit approve segments PROJECT`
+### `videoedit approve-segment PROJECT` and `videoedit lock-segment PROJECT`
 
 Imports Gate 2 decisions from one or more `segment_review` artifacts.
 
 Options:
 
 ```text
---from PATH
+--review-package PATH
+--transcript-comparison PATH
+--segment-qa PATH
+--visual-qa PATH
+--composition-bundle PATH
 --actor TEXT
 --role TEXT
 ```
 
 The command rejects stale preview, transcript comparison, effect asset, composition bundle, or QA hashes.
 
-### `videoedit render final-candidate PROJECT`
+### `videoedit assemble-final PROJECT`
 
-Assembles only Gate 2 approved segment revisions, applies the final loudness pass, and writes a review candidate. Reuse of a derived manifest requires the current lock/media hashes, segment ranges, project configuration, encoder version, and exact promoted output/pre-normalized file hashes; a stale schema-valid manifest fails closed. It does not create a delivery master and does not imply Gate 3 approval.
+Assembles only Gate 2 approved segment revisions and writes a review
+candidate. Reuse of a derived manifest requires the current lock/media hashes,
+segment ranges, project configuration, encoder version, and exact promoted
+output/pre-normalized file hashes; a stale schema-valid manifest fails closed.
+It does not create a delivery master and does not imply Gate 3 approval.
 
 Options:
 
 ```text
---profile NAME
---revision ID
+--segment-spec PATH
 --output PATH
+--revision-id TEXT
+--workspace PATH
 ```
 
 ### Implemented P11 commands
@@ -903,7 +940,7 @@ Final visual proof must include at least one retained, non-empty image or video 
 an empty file, or a JSON/text diagnostic is a required QA failure. This file check proves
 that review material was retained; it does not replace human visual inspection or Gate 3.
 
-### `videoedit cleanup plan PROJECT`
+### `videoedit cleanup-plan PROJECT`
 
 Creates the schema-valid cleanup plan from retained artifact records and a passing backup verification report. A keyed cached plan is reused only when its current derived entries, exact hashes, eligibility, backup binding, project, revision, and configuration identity match; schema-valid stale contents fail closed.
 

@@ -1,5 +1,9 @@
 # SAM 3.1 Worker Boundary
 
+> This is an optional contract boundary, not part of the required public
+> workflow. Normal users should not install it. Use chroma keying or an
+> approved supplied/manual mask instead.
+
 This directory is a planning scaffold for a worker that turns an approved object prompt into frame-aligned lossless masks, stable object identities, and tracked geometry. The core invokes the worker as a separate process because the current SAM environment is intentionally isolated from the Python 3.11 core.
 
 The included `run_job.py` is a contract-bound adapter. It prefers the verified SAM

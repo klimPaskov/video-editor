@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import pytest
@@ -5,6 +6,11 @@ import pytest
 from videoedit.adapters.ffmpeg import FFmpegAdapter
 from videoedit.adapters.process import LocalProcessRunner
 from videoedit.services.doctor import _amd_amf_check
+
+
+def _skip_non_windows_amd_probe() -> None:
+    if os.name != "nt":
+        pytest.skip("AMD AMF integration checks require the Windows AMD media runtime")
 
 
 @pytest.mark.integration
@@ -23,6 +29,7 @@ def test_generate_probe_and_mask_recolor(tmp_path: Path) -> None:
 
 @pytest.mark.integration
 def test_amd_overlay_preserves_the_final_visual_frame_with_audio(tmp_path: Path) -> None:
+    _skip_non_windows_amd_probe()
     amf_check = _amd_amf_check(
         configured_path="ffmpeg",
         runner=LocalProcessRunner(),
@@ -49,6 +56,7 @@ def test_amd_overlay_preserves_the_final_visual_frame_with_audio(tmp_path: Path)
 
 @pytest.mark.integration
 def test_amd_audio_bound_stages_preserve_visual_boundaries(tmp_path: Path) -> None:
+    _skip_non_windows_amd_probe()
     amf_check = _amd_amf_check(
         configured_path="ffmpeg",
         runner=LocalProcessRunner(),

@@ -6,7 +6,7 @@ Review is a data transition between proposed edits and the canonical edit decisi
 
 ## Export package
 
-`videoedit review export PROJECT` should create:
+`videoedit plan-review PROJECT` should create:
 
 ```text
 review/

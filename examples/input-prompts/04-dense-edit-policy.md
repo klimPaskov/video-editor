@@ -1,25 +1,34 @@
-# Prompt: smart-dense editing and exact cuts
+# Prompt: smart-dense cleanup for a developer tutorial
 
-Work on `<project-id>` at revision `<revision-id>`.
+Work on `hermes-agent-demo-20260728`, revision `rev_004`, from the current
+local transcript, silence report, take boundaries, and screen evidence.
 
-Create an evidence-backed smart-dense edit proposal from the current local
-transcript, silence report, take boundaries, and source media. Propose every
-qualifying mechanical candidate: dead air, low-risk filler, stutter,
-false-start, accidental repetition, and excess silence. Preserve useful
-breaths, emphasis, names, numbers, negation, qualifications, uncertainty,
-overlapping speakers, and natural cadence.
+Scan every word and gap for clearly mechanical improvements. Propose all
+qualifying low-risk instances of:
 
-The operator has also requested these exact edits:
+- repeated starts such as “I, I mean…”;
+- one-word stutters such as “the the”;
+- abandoned phrases followed by a complete restart;
+- “uh”, “um”, accidental repetitions, dead air, and excess silence;
+- obvious housekeeping such as waiting for a page that contributes no useful
+  explanation.
 
-- `<source start>-<source end>`: `<quoted words and reason>`
-- `<source start>-<source end>`: `<quoted words and reason>`
+Protect commands, filenames, names, numbers, negation, warnings,
+qualifications, uncertainty, useful breaths, emotion, and overlapping speech.
+Do not delete a semantic tangent automatically. Compare adjacent takes for
+completeness, factual correctness, delivery, audio, gesture, and screen
+continuity instead of assuming the last take is best.
 
-Do not infer additional semantic deletions. Keep the original range when a
-meaning, identity, take, or join is uncertain. For each proposed applied cut,
-record its source range, reason, confidence, risk, join strategy, preview
-range, and source-to-output mapping. Create the review batch, decision list,
-join plan, and edit metrics QA.
+Also propose these exact operator edits:
 
-Wait for my explicit Gate 1 approval before applying semantic cuts, effects, or
-any requested speed-up. Return the exact artifact paths, hashes, warnings, and
-the small set of questions that need a human decision.
+- `01:30.940-01:32.700`: remove “I am not even going to do this manually”;
+- `04:09.200-04:10.480`: remove “very nice” while the GitHub page is open;
+- `04:11.000-04:19.840`: remove the sentence beginning “the point of this
+  series is also…”;
+- `07:18.550-07:19.270`: remove “good job”; `07:19.950-07:20.730`: remove
+  “very nice”.
+
+For every proposal record source range, quoted transcript, type, confidence,
+meaning/continuity risk, safe fallback, join strategy, preview context, and
+source-to-output mapping. Create the review batch, decision list, join plan,
+metrics QA, and Gate 1 packet. Stop before applying anything.

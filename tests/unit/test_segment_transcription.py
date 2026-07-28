@@ -116,9 +116,7 @@ def _fixture_manifest(tmp_path: Path) -> tuple[Path, Path, Path]:
     }
     write_validated_artifact(ROOT, "revision_media_manifest", manifest_path, manifest)
     transcript = json.loads(
-        (ROOT / "projects" / "p9-cue-fixture" / "work" / "segment-transcript.json").read_text(
-            encoding="utf-8"
-        )
+        (ROOT / "tests" / "fixtures" / "segment-transcript.json").read_text(encoding="utf-8")
     )
     transcript["project_id"] = layout.root.name
     transcript_path = layout.work / "intended-transcript.json"

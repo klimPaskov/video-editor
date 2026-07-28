@@ -1,28 +1,28 @@
-# Prompt: review and deliver a candidate
+# Prompt: review a real candidate before publishing
 
-Review the current candidate for `<project-id>`:
+Review this candidate for `hermes-agent-demo-20260728`, revision `rev_004`:
 
-- Candidate: `<absolute path to candidate MP4>`
-- Review packet: `<absolute path to QA review packet>`
-- Reviewer: `<name>`
-- Review role: `<role>`
+```text
+Candidate: C:\Users\me\Projects\video-editor\projects\hermes-agent-demo-20260728\revisions\rev_004\outputs\candidate.mp4
+Review packet: C:\Users\me\Projects\video-editor\projects\hermes-agent-demo-20260728\review\qa-review-packet.json
+Reviewer: Alex
+Role: channel editor
+```
 
-Show the candidate and its diagnostics. Check every flagged join and segment
-for clipped words, clicks, room-tone jumps, duplicate or missing words, cadence,
-black flashes, frozen frames, face or screen-state jumps, caption mistakes,
-targetless zooms, incorrect prompt-speed boundaries, and audio/video sync.
+Inspect the actual MP4 and the evidence, not just JSON or process exit codes.
+Check every flagged join and a representative sample of passing joins for:
 
-Record a decision for each item as `repair`, `false_positive`,
-`accepted_risk`, or `reject_candidate`, with a short reason. Do not treat a
-successful FFmpeg or Remotion exit code as visual proof.
+- missing or duplicated words, clipped syllables, bad grammar, and rushed
+  cadence;
+- clicks, dropouts, clipping, room-tone jumps, A/V drift, and audible changes
+  in the speed-up section;
+- black flashes, frozen frames, face jumps, impossible cursor or screen states;
+- caption spelling, timing, line wrapping, contrast, and safe-area violations;
+- target-centered zoom timing, easing, stability, edge coverage, and unrelated
+  content entering the frame;
+- exact prompt-writing boundaries, audible sound, and unchanged voice pitch.
 
-Only after all required findings are repaired or explicitly accepted by the
-review policy, and after I explicitly approve Gate 3, should you:
-
-1. promote the approved candidate to the configured `outputs` directory;
-2. write delivery metadata, stream details, and checksums;
-3. run strict FFmpeg decode and stream validation;
-4. verify a backup copy by hash.
-
-Keep source deletion and generated-output cleanup as separate approvals. Do not
-delete or overwrite the source or a valid prior revision.
+Record each finding as `repair`, `false_positive`, `accepted_risk`, or
+`reject_candidate`, with a timestamp, reason, and retained evidence path.
+Repair failures in a new revision. Do not approve Gate 3, delivery, backup, or
+cleanup until the current human approvals and full watch-through are complete.

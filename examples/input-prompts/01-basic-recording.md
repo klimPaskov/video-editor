@@ -1,25 +1,32 @@
-# Prompt: edit one recording
+# Prompt: edit a real tutorial recording
 
-Use the local VideoEdit workflow on this source:
+Create a VideoEdit project named `hermes-agent-demo-20260728` from:
 
-- Source: `<absolute path to the video file>`
-- Project id: `<short-project-id>`
-- Intended audience: `<audience>`
-- Desired duration or pacing: `<brief target, if any>`
+```text
+C:\Users\me\Videos\hermes-agent-demo.mp4
+```
 
-Create a proposal first. Preserve the immutable source and do not render over
-it. Remove only clearly mechanical dead air, filler, stutters, false starts,
-and accidental repetitions. Preserve meaning, useful breaths, names, numbers,
-qualifications, and natural emphasis.
+This is a 42-minute screen recording for developers. I explain how I use a
+Hermes agent to change a local GitHub project. The finished tutorial should
+feel focused and conversational, not rushed. Keep the opening explanation, the
+important commands, the successful run, and the final result.
 
-Produce:
+First perform only the local evidence path:
 
-1. media hash and ffprobe evidence;
-2. a local word-timed transcript and silence report;
-3. an edit/effect/focus/pacing plan with confidence and reasons;
-4. a review packet for Gate 1.
+1. copy and hash the source without modifying the original;
+2. probe the streams and duration with ffprobe;
+3. create a word-timed local Whisper transcript and silence report;
+4. propose dense but conservative edits, captions, focus, and effects;
+5. create a Gate 1 review packet with hashes and evidence.
 
-Do not approve the plan, make paid calls, use cloud media generation, delete
-source files, or promote a delivery. Stop and ask me when a cut is semantic,
-an identity is uncertain, a required asset is unavailable, or a licence or
-hardware decision is needed.
+Remove only clearly mechanical dead air, low-risk fillers, stutters, false
+starts, and accidental repetitions. Preserve names, commands, numbers,
+negation, warnings, qualifications, useful breaths, emotion, and uncertain
+words. Every proposed cut needs a reason, confidence, risk, join strategy, and
+preview range.
+
+Do not apply the edits, approve any gate, call a paid provider, use cloud media
+generation, invoke SAM 3.1 or MatAnyone 2, delete source files, or publish a
+delivery. Stop on uncertain meaning, identity, timing, licensing, or hardware.
+Return exact commands, artifact paths, hashes, warnings, and the few decisions
+that need my review.

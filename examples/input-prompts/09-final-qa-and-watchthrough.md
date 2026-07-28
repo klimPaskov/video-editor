@@ -1,25 +1,28 @@
-# Prompt: final candidate QA and watch-through
+# Prompt: perform the final review on a real candidate
 
-Review `<absolute local candidate MP4>` for `<project-id>` revision
-`<revision-id>`.
+Review:
 
-Use the current review packet, final QA, join previews, visual evidence, source
-mapping, caption sidecars, and stream diagnostics. Inspect the actual media,
-not just JSON or process exit codes. Check:
+```text
+Project: hermes-agent-demo-20260728
+Revision: rev_004
+Candidate: C:\Users\me\Projects\video-editor\projects\hermes-agent-demo-20260728\revisions\rev_004\outputs\candidate.mp4
+Final QA: C:\Users\me\Projects\video-editor\projects\hermes-agent-demo-20260728\review\final-qa.json
+```
 
-- source immutability, revision and approval hashes;
-- duration, frame count, rational frame rate, dimensions, pixel format, color;
-- audio sample rate, channel layout, codec, sync, clipping, clicks, dropouts,
-  and room-tone continuity;
-- every join for missing/duplicate words, clipped syllables, grammar, meaning,
-  cadence, black flashes, freezes, face jumps, and impossible UI states;
-- caption timing, glyphs, contrast, line wrapping, and safe areas;
-- mask/alpha edges, subject identity, object recolor, z-order, and occlusion;
-- every zoom target, target centering, easing, stability, and exact boundaries;
-- every speed-up boundary, visible prompt action, audible sound, and original
-  voice pitch.
+Use the current review packet, every join preview, the output transcript, the
+source-to-output map, caption sidecars, visual evidence, and stream diagnostics.
+Watch the actual candidate from beginning to end. Sample the first, middle,
+last, high-motion, caption-heavy, zoom, and speed-up sections, and inspect all
+machine failures.
 
-Record each finding as `repair`, `false_positive`, `accepted_risk`, or
-`reject_candidate`, with a reason and retained evidence path. Record a human
-watch-through only after the candidate has been inspected. Do not approve Gate
-3, delivery, backup, or cleanup on my behalf.
+Check source/revision/approval hashes; frame count and rational FPS; dimensions,
+pixel format, BT.709 metadata; audio codec, sample rate, stereo layout, sync,
+clipping, clicks, dropouts, and room-tone continuity; every join for missing or
+duplicated words; captions and safe areas; mask edges and z-order; black flashes
+and freezes; cursor/screen-state continuity; target-centered zoom boundaries;
+and audible pitch-preserved prompt speed-ups.
+
+Record every finding as `repair`, `false_positive`, `accepted_risk`, or
+`reject_candidate` with timecode, reason, and retained evidence. Record the
+human watch-through only after inspection. Do not invent Gate 3, delivery,
+backup, or cleanup approval from a passing command.

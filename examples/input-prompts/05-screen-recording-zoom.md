@@ -1,24 +1,24 @@
-# Prompt: purposeful screen-recording focus
+# Prompt: focus the UI that viewers actually need to read
 
-Review `<project-id>` revision `<revision-id>` for screen-recording focus.
+Review `hermes-agent-demo-20260728`, revision `rev_004`, for purposeful focus.
+The opening title card must remain unzoomed.
 
-Do not zoom the intro/title card. Use a zoom only when the target is visible,
-relevant to the current point, and supported by evidence:
+There is one candidate target:
 
-- Target: `<opened window, prompt box, control, or cursor action>`
-- Target appears: `<source time>`
-- Action starts: `<source time>`
-- Action ends: `<source time>`
-- Why the target matters: `<reason>`
-- Evidence frames: `<local paths or frame description>`
+- Target: the **Instructions** textarea in the open Project settings dialog;
+- target first visible: about `11:36.500`;
+- visible typing action: `11:37.000-12:18.000`;
+- target remains relevant until: about `12:18.500`;
+- reason: viewers need to read where the project instructions are entered;
+- evidence: capture the first typed character and the final completed text.
 
-Start after the target appears and end before unrelated content begins. Center
-the actual target, preserve stable full-frame coverage, and use frame-driven
-smooth ease-in/ease-out motion. Reject random times, targetless movement,
-whole-screen drift, snapping, jitter, edge gaps, and zooms that hide the next
-state.
+Use a modest 1.45x target-centered zoom with frame-driven smooth ease-in,
+hold, and ease-out. Start only after the textarea is visible, keep the actual
+textarea centered, and end before the dialog is dismissed or unrelated reading
+begins. Keep the rest of the screen stable; do not pan freely or move the
+whole frame.
 
-If the target or boundary is not verifiable, keep normal framing and record a
-no-zoom decision. Produce the focus/pacing plan, target evidence frames,
-geometry diagnostics, and a Gate 1 review packet. Do not approve the plan or
-render a final candidate.
+Reject zooms on the intro, browser chrome, waiting/loading, result inspection,
+or a mixed UI state. If the target or either boundary is not verifiable, emit a
+`no_zoom` decision. Produce evidence frames, integer-frame keyframes, geometry
+diagnostics, and a Gate 1 review packet. Do not apply the zoom yet.
