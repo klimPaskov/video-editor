@@ -637,7 +637,7 @@ videoedit approve-qa-override PROJECT_ID --qa-report PATH --finding FINDING_ID=E
 videoedit check-qa-override PROJECT_ID --qa-report PATH --override PATH
 videoedit qa-visual-segment PROJECT_ID --review-package PATH
 videoedit plan-marker-focus PROJECT_ID --markers PATH
-videoedit qa-focus-pacing PROJECT_ID --focus-pacing-plan PATH
+videoedit qa-focus-pacing PROJECT_ID --focus-pacing-plan PATH [--retimed-timeline PATH] [--visual-timeline PATH] [--transcript PATH]
 videoedit approve-segment PROJECT_ID --review-package PATH --transcript-comparison PATH --segment-qa PATH --visual-qa PATH --composition-bundle PATH --actor TEXT --role TEXT
 videoedit lock-segment PROJECT_ID --review PATH --review-package PATH --transcript-comparison PATH --segment-qa PATH --visual-qa PATH --composition-bundle PATH
 ```
@@ -698,6 +698,13 @@ Repeat `--decision` for a batch and optionally provide retained evidence with
 IDs, decisions not allowed by the packet, missing reviewer identity, and empty
 reasons. It never mutates the packet or grants QA override, Gate 2, Gate 3,
 delivery, or cleanup approval.
+
+`qa-focus-pacing` fails closed when the project default retimed timeline belongs
+to another revision; pass the current revision-bound timeline explicitly. When
+`--visual-timeline` is supplied, it must be a schema-valid timeline with the
+same dimensions and the exact focus-plan hash. Its compiled zoom keyframes are
+extracted and checked against the rebased plan; the command never recreates
+passing keyframes from the plan alone.
 
 ### `videoedit qa PROJECT --scope focus-pacing`
 

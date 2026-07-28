@@ -120,7 +120,11 @@ The current local implementation exposes these stages through the CLI and servic
 - `compile-retimed-timeline` emits the authoritative piecewise source/output map.
 - `render-retimed` stages FFmpeg output, preserves audible pitch by default, validates decode, duration, and A/V drift, and writes a render manifest.
 - `compose-visual --focus-pacing-plan` attaches approved target-centered keyframes to the Remotion timeline; `--retimed-timeline` rebases source times before keyframe generation.
-- `qa-focus-pacing` persists the named zoom and speed-up checks. Visual overlay clearance remains an explicit review finding.
+- `qa-focus-pacing` persists the named zoom and speed-up checks. A stale
+  default retimed timeline is rejected when the plan is revision-bound; pass
+  `--retimed-timeline` and, after composition, `--visual-timeline` so QA checks
+  the compiled integer-frame zoom keyframes rather than regenerating them from
+  the plan. Visual overlay clearance remains an explicit review finding.
 
 The implementation does not treat a low-confidence candidate as an applied effect: zooms use `no_zoom`, speed-ups use `normal_speed`, and mixed prompt activity is rejected from the speed-up list with a warning.
 
