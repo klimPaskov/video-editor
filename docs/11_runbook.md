@@ -119,6 +119,9 @@ The immutable ingest source manifest retains its ingest revision when later edit
 are created; status therefore verifies its project and source hash without requiring the
 ingest revision to equal the active edit revision. A current review-scoped final QA report is
 included in readiness evaluation, but a non-ready report does not count as Gate 3 approval.
+The status warnings include `gate1_approval_missing_or_stale` whenever no schema-valid,
+approved Gate 1 edit record is bound to the active revision; an older revision's approval is
+never treated as current.
 
 ## Review workflow
 

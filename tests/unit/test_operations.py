@@ -22,6 +22,7 @@ def test_status_cancellation_and_retry_are_schema_bound(tmp_path: Path) -> None:
     status = read_project_status(ROOT, layout)
     assert status["source_integrity"] == "unknown"
     assert status["qa_ready"] is False
+    assert "gate1_approval_missing_or_stale" in status["warnings"]
     status_path = write_project_status(ROOT, layout)
     validate_artifact(ROOT, "operation_status", json.loads(status_path.read_text(encoding="utf-8")))
 
@@ -138,3 +139,28 @@ def test_status_reuses_immutable_ingest_source_for_later_revision_and_finds_revi
     assert "final_qa_not_ready" in status["warnings"]
     assert "final_qa_missing" not in status["warnings"]
     assert "source_manifest_project_or_revision_mismatch" not in status["warnings"]
+
+
+def test_status_accepts_a_current_gate1_approval(tmp_path: Path) -> None:
+    layout = initialize_project(tmp_path, "current_gate1_status_fixture")
+    approval = json.loads(
+        (ROOT / "examples" / "approval_record.example.json").read_text(encoding="utf-8")
+    )
+    approval.update(
+        {
+            "project_id": layout.root.name,
+            "revision_id": "rev_001",
+            "approval_type": "edit",
+            "decision": "approved",
+        }
+    )
+    write_validated_artifact(
+        ROOT,
+        "approval_record",
+        layout.review / "gate1-approval-current.json",
+        approval,
+    )
+
+    status = read_project_status(ROOT, layout)
+
+    assert "gate1_approval_missing_or_stale" not in status["warnings"]
