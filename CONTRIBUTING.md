@@ -21,6 +21,9 @@ weakening its review or safety boundaries.
 
 The development extra includes NumPy only for validation-only worker contract
 fixtures; it does not install or run SAM 3.1 or MatAnyone 2 inference.
+GitHub CI runs the portable contract/unit suite plus a software FFmpeg smoke
+test; run the full `uv run pytest -q` locally to exercise every media
+integration and available hardware path.
 
 ## Documentation and prompts
 

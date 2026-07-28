@@ -7,6 +7,7 @@ on:
 jobs:
   python-core:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - name: Install FFmpeg for media fixtures
@@ -20,7 +21,10 @@ jobs:
       - run: uv run ruff format --check .
       - run: uv run ruff check .
       - run: uv run mypy src
-      - run: uv run pytest -q
+      - name: Run portable contract and unit suite
+        run: uv run pytest -q -m "not integration"
+      - name: Run portable FFmpeg smoke
+        run: uv run pytest -q tests/integration/test_ffmpeg_demo.py -k generate_probe_and_mask_recolor
       - run: uv run python scripts/validate_examples.py
       - name: Check shell syntax
         run: |
