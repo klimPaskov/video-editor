@@ -124,7 +124,6 @@ Supported fix markers are:
 [KEEP] lock this range as reviewed
 [REMOVE] remove the named or timecoded range
 [RETIME] move or extend an effect
-[MASK] correct object or person selection
 [TEXT] change copy, styling, or layout
 [AUDIO] change timing, level, cue, or mix
 [ZOOM] add, remove, retarget, or retime a purposeful zoom
@@ -151,7 +150,6 @@ Reject:
 - a stale bound hash
 - a locked segment whose inputs changed without a new revision
 - a fix with an invalid or out-of-bounds range
-- a mask correction without object identity or prompt context
 - an approval while a required segment QA check fails
 - a decision that names an asset absent from the project asset manifest
 

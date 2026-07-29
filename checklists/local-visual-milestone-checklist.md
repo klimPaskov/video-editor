@@ -1,6 +1,6 @@
 # Local Visual Milestone Checklist
 
-Use this checklist before starting SAM 3.1 or MatAnyone 2 work.
+Use this checklist for the local screen-recording visual milestone.
 
 ## Foundation
 
@@ -19,24 +19,19 @@ Use this checklist before starting SAM 3.1 or MatAnyone 2 work.
 - [ ] Captions stay inside safe areas.
 - [ ] Still and segment previews render.
 
-## Green screen and masks
+## Screen composition
 
-- [ ] The key colour and lighting are documented.
-- [ ] The foreground intermediate retains a valid alpha channel.
-- [ ] Hair, fingers, clothes, holes, spill, and motion blur were reviewed.
-- [ ] The subject can be placed over at least two contrasting backgrounds.
-- [ ] One supplied local object mask aligns in size, frame count, range, and polarity.
-- [ ] Recolor affects only pixels inside the approved mask.
-- [ ] Invalid masks fall back to the original shot.
+- [ ] The screen target is visible before every purposeful zoom.
+- [ ] Zooms are centered, eased, stable, and bounded by relevant UI.
+- [ ] Prompt-action speed-ups start and end on the visible prompt action.
+- [ ] Sped-up sections retain audible, pitch-preserved sound.
+- [ ] Captions and text stay inside their approved safe areas.
 
 ## Full local proof
 
 - [ ] A short fixture shows approved cuts.
 - [ ] Production audio is preserved.
-- [ ] One object is recolored.
-- [ ] The green-screen subject is placed over a new background.
-- [ ] Text appears behind the subject.
-- [ ] Captions and front graphics appear above the subject.
+- [ ] A screen-focused visual layer and captions are rendered.
 - [ ] The final fixture fully decodes.
 - [ ] Contact sheets and timecoded QA findings exist.
 - [ ] No GPU checkpoint, credential, network provider, or paid service was required.

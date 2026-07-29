@@ -40,10 +40,8 @@ Check the exact Codex CLI options against the installed version. The result sche
 
 ## Phase selection
 
-Under ADR-0013, select the first incomplete task on the required path
-P0-P6, U21/U22, P9, P10, and P11. P7/P8 prompts are retained for optional
-future extensions and must not be selected unless a new accepted re-enable
-decision names the worker and its live scope.
+Select the first incomplete task on the required path P0-P6, U21/U22, P9, P10,
+and P11. Retired optional integration prompts are not part of the phase loop.
 
 Use one prompt from `prompts/`:
 
@@ -53,10 +51,7 @@ Use one prompt from `prompts/`:
 - `03_edit_planning_review.md`
 - `04_base_edit_audio.md`
 - `05_remotion_captions_motion.md`
-- `06_green_screen_local_masks.md`
-- `07_sam31_worker.md` (optional deferred extension)
-- `08_matanyone2_worker.md` (optional deferred extension)
-- `09_object_effects_assets_sound.md`
+- `09_assets_broll_sound.md`
 - `10_preview_self_verify.md`
 - `11_delivery_operations.md`
 - `99_review.md`
@@ -72,8 +67,6 @@ Project skills live under `.agents/skills`:
 - `operate-videoedit` guides later operation and diagnosis.
 - `ffmpeg-video-engine` constrains deterministic media work.
 - `remotion-compositor` constrains declarative visual work.
-- `sam3-object-effects` constrains segmentation and tracking.
-- `matanyone-person-matting` constrains person matting.
 - `video-review-qa` constrains preview, review, and quality evidence.
 
 The official Remotion skills may be installed separately. Project requirements remain authoritative when an external skill conflicts with this package.
@@ -85,7 +78,7 @@ For parallel tasks:
 - create one worktree and branch per independent pull request
 - do not assign two agents to edit the same public schema
 - merge foundation contracts before adapter implementations
-- separate GPU worker changes from core environment changes
+- separate future external-integration changes from core environment changes
 - rebase or merge current contract changes before final tests
 
 Safe parallel work after Phase 0 includes media fixtures, QA helpers, timeline functions, caption segmentation, visual components, and documentation.

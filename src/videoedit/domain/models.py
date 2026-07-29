@@ -291,12 +291,6 @@ class EffectRequest(BaseModel):
         "motion_graphic",
         "sound_effect",
         "broll",
-        "track_recolor",
-        "track_replace",
-        "inpainting",
-        "person_matte",
-        "background_replace",
-        "text_between_subject_and_background",
         "picture_in_picture",
         "screen_focus",
     ]

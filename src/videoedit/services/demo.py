@@ -25,6 +25,8 @@ def build_demo(
     adapter: FFmpegAdapter | None = None,
     npm_path: str = "npm",
 ) -> dict[str, str]:
+    """Create a small screen-recording fixture for smoke tests and onboarding."""
+
     layout = initialize_project(workspace, project_id)
     ffmpeg = adapter or FFmpegAdapter()
     remotion = RemotionService(
@@ -33,24 +35,14 @@ def build_demo(
         ffmpeg_adapter=ffmpeg,
     )
 
-    source = layout.work / "synthetic-green-screen.mp4"
-    mask = layout.work / "synthetic-object-mask.mp4"
-    recolored = layout.work / "synthetic-recolored.mp4"
-    foreground = layout.work / "synthetic-foreground.mov"
-    plate = layout.work / "plate.mp4"
-    composite = layout.output / "demo-local.mp4"
+    source = layout.work / "synthetic-screen-recording.mp4"
     final = layout.output / "demo-final.mp4"
 
     ffmpeg.generate_demo_source(source)
-    ffmpeg.generate_demo_mask(mask)
     manifest = ingest_source(layout, source, package_root=workspace)
-    ffmpeg.recolor_with_mask(source, mask, recolored)
-    ffmpeg.chroma_key_foreground(recolored, foreground)
-    ffmpeg.generate_demo_plate(plate)
-    ffmpeg.overlay_foreground(plate, foreground, composite, audio_source=recolored)
 
     duration_frames = 180
-    plate_timeline = TimelineSpec(
+    timeline = TimelineSpec(
         project_id=project_id,
         width=1280,
         height=720,
@@ -62,85 +54,67 @@ def build_demo(
             secondary_value="#4B6CB7",
         ),
         layers=[
+            VideoLayer(
+                id="screen-recording",
+                start_frame=0,
+                duration_frames=duration_frames,
+                z_index=20,
+                role="subject",
+                src="",
+                muted=False,
+            ),
             TextLayer(
-                id="behind-subject",
+                id="demo-label",
                 start_frame=24,
                 duration_frames=132,
-                z_index=1,
-                text="TEXT BEHIND SUBJECT",
+                z_index=30,
+                text="SCREEN RECORDING WORKFLOW",
                 color="#FFFFFF",
-                font_size=74,
+                font_size=64,
                 animation="scale",
-                transform=Transform(x=0, y=-20),
+                transform=Transform(y=-20),
+            ),
+        ],
+        captions=[
+            CaptionCue(
+                id="caption-1",
+                start_frame=48,
+                end_frame=132,
+                text="A small screen-recording fixture",
+                emphasis=["screen-recording"],
             )
         ],
     )
-    plate_props = remotion.write_props(plate_timeline, layout.artifacts / "plate-timeline.json")
 
     outputs = {
         "project": str(layout.root),
         "source_manifest": str(layout.artifacts / "source-manifest.json"),
         "source_sha256": str(manifest["sha256"]),
-        "recolored": str(recolored),
-        "foreground": str(foreground),
-        "plate_timeline": str(plate_props),
-        "local_composite": str(composite),
+        "screen_recording": str(source),
         "final": str(final),
     }
 
     if render:
-        composite_asset = remotion.stage_asset(project_id, composite)
-        final_timeline = TimelineSpec(
-            project_id=project_id,
-            width=1280,
-            height=720,
-            fps=30,
-            duration_frames=duration_frames,
-            background=BackgroundLayer(kind="solid", value="#000000"),
-            layers=[
-                VideoLayer(
-                    id="composite",
-                    start_frame=0,
-                    duration_frames=duration_frames,
-                    z_index=0,
-                    src=composite_asset,
-                    muted=False,
-                ),
-                TextLayer(
-                    id="front-label",
-                    start_frame=12,
-                    duration_frames=70,
-                    z_index=10,
-                    text="CODEX VIDEO AGENT",
-                    color="#FFD166",
-                    font_size=44,
-                    animation="slide_up",
-                    transform=Transform(y=-260),
-                ),
-            ],
-            captions=[
-                CaptionCue(
-                    id="caption-1",
-                    start_frame=48,
-                    end_frame=132,
-                    text="Mask driven recolor, green screen cutout, and layered text",
-                    emphasis=["recolor", "layered"],
-                )
-            ],
-            assets=[
-                TimelineAssetRef(
-                    asset_id="asset_composite",
-                    src=composite_asset,
-                    sha256=sha256_file(composite),
-                    role="subject",
-                )
-            ],
+        staged_source = remotion.stage_asset(project_id, source)
+        render_timeline = timeline.model_copy(
+            update={
+                "layers": [
+                    timeline.layers[0].model_copy(update={"src": staged_source}),
+                    timeline.layers[1],
+                ],
+                "assets": [
+                    TimelineAssetRef(
+                        asset_id="asset_screen_recording",
+                        src=staged_source,
+                        sha256=sha256_file(source),
+                        role="subject",
+                    )
+                ],
+            }
         )
-        final_props = remotion.write_props(final_timeline, layout.artifacts / "final-timeline.json")
-        remotion.render(final_props, final)
-        outputs["plate"] = str(plate)
-        outputs["composite"] = str(composite)
-        outputs["final_timeline"] = str(final_props)
+        props = remotion.write_props(render_timeline, layout.artifacts / "final-timeline.json")
+        remotion.render(props, final)
+        outputs["final_timeline"] = str(props)
 
     (layout.artifacts / "demo-result.json").write_text(
         json.dumps(outputs, indent=2), encoding="utf-8"

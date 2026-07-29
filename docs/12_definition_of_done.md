@@ -65,55 +65,28 @@ The first complete visual milestone is done when:
 - a schema-valid Remotion timeline renders from JSON props
 - brand fonts, colors, captions, safe areas, and motion primitives are deterministic
 - middle and front render passes have explicit z-order
-- a green-screen or approved-mask subject can be placed over a new background
-- text can be rendered behind the subject
-- one object can be recolored through a supplied local mask
+- text can be rendered behind or in front of recorded screen content
+- purposeful UI zooms use a visible target and verified boundaries
+- requested prompt-action speed-ups retain audible, pitch-preserved sound
 - production audio is preserved
 - contact sheets and timecoded visual findings are produced
-- the milestone works without credentials, paid providers, SAM 3.1, or MatAnyone 2
+- the milestone works without credentials, paid providers, or optional workers
 
-## SAM 3.1 worker done (optional deferred extension)
-
-The SAM worker is done only if the optional extension is later re-enabled. It
-is not a required final-workflow criterion. When enabled, it is done when:
-
-- current licence, checkpoint, code revision, Python, PyTorch, CUDA, and hardware decisions are recorded
-- the worker runs in its own environment
-- job and result contracts validate
-- jobs are bounded to approved ranges and prompt frames
-- masks are lossless and frame aligned
-- object IDs and geometry are retained
-- missing masks, area jumps, leaks, jumps, and identity switches are reported
-- fake contract tests pass
-- one short licensed live target-GPU test passes human review
-
-## MatAnyone 2 worker done (optional deferred extension)
-
-The MatAnyone worker is done only if the optional extension is later re-enabled.
-It is not a required final-workflow criterion. When enabled, it is done when:
-
-- current licence, checkpoint, code revision, Python, and hardware decisions are recorded
-- the worker runs in its own environment
-- job and result contracts validate
-- an approved first-frame person mask is required
-- foreground and alpha roles are proved before use
-- dimensions, frame count, hashes, and model identity are retained
-- hair, fingers, clothes, holes, motion blur, and temporal stability are reviewed
-- fake contract tests pass
-- one short licensed live target-GPU test passes human review
-
-## Object effects and local assets done
+## Visual assets and composition done
 
 This stage is done when:
 
-- approved tracks convert to bounded transform keyframes
-- object replacement keeps an original-shot fallback
-- occluder masks have explicit z-order
-- uncertain tracking or occlusion fails visibly
 - local assets have hashes, descriptions, tags, licences, attribution, and usage history
 - B-roll and sound cues require approval and obey density and collision rules
+- picture-in-picture and text layers have explicit bounds and z-order
 - speech-priority mixing, fades, gain, ducking, and clipping checks pass
 - no paid service is required for acceptance
+
+## Retired integrations
+
+Deferred model integrations and their contract tests are not release criteria
+and are not part of the public installer, CLI, doctor checks, or final render
+path. They must never be reported as required workflow capabilities.
 
 ## Optional provider adapter done
 

@@ -44,16 +44,10 @@ SUPPORTED_EFFECT_KINDS = {
     "motion_graphic",
     "sound_effect",
     "broll",
-    "track_recolor",
-    "track_replace",
-    "inpainting",
-    "person_matte",
-    "background_replace",
-    "text_between_subject_and_background",
     "picture_in_picture",
     "screen_focus",
 }
-SUPPORTED_RENDERERS = {"ffmpeg", "remotion", "sam3", "matanyone2", "provider"}
+SUPPORTED_RENDERERS = {"ffmpeg", "remotion", "provider"}
 NEGATION_WORDS = {
     "no",
     "not",
@@ -1332,17 +1326,8 @@ def _find_trigger_word_ids(
 
 
 def _default_effect_fallback(kind: str) -> str:
-    if kind in {
-        "track_recolor",
-        "track_replace",
-        "inpainting",
-        "person_matte",
-        "background_replace",
-    }:
-        return (
-            "Keep the original source layer if identity, mask, alpha, or continuity "
-            "validation fails"
-        )
+    if kind in {"picture_in_picture", "screen_focus"}:
+        return "Keep the original source layer if the approved target or timing cannot be validated"
     if kind in {"broll", "picture_in_picture"}:
         return "Omit the optional insert and preserve the approved base edit"
     if kind == "sound_effect":

@@ -1,6 +1,6 @@
 schema_version: 1
 project:
-  name: demo-talking-head
+  name: demo-screen-recording
   data_classification: internal
   timezone: Europe/Tallinn
   source_mode: reference

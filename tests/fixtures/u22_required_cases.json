@@ -141,7 +141,7 @@
         "incoming_segment_id": "seg_demo",
         "purpose": "new_point",
         "transcript_evidence": "The speaker introduces the next major point.",
-        "visual_evidence": "The approved incoming demo replaces the talking-head coverage.",
+        "visual_evidence": "The approved incoming screen view replaces the outgoing coverage.",
         "evidence_ids": ["ev_good_boundary"],
         "first_incoming_word_us": 2900000,
         "last_outgoing_word_us": 2100000,

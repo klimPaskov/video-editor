@@ -20,7 +20,7 @@ weakening its review or safety boundaries.
    commands) before opening a pull request.
 
 The development extra includes NumPy only for validation-only worker contract
-fixtures; it does not install or run SAM 3.1 or MatAnyone 2 inference.
+fixtures; it does not install or run unreleased external inference integrations.
 GitHub CI runs the portable contract/unit suite plus a software FFmpeg smoke
 test; run the full `uv run pytest -q` locally to exercise every media
 integration and available hardware path.
@@ -32,7 +32,7 @@ User-facing changes belong in the README, `docs/31_user_quickstart.md`, or
 scenario with a project id, source context, quoted editorial instructions,
 visible timing, forbidden actions, expected evidence, and the approval boundary.
 Avoid examples such as “make this better” or placeholders with no surrounding
-story; use the existing Hermes-agent tutorial and green-screen examples as the
+story; use the existing Hermes-agent tutorial and screen-recording examples as the
 style reference.
 
 Small, focused pull requests are easier to review. Include the fixture or

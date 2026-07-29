@@ -36,9 +36,6 @@ behalf.
 
 ## Optional worker extensions
 
-SAM 3.1 and MatAnyone 2 are not installed or invoked by the required workflow.
-If a future accepted decision re-enables either worker, review its current
-licence and checkpoint access separately and create the project-local
-`worker_runtime_approval` with `videoedit approve-worker-runtime`. That record
-must bind the exact code, checkpoint, licence, Python/PyTorch/CUDA runtime, and
-device identity; an AMD FFmpeg encoder is not evidence for either worker.
+Optional model workers are not installed or invoked by the required workflow.
+Keep any future experiment in a separate project and do not add it to the
+public setup path without a new product decision.

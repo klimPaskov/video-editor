@@ -57,8 +57,8 @@ def test_default_video_profile_is_software_and_hashable() -> None:
 
 
 def test_video_profile_rejects_unsafe_codec_and_unbounded_bitrate() -> None:
-    with pytest.raises(ValueError, match="safe"):
-        FFmpegAdapter(video_codec="h264 amf")
+    with pytest.raises(ValueError, match="only"):
+        FFmpegAdapter(video_codec="h264_vaapi")
     with pytest.raises(ValueError, match="between"):
         FFmpegAdapter(video_bitrate_bps=100)
 
@@ -97,66 +97,6 @@ def test_software_lossless_profile_uses_explicit_qp_zero() -> None:
     assert arguments[arguments.index("-qp") + 1] == "0"
     assert "-crf" not in arguments
     assert "yuv420p" in arguments
-    with pytest.raises(ValueError, match="explicit QP"):
-        FFmpegAdapter(video_codec="h264_amf")._video_encode_arguments(
-            "h264_amf",
-            crf=20,
-            preset="medium",
-            qp=0,
-        )
-
-
-def test_amd_derivative_uses_bitrate_and_nv12_without_software_rate_controls(
-    tmp_path: Path,
-) -> None:
-    runner = RecordingRunner()
-    adapter = FFmpegAdapter(runner=runner, video_codec="h264_amf")
-
-    adapter.render_scaled_derivative(
-        tmp_path / "source.mp4",
-        tmp_path / "amd.mp4",
-        width=640,
-        height=360,
-    )
-    arguments = _ffmpeg_arguments(runner)
-
-    assert "h264_amf" in arguments
-    assert "-b:v" in arguments
-    assert str(DEFAULT_VIDEO_BITRATE_BPS) in arguments
-    assert "-crf" not in arguments
-    assert "-preset" not in arguments
-    assert "format=nv12" in " ".join(arguments)
-    assert "nv12" in arguments
-
-
-def test_amd_base_and_retime_graphs_use_nv12_and_bound_encoder(tmp_path: Path) -> None:
-    runner = RecordingRunner()
-    adapter = FFmpegAdapter(runner=runner, video_codec="h264_amf")
-
-    adapter.render_keep_ranges(
-        tmp_path / "source.mp4",
-        [(0, 1_000_000)],
-        tmp_path / "base.mp4",
-    )
-    adapter.render_retimed_segments(
-        tmp_path / "source.mp4",
-        [
-            {
-                "source_range": {"start_us": 0, "end_us": 1_000_000},
-                "playback_rate": 1,
-            }
-        ],
-        tmp_path / "retimed.mp4",
-    )
-
-    ffmpeg_requests = [item for item in runner.requests if item.executable == "ffmpeg"]
-    assert len(ffmpeg_requests) == 2
-    for request in ffmpeg_requests:
-        assert "h264_amf" in request.arguments
-        assert "-b:v" in request.arguments
-        assert "format=nv12" in " ".join(request.arguments)
-        assert "-crf" not in request.arguments
-        assert "-preset" not in request.arguments
 
 
 def test_single_keep_range_preview_seeks_before_decoding_long_source(tmp_path: Path) -> None:
@@ -263,9 +203,9 @@ def test_retime_render_binds_output_duration_when_requested(tmp_path: Path) -> N
     assert request.arguments[request.arguments.index("-r") + 1] == "60/1"
 
 
-def test_amd_fixture_and_composite_outputs_use_bound_encoder(tmp_path: Path) -> None:
+def test_fixture_and_composite_outputs_use_software_encoder(tmp_path: Path) -> None:
     runner = RecordingRunner()
-    adapter = FFmpegAdapter(runner=runner, video_codec="h264_amf")
+    adapter = FFmpegAdapter(runner=runner)
 
     adapter.create_edit_proxy(tmp_path / "source.mp4", tmp_path / "proxy.mp4")
     adapter.generate_demo_source(tmp_path / "demo-source.mp4", duration_seconds=1)
@@ -285,16 +225,15 @@ def test_amd_fixture_and_composite_outputs_use_bound_encoder(tmp_path: Path) -> 
     requests = [item for item in runner.requests if item.executable == "ffmpeg"]
     assert len(requests) == 6
     for request in requests:
-        assert "h264_amf" in request.arguments
-        assert "-b:v" in request.arguments
-        assert "nv12" in request.arguments
-        assert "-crf" not in request.arguments
-        assert "-preset" not in request.arguments
+        assert "libx264" in request.arguments
+        assert "yuv420p" in request.arguments
+        assert "-crf" in request.arguments
+        assert "-preset" in request.arguments
 
 
 def test_audio_overlay_binds_padded_audio_to_the_visual_boundary(tmp_path: Path) -> None:
     runner = RecordingRunner()
-    adapter = FFmpegAdapter(runner=runner, video_codec="h264_amf")
+    adapter = FFmpegAdapter(runner=runner)
 
     adapter.overlay_foreground(
         tmp_path / "plate.mp4",
@@ -319,7 +258,7 @@ def test_audio_boundary_finalization_pads_and_trims_to_the_requested_duration(
     tmp_path: Path,
 ) -> None:
     runner = RecordingRunner()
-    adapter = FFmpegAdapter(runner=runner, video_codec="h264_amf")
+    adapter = FFmpegAdapter(runner=runner)
 
     adapter.bound_audio_to_visual_duration(
         tmp_path / "rendered.mp4",
@@ -337,20 +276,5 @@ def test_audio_boundary_finalization_pads_and_trims_to_the_requested_duration(
     assert "-shortest" in arguments
 
 
-def test_amd_profile_does_not_replace_lossless_mask_encoding(tmp_path: Path) -> None:
-    runner = RecordingRunner()
-    adapter = FFmpegAdapter(runner=runner, video_codec="h264_amf")
-
-    adapter.generate_demo_mask(tmp_path / "mask.mp4", duration_seconds=1)
-
-    arguments = _ffmpeg_arguments(runner)
-    assert "libx264" in arguments
-    assert "h264_amf" not in arguments
-    assert "yuv420p" in arguments
-
-
-def test_settings_accepts_explicit_amd_profile_without_changing_default() -> None:
+def test_settings_exposes_only_the_software_profile() -> None:
     assert Settings(_env_file=None).video_codec == "libx264"
-    settings = Settings(_env_file=None, video_codec="h264_amf", video_bitrate_bps=8_000_000)
-    assert settings.video_codec == "h264_amf"
-    assert settings.video_bitrate_bps == 8_000_000

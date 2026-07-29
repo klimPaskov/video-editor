@@ -135,8 +135,8 @@ For a source-specific lossless master, pass an explicit `libx264` profile with
 decode enabled. The renderer binds the source frame rate as CFR and binds the
 canonical retimed duration at the mux boundary. A long retimed graph is written
 to a staging-side FFmpeg filter script so Windows command-line limits cannot
-silently truncate a production render. The AMD AMF profile remains available
-for previews and derivatives, but it is not used when the delivery contract
+silently truncate a production render. The software profile is used for all
+previews, derivatives, and delivery masters when the delivery contract
 requires an explicit H.264 QP-0 guarantee. No loudness-normalization filter is
 added to this profile.
 
