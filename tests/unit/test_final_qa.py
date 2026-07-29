@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from videoedit.services.final_qa import _cached_report_matches_payload, _visual_evidence_check
+from videoedit.services.final_qa import (
+    _cached_report_matches_payload,
+    _visual_evidence_check,
+)
 
 
 def test_visual_evidence_requires_non_empty_image_or_video(tmp_path: Path) -> None:

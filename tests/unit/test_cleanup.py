@@ -35,7 +35,14 @@ def _fixture(tmp_path: Path) -> tuple[object, Path, Path]:
             }
         ],
     )
-    cleanup_plan = plan_cleanup(ROOT, layout, backup_report)
+    cleanup_plan = plan_cleanup(
+        ROOT,
+        layout,
+        backup_report,
+        preserve_valid_revisions=False,
+        preserve_failed_evidence=False,
+        preserve_active_assembly=False,
+    )
     return layout, cleanup_plan, backup_report
 
 
@@ -139,6 +146,9 @@ def test_cleanup_plan_rejects_tampered_cached_entries(tmp_path: Path) -> None:
             ROOT,
             layout,
             layout.artifacts / "backup-verification.json",
+            preserve_valid_revisions=False,
+            preserve_failed_evidence=False,
+            preserve_active_assembly=False,
         )
 
 

@@ -2840,6 +2840,12 @@ def assemble_final(
     output: Annotated[
         Path | None, typer.Option(help="Optional final candidate output path")
     ] = None,
+    normalization: Annotated[
+        str,
+        typer.Option(
+            help="Loudness policy: profile or none; none preserves one assembled candidate"
+        ),
+    ] = "profile",
     revision_id: Annotated[str, typer.Option(help="Project revision ID")] = "rev_001",
     workspace: Annotated[Path | None, typer.Option(help="Repository workspace")] = None,
 ) -> None:
@@ -2868,6 +2874,7 @@ def assemble_final(
         revision_id=revision_id,
         output=output.resolve() if output else None,
         adapter=_configured_ffmpeg_adapter(),
+        normalization=normalization,
     )
     typer.echo(str(created))
 
@@ -3164,11 +3171,31 @@ def cleanup_plan(
         Path | None, typer.Option(help="Passing backup verification JSON")
     ] = None,
     revision_id: Annotated[str, typer.Option(help="Project revision ID")] = "rev_001",
+    preserve_valid_revisions: Annotated[
+        bool,
+        typer.Option(help="Keep inactive but valid revision evidence"),
+    ] = True,
+    preserve_failed_evidence: Annotated[
+        bool,
+        typer.Option(help="Keep failed staging evidence for diagnosis"),
+    ] = True,
+    preserve_active_assembly: Annotated[
+        bool,
+        typer.Option(help="Keep active assembly evidence referenced by current manifests"),
+    ] = True,
     workspace: Annotated[Path | None, typer.Option(help="Repository workspace")] = None,
 ) -> None:
     layout = ProjectLayout(_workspace_path(workspace) / "projects" / project_id)
     selected = backup_verification or layout.artifacts / "backup-verification.json"
-    output = plan_cleanup(_package_root(), layout, selected.resolve(), revision_id=revision_id)
+    output = plan_cleanup(
+        _package_root(),
+        layout,
+        selected.resolve(),
+        revision_id=revision_id,
+        preserve_valid_revisions=preserve_valid_revisions,
+        preserve_failed_evidence=preserve_failed_evidence,
+        preserve_active_assembly=preserve_active_assembly,
+    )
     typer.echo(str(output))
 
 

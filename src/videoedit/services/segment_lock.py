@@ -143,8 +143,6 @@ def lock_segment_revision(
         )
     if segment_qa["revision_id"] != revision_id or visual_qa["revision_id"] != revision_id:
         raise PlanningValidationError("QA reports are bound to another revision")
-    if comparison.get("sequence_status") != "pass":
-        raise PlanningValidationError("cannot lock a segment with a failing transcript comparison")
     override_ref = review.get("qa_override")
     override_status: str | None = None
     selected_override: Path | None = None
@@ -163,6 +161,8 @@ def lock_segment_revision(
         )
         if override_status != "ready":
             raise PlanningValidationError("cannot lock a segment with an incomplete QA override")
+    if comparison.get("sequence_status") != "pass" and override_status != "ready":
+        raise PlanningValidationError("cannot lock a segment with a failing transcript comparison")
     if (
         not segment_qa.get("final_ready", False) and override_status != "ready"
     ) or not visual_qa.get("final_ready", False):
