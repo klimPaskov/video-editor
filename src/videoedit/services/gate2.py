@@ -16,7 +16,7 @@ from videoedit.services.artifacts import (
 from videoedit.services.project import ProjectLayout, ProjectLock, sha256_file
 from videoedit.services.qa_override import evaluate_qa_override
 
-GATE2_IMPLEMENTATION_VERSION = "p10-08b"
+GATE2_IMPLEMENTATION_VERSION = "p10-08c"
 
 
 def _read_object(path: Path, description: str) -> dict[str, Any]:
@@ -179,7 +179,7 @@ def approve_segment_gate2(
         }
     if decision == "approved":
         blockers: list[str] = []
-        if comparison.get("sequence_status") != "pass":
+        if comparison.get("sequence_status") != "pass" and override_status != "ready":
             blockers.append("transcript comparison is not passing")
         if not segment_qa.get("final_ready", False) and override_status != "ready":
             blockers.append("segment QA is not final-ready")

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
@@ -40,7 +41,7 @@ from videoedit.services.stage_state import (
     load_stage_state,
 )
 
-IMPLEMENTATION_VERSION = "p11-01b"
+IMPLEMENTATION_VERSION = "p11-01c"
 
 
 def _read_object(path: Path, description: str) -> dict[str, Any]:
@@ -100,6 +101,7 @@ def _cached_assembly_matches(
     expected_duration_us: int,
     expected_inputs: list[dict[str, str]],
     expected_segments: list[dict[str, Any]],
+    expected_warnings: list[str],
     final_output: Path,
     retained_pre: Path,
 ) -> bool:
@@ -113,6 +115,7 @@ def _cached_assembly_matches(
         or current["expected_duration_us"] != expected_duration_us
         or current["inputs"] != expected_inputs
         or current["segments"] != expected_segments
+        or current["warnings"] != expected_warnings
         or current["status"] != "complete"
     ):
         return False
@@ -206,11 +209,19 @@ def assemble_approved_segments(
     revision_id: str = "rev_001",
     output: Path | None = None,
     adapter: FFmpegAdapter | None = None,
+    normalization: str = "profile",
 ) -> Path:
-    """Assemble locked segment media and apply the final deterministic loudness pass."""
+    """Assemble locked segment media with the selected loudness policy.
+
+    ``profile`` preserves the historical deterministic loudness pass. ``none``
+    is intentionally limited to one already-assembled segment and copies its
+    bytes through staging without changing picture or audio.
+    """
 
     if not segments:
         raise PlanningValidationError("final assembly requires at least one locked segment")
+    if normalization not in {"profile", "none"}:
+        raise PlanningValidationError("normalization must be profile or none")
     validated: list[dict[str, Any]] = []
     media_paths: list[Path] = []
     previous_source_end = -1
@@ -230,6 +241,15 @@ def assemble_approved_segments(
         media_paths.append(Path(str(segment["media_path"])))
 
     expected_duration_us = sum(int(item["media_duration_us"]) for item in validated)
+    if normalization == "none" and len(validated) != 1:
+        raise PlanningValidationError(
+            "normalization=none requires one already-assembled segment to preserve bytes"
+        )
+    expected_warnings = (
+        []
+        if normalization == "profile"
+        else ["loudness_normalization_disabled_by_delivery_profile"]
+    )
     adapter = adapter or FFmpegAdapter()
     encoder_identity = adapter_encoder_identity(adapter)
     adapter_version = _adapter_version(adapter)
@@ -273,6 +293,7 @@ def assemble_approved_segments(
             "expected_duration_us": expected_duration_us,
             "output": str(output.resolve()) if output else None,
             "encoder": encoder_identity,
+            "normalization": normalization,
         },
     )
     manifest_path = layout.artifacts / f"final-assembly-{stage_key[:16]}.json"
@@ -298,6 +319,7 @@ def assemble_approved_segments(
             expected_duration_us=expected_duration_us,
             expected_inputs=expected_inputs,
             expected_segments=expected_segments,
+            expected_warnings=expected_warnings,
             final_output=final_output,
             retained_pre=retained_pre,
         ):
@@ -325,20 +347,28 @@ def assemble_approved_segments(
         )
         commands: list[dict[str, Any]] = []
         try:
-            concat_result = adapter.concat_media(media_paths, staged_pre)
-            commands.append(_command_record(concat_result, stage_dir, adapter_version))
+            if normalization == "none":
+                shutil.copyfile(media_paths[0], staged_pre)
+                if sha256_file(staged_pre) != sha256_file(media_paths[0]):
+                    raise RenderOutputError("preassembled candidate changed during staging copy")
+            else:
+                concat_result = adapter.concat_media(media_paths, staged_pre)
+                commands.append(_command_record(concat_result, stage_dir, adapter_version))
             input_loudness_result = adapter.measure_loudness(staged_pre)
             input_loudness = parse_loudness_measurement(input_loudness_result)
             commands.append(_command_record(input_loudness_result, stage_dir, adapter_version))
-            normalize_result = adapter.normalize_loudness(
-                staged_pre,
-                staged_normalized,
-                input_loudness,
-                integrated_target_lufs=INTEGRATED_TARGET_LUFS,
-                true_peak_target_dbfs=TRUE_PEAK_TARGET_DBFS,
-                loudness_range_target_lu=LOUDNESS_RANGE_TARGET_LU,
-            )
-            commands.append(_command_record(normalize_result, stage_dir, adapter_version))
+            if normalization == "none":
+                shutil.copyfile(staged_pre, staged_normalized)
+            else:
+                normalize_result = adapter.normalize_loudness(
+                    staged_pre,
+                    staged_normalized,
+                    input_loudness,
+                    integrated_target_lufs=INTEGRATED_TARGET_LUFS,
+                    true_peak_target_dbfs=TRUE_PEAK_TARGET_DBFS,
+                    loudness_range_target_lu=LOUDNESS_RANGE_TARGET_LU,
+                )
+                commands.append(_command_record(normalize_result, stage_dir, adapter_version))
             output_loudness_result = adapter.measure_loudness(staged_normalized)
             output_loudness = parse_loudness_measurement(output_loudness_result)
             commands.append(_command_record(output_loudness_result, stage_dir, adapter_version))
@@ -346,11 +376,15 @@ def assemble_approved_segments(
             clipped_samples = parse_clipped_samples(clipping_result)
             commands.append(_command_record(clipping_result, stage_dir, adapter_version))
             loudness_pass = (
-                abs(output_loudness["integrated_lufs"] - INTEGRATED_TARGET_LUFS)
-                <= INTEGRATED_TOLERANCE_LU
-                and output_loudness["true_peak_dbfs"]
-                <= TRUE_PEAK_TARGET_DBFS + TRUE_PEAK_TOLERANCE_DB
-                and clipped_samples == 0
+                sha256_file(staged_normalized) == sha256_file(media_paths[0])
+                if normalization == "none"
+                else (
+                    abs(output_loudness["integrated_lufs"] - INTEGRATED_TARGET_LUFS)
+                    <= INTEGRATED_TOLERANCE_LU
+                    and output_loudness["true_peak_dbfs"]
+                    <= TRUE_PEAK_TARGET_DBFS + TRUE_PEAK_TOLERANCE_DB
+                    and clipped_samples == 0
+                )
             )
             if not loudness_pass:
                 raise RenderOutputError("final loudness pass is outside the delivery profile")
@@ -404,7 +438,7 @@ def assemble_approved_segments(
                     "status": "pass",
                 },
                 "commands": commands,
-                "warnings": [],
+                "warnings": expected_warnings,
                 "status": "complete",
             }
             write_validated_artifact(
@@ -421,7 +455,7 @@ def assemble_approved_segments(
                     "final_assembly_manifest": manifest_path,
                     "final_candidate": final_output,
                 },
-                warnings=[],
+                warnings=expected_warnings,
             )
             return manifest_path
         except Exception as exc:

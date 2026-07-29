@@ -17,7 +17,7 @@ from videoedit.services.artifacts import (
 )
 from videoedit.services.project import ProjectLayout, ProjectLock, sha256_file
 
-CLEANUP_PLAN_IMPLEMENTATION_VERSION = "p11-08b"
+CLEANUP_PLAN_IMPLEMENTATION_VERSION = "p11-08c"
 
 
 def _read_object(path: Path, description: str) -> dict[str, Any]:
@@ -45,8 +45,22 @@ def _cleanup_cache_binding(payload: dict[str, Any]) -> dict[str, Any]:
     return binding
 
 
-def _candidate_files(layout: ProjectLayout, revision_id: str) -> list[tuple[Path, str, str]]:
-    roots = [layout.staging, layout.work / "proxies", layout.work / "final-assembly"]
+def _candidate_files(
+    layout: ProjectLayout,
+    revision_id: str,
+    *,
+    preserve_valid_revisions: bool = True,
+    preserve_failed_evidence: bool = True,
+    preserve_active_assembly: bool = True,
+) -> list[tuple[Path, str, str]]:
+    roots = [layout.staging]
+    if not preserve_active_assembly:
+        roots.extend((layout.work / "proxies", layout.work / "final-assembly"))
+    failed_roots: set[Path] = set()
+    if preserve_failed_evidence and layout.staging.is_dir():
+        for path in layout.staging.rglob("*"):
+            if path.is_file() and "failed" in path.name.casefold():
+                failed_roots.add(path.parent.resolve())
     candidates: list[tuple[Path, str, str]] = []
     for root in roots:
         if not root.is_dir():
@@ -56,8 +70,14 @@ def _candidate_files(layout: ProjectLayout, revision_id: str) -> list[tuple[Path
             for path in paths:
                 if not path.is_file() or path.is_symlink():
                     continue
+                resolved_path = path.resolve()
+                if any(
+                    resolved_path == failed_root or failed_root in resolved_path.parents
+                    for failed_root in failed_roots
+                ):
+                    continue
                 try:
-                    path.resolve().relative_to(layout.root.resolve())
+                    resolved_path.relative_to(layout.root.resolve())
                 except ValueError:
                     continue
                 candidates.append(
@@ -70,7 +90,7 @@ def _candidate_files(layout: ProjectLayout, revision_id: str) -> list[tuple[Path
         except OSError:
             continue
     inactive = layout.revisions
-    if inactive.is_dir():
+    if not preserve_valid_revisions and inactive.is_dir():
         for revision_root in inactive.iterdir():
             if not revision_root.is_dir() or revision_root.name == revision_id:
                 continue
@@ -97,6 +117,9 @@ def plan_cleanup(
     backup_verification_path: Path,
     *,
     revision_id: str = "rev_001",
+    preserve_valid_revisions: bool = True,
+    preserve_failed_evidence: bool = True,
+    preserve_active_assembly: bool = True,
 ) -> Path:
     """Create a dry-run cleanup plan that excludes source and required active artifacts."""
 
@@ -106,7 +129,13 @@ def plan_cleanup(
     if backup["project_id"] != layout.root.name or backup["revision_id"] != revision_id:
         raise PlanningValidationError("backup verification belongs to another project or revision")
     entries: list[dict[str, Any]] = []
-    for path, retention, reason in _candidate_files(layout, revision_id):
+    for path, retention, reason in _candidate_files(
+        layout,
+        revision_id,
+        preserve_valid_revisions=preserve_valid_revisions,
+        preserve_failed_evidence=preserve_failed_evidence,
+        preserve_active_assembly=preserve_active_assembly,
+    ):
         digest = sha256_file(path)
         entries.append(
             {
@@ -144,6 +173,9 @@ def plan_cleanup(
             "revision_id": revision_id,
             "config_sha256": config_sha256(layout),
             "entries": entries,
+            "preserve_valid_revisions": preserve_valid_revisions,
+            "preserve_failed_evidence": preserve_failed_evidence,
+            "preserve_active_assembly": preserve_active_assembly,
         },
     )
     output = layout.artifacts / f"cleanup-plan-{key[:16]}.json"

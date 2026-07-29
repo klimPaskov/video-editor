@@ -12,6 +12,7 @@ from videoedit.services.artifacts import validate_artifact, write_validated_arti
 from videoedit.services.project import ProjectLayout, initialize_project
 from videoedit.services.segment_preview import write_segment_preview_plan
 from videoedit.services.segment_review_package import (
+    _effect_summary,
     _review_artifacts,
     build_segment_review_packages,
 )
@@ -189,3 +190,30 @@ def test_revision_review_skips_stale_default_artifacts(tmp_path: Path) -> None:
     )
 
     assert _review_artifacts(layout, None, revision_id="rev_002") == []
+
+
+def test_effect_summary_clips_overlapping_effect_to_review_segment(tmp_path: Path) -> None:
+    layout = initialize_project(tmp_path, "segment_effect_fixture")
+    focus_plan = json.loads(
+        (ROOT / "examples" / "focus_pacing_plan.example.json").read_text(encoding="utf-8")
+    )
+    focus_plan["project_id"] = layout.root.name
+    focus_plan["revision_id"] = "rev_001"
+    focus_path = layout.artifacts / "focus-pacing-plan.json"
+    write_validated_artifact(ROOT, "focus_pacing_plan", focus_path, focus_plan)
+
+    summary = _effect_summary(
+        ROOT,
+        layout,
+        {
+            "segment_id": "segment_000001",
+            "source_range": {"start_us": 10_000_000, "end_us": 12_000_000},
+        },
+        "planning-key",
+        [focus_path],
+        "rev_001",
+    )
+
+    zoom = next(item for item in summary["effects"] if item["effect_id"] == "zoom_prompt_box")
+    assert zoom["source_range"] == {"start_us": 10_000_000, "end_us": 12_000_000}
+    assert zoom["overlap_us"] == 2_000_000

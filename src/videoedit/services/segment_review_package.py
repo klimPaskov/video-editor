@@ -22,7 +22,7 @@ from videoedit.services.artifacts import (
 )
 from videoedit.services.project import ProjectLayout, ProjectLock, sha256_file
 
-IMPLEMENTATION_VERSION = "p10-02b"
+IMPLEMENTATION_VERSION = "p10-02c"
 KNOWN_REVIEW_ARTIFACT_NAMES = (
     "effect-plan.json",
     "focus-pacing-plan.json",
@@ -294,12 +294,17 @@ def _effect_summary(
             )
             kind = str(raw.get("kind") or raw.get("action_type") or "effect")
             renderer = str(raw.get("renderer") or "remotion")
+            clipped_start_us = max(effect_start_us, range_start_us)
+            clipped_end_us = min(effect_end_us, range_end_us)
             effects.append(
                 {
                     "effect_id": effect_id or f"effect_{len(effects) + 1:06d}",
                     "kind": kind,
                     "renderer": renderer,
-                    "source_range": {"start_us": effect_start_us, "end_us": effect_end_us},
+                    "source_range": {
+                        "start_us": clipped_start_us,
+                        "end_us": clipped_end_us,
+                    },
                     "overlap_us": overlap_us,
                     "asset_refs": _asset_refs(raw.get("asset_refs")),
                     "status": "current",

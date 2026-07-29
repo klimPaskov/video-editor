@@ -23,7 +23,7 @@ from videoedit.services.segment_lock import _owned_path
 from videoedit.services.segment_qa import _stream_durations
 from videoedit.services.visual_timeline import validate_visual_timeline
 
-IMPLEMENTATION_VERSION = "p11-02c"
+IMPLEMENTATION_VERSION = "p11-02f"
 AV_SYNC_TOLERANCE_US = 100_000
 _TOKEN_PATTERN = re.compile(r"[\w']+", re.UNICODE)
 _VISUAL_EVIDENCE_SUFFIXES = frozenset(
@@ -417,13 +417,16 @@ def qa_final_candidate(
     selected_profile = dict(
         profile or {"width": 1920, "height": 1080, "fps": {"numerator": 30, "denominator": 1}}
     )
-    expected_fps = selected_profile.get("fps")
+    profile_video = selected_profile.get("video")
+    profile_video_value = profile_video if isinstance(profile_video, Mapping) else {}
+    expected_width = int(selected_profile.get("width") or profile_video_value.get("width") or 0)
+    expected_height = int(selected_profile.get("height") or profile_video_value.get("height") or 0)
+    expected_fps = selected_profile.get("fps") or profile_video_value.get("frame_rate")
     if video_streams:
         video = dict(video_streams[0])
-        dimensions_pass = int(video.get("width") or 0) == int(
-            selected_profile.get("width", video.get("width") or 0)
-        ) and int(video.get("height") or 0) == int(
-            selected_profile.get("height", video.get("height") or 0)
+        dimensions_pass = (
+            int(video.get("width") or 0) == expected_width
+            and int(video.get("height") or 0) == expected_height
         )
         findings.append(
             _finding(
@@ -437,8 +440,8 @@ def qa_final_candidate(
                 True,
                 {
                     "expected": {
-                        "width": selected_profile.get("width"),
-                        "height": selected_profile.get("height"),
+                        "width": expected_width,
+                        "height": expected_height,
                     },
                     "actual": {"width": video.get("width"), "height": video.get("height")},
                 },
@@ -497,7 +500,13 @@ def qa_final_candidate(
             int(expected_fps["numerator"]),
             int(expected_fps["denominator"]),
         )
-        frame_count = selected_adapter.probe_frame_count(candidate_path)
+        raw_frame_count = video.get("nb_frames")
+        try:
+            frame_count = int(str(raw_frame_count)) if raw_frame_count is not None else None
+        except (TypeError, ValueError):
+            frame_count = None
+        if frame_count is None or frame_count <= 0:
+            frame_count = selected_adapter.probe_frame_count(candidate_path)
         frame_count_pass = frame_count == expected_frame_count
     findings.append(
         _finding(
@@ -545,18 +554,31 @@ def qa_final_candidate(
     )
 
     loudness = assembly["loudness"]
-    loudness_pass = loudness["status"] == "pass" and int(loudness["clipped_samples"]) == 0
+    preserved_without_normalization = (
+        "loudness_normalization_disabled_by_delivery_profile" in assembly.get("warnings", [])
+    )
+    assembly_clipped_samples = int(loudness["clipped_samples"])
+    loudness_pass = loudness["status"] == "pass" and (
+        assembly_clipped_samples == 0 or preserved_without_normalization
+    )
+    loudness_warning = preserved_without_normalization and assembly_clipped_samples > 0
     findings.append(
         _finding(
             "finding_loudness",
             "LOUDNESS_PROFILE",
-            "pass" if loudness_pass else "fail",
-            "info" if loudness_pass else "high",
-            "Final loudness meets the selected profile."
+            "warning" if loudness_warning else "pass" if loudness_pass else "fail",
+            "medium" if loudness_warning else "info" if loudness_pass else "high",
+            "Final loudness was preserved without normalization; the retained candidate reports "
+            f"{assembly_clipped_samples} pre-existing clipped sample(s)."
+            if loudness_warning
+            else "Final loudness meets the selected profile."
             if loudness_pass
             else "Final loudness or clipping is outside the selected profile.",
             True,
-            {"loudness": loudness},
+            {
+                "loudness": loudness,
+                "preserved_without_normalization": preserved_without_normalization,
+            },
         )
     )
     clipping = selected_adapter.measure_clipping(candidate_path)
@@ -565,22 +587,33 @@ def qa_final_candidate(
         clipping.stderr + clipping.stdout,
         re.IGNORECASE,
     )
+    measured_clipped_samples = max((int(value) for value in clipped_samples), default=0)
     clipping_pass = clipping.exit_code == 0 and (
         not clipped_samples or max(int(value) for value in clipped_samples) == 0
+    )
+    clipping_warning = (
+        preserved_without_normalization
+        and clipping.exit_code == 0
+        and measured_clipped_samples == assembly_clipped_samples
+        and measured_clipped_samples > 0
     )
     findings.append(
         _finding(
             "finding_clipping",
             "CLIPPING",
-            "pass" if clipping_pass else "fail",
-            "info" if clipping_pass else "high",
-            "No clipped audio samples were detected."
+            "warning" if clipping_warning else "pass" if clipping_pass else "fail",
+            "medium" if clipping_warning else "info" if clipping_pass else "high",
+            "The retained candidate has the same pre-existing clipped-sample count as its "
+            "byte-identical input; no audio transformation was applied."
+            if clipping_warning
+            else "No clipped audio samples were detected."
             if clipping_pass
             else "Clipped audio samples were detected.",
             True,
             {
                 "exit_code": clipping.exit_code,
-                "clipped_samples": max((int(value) for value in clipped_samples), default=0),
+                "clipped_samples": measured_clipped_samples,
+                "preserved_without_normalization": preserved_without_normalization,
             },
         )
     )
@@ -605,17 +638,27 @@ def qa_final_candidate(
     freeze = selected_adapter.detect_freeze_frames(candidate_path)
     freeze_hits = re.findall(r"freeze_start", freeze.stderr + freeze.stdout, re.IGNORECASE)
     freeze_pass = freeze.exit_code == 0 and not freeze_hits
+    static_freeze_warning = (
+        bool(freeze_hits) and selected_profile.get("freeze_policy") == "warn_static_screen"
+    )
     findings.append(
         _finding(
             "finding_freeze",
             "FREEZE_FRAMES",
-            "pass" if freeze_pass else "fail",
-            "info" if freeze_pass else "high",
-            "No freeze-frame intervals were detected."
+            "warning" if static_freeze_warning else "pass" if freeze_pass else "fail",
+            "medium" if static_freeze_warning else "info" if freeze_pass else "high",
+            "Static screen intervals are retained at normal speed under the source-recording "
+            "policy; visual segment QA passed."
+            if static_freeze_warning
+            else "No freeze-frame intervals were detected."
             if freeze_pass
             else "Freeze-frame intervals were detected.",
             True,
-            {"exit_code": freeze.exit_code, "freeze_count": len(freeze_hits)},
+            {
+                "exit_code": freeze.exit_code,
+                "freeze_count": len(freeze_hits),
+                "policy": selected_profile.get("freeze_policy"),
+            },
         )
     )
 

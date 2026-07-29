@@ -870,9 +870,17 @@ Options:
 ```text
 --segment-spec PATH
 --output PATH
+--normalization TEXT     # profile (default) or none for one pre-assembled candidate
 --revision-id TEXT
 --workspace PATH
 ```
+
+Use `--normalization none` only with a single already-assembled candidate when
+the delivery profile explicitly requires source audio preservation. This path
+does not add a loudness filter; it copies the validated candidate into the
+assembly stage, rechecks its hash, and retains any source-bound clipping as a
+warning. The normal `profile` mode remains the default for multi-segment
+assembly and applies the configured loudness policy.
 
 ### Implemented P11 commands
 
@@ -951,6 +959,9 @@ Options:
 --cache
 --inactive-revisions
 --dry-run
+--preserve-valid-revisions     # default: keep valid inactive revision evidence
+--preserve-failed-evidence     # default: keep failed staging evidence
+--preserve-active-assembly     # default: keep files bound by active manifests
 ```
 
 The command never includes registered source paths. Each generated entry records the exact
@@ -958,3 +969,7 @@ SHA-256 of the derived file, and execution refuses to remove a file if it has be
 since the plan was created. Execution remains blocked until the exact cleanup plan hash has a
 current approval. A cleanup approval is also bound to its project, revision, reviewer, role,
 reason, and plan hash; conflicting approval details are rejected rather than silently reused.
+The default plan removes only eligible staging intermediates while preserving
+valid revisions, failed evidence, and files referenced by active assembly
+manifests. Disable those preservation switches only when the operator intends
+to review and retire the corresponding evidence explicitly.
