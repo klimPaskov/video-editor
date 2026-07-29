@@ -51,22 +51,12 @@ QA reports, delivery metadata, and the final MP4.
 ## Prompt example
 
 ```text
-Edit C:\Users\me\Videos\hermes-demo.mp4 as a developer tutorial.
-
-Remove "good job" and "very nice" around 07:18. On the GitHub page, remove the
-sentence beginning "the point of this series is also...". Cut "I am not even
-going to do this manually" directly to "So I'm gonna use a Hermes agent for it."
-Remove obvious "uh", "um", dead air, and thinking pauses only when the join is
-natural.
-
-Speed up only the visible prompt-writing action in the Instructions box from
-about 11:37 to 12:18. Keep sound audible and voice pitch unchanged. Leave
-browsing, reading, waiting, loading, and result inspection at normal speed.
-Do not zoom the intro. Zoom only a clearly visible prompt box or relevant UI,
-center the target, and use smooth motion.
-
-Create a reviewable proposal first. Preserve names, numbers, commands,
-warnings, useful breaths, and uncertain meaning.
+Please make this screen recording into a clean, focused tutorial. Cut obvious
+dead air, filler, and repeated bits, but keep the important commands and
+explanations. Only speed up visible prompt-writing; leave browsing and waiting
+at normal speed, keep the audio audible, and keep the voice at its original
+pitch. Add captions and only zoom when it helps show a useful UI element. Show
+me the edit proposal before rendering.
 ```
 
 Find more realistic prompts and reusable templates in
