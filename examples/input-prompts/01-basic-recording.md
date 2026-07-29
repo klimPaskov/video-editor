@@ -26,7 +26,7 @@ words. Every proposed cut needs a reason, confidence, risk, join strategy, and
 preview range.
 
 Do not apply the edits, approve any gate, call a paid provider, use cloud media
-generation, invoke SAM 3.1 or MatAnyone 2, delete source files, or publish a
-delivery. Stop on uncertain meaning, identity, timing, licensing, or hardware.
+generation, delete source files, or publish a delivery. Stop on uncertain
+meaning, timing, licensing, or tool availability.
 Return exact commands, artifact paths, hashes, warnings, and the few decisions
 that need my review.

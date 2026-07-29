@@ -18,7 +18,7 @@ machine failures.
 Check source/revision/approval hashes; frame count and rational FPS; dimensions,
 pixel format, BT.709 metadata; audio codec, sample rate, stereo layout, sync,
 clipping, clicks, dropouts, and room-tone continuity; every join for missing or
-duplicated words; captions and safe areas; mask edges and z-order; black flashes
+duplicated words; captions and safe areas; layer edges and z-order; black flashes
 and freezes; cursor/screen-state continuity; target-centered zoom boundaries;
 and audible pitch-preserved prompt speed-ups.
 

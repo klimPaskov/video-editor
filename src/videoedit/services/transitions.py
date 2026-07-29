@@ -30,8 +30,6 @@ ALLOWED_PURPOSES = frozenset(
         "new_point",
         "new_chapter",
         "mode_change",
-        "talking_head_to_major_demo",
-        "major_demo_to_talking_head",
         "comparison",
         "before_after",
         "location_change",
@@ -78,8 +76,6 @@ _PURPOSE_TRANSITION_DEFAULTS: dict[str, str] = {
     "new_point": "swipe_left",
     "new_chapter": "chapter_transition",
     "mode_change": "blur_swipe",
-    "talking_head_to_major_demo": "push_left",
-    "major_demo_to_talking_head": "push_right",
     "comparison": "short_crossfade",
     "before_after": "push_left",
     "location_change": "dip_to_color",
@@ -279,12 +275,6 @@ def _mode(segment: Mapping[str, object]) -> str:
 def _mode_purpose(outgoing: str, incoming: str) -> str | None:
     if not outgoing or not incoming or outgoing == incoming:
         return None
-    outgoing_demo = outgoing in {"demo", "major_demo", "screen_demo", "visual_explanation"}
-    incoming_demo = incoming in {"demo", "major_demo", "screen_demo", "visual_explanation"}
-    if outgoing in {"talking_head", "interview", "host"} and incoming_demo:
-        return "talking_head_to_major_demo"
-    if outgoing_demo and incoming in {"talking_head", "interview", "host"}:
-        return "major_demo_to_talking_head"
     if "location" in outgoing or "location" in incoming:
         return "location_change"
     return "mode_change"

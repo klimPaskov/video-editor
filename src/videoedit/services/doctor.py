@@ -15,26 +15,12 @@ from videoedit.adapters.process import (
     ProcessRequest,
     ProcessResult,
     ProcessRunner,
-    parse_command,
 )
 from videoedit.errors import VideoeditError
 from videoedit.services.project import sha256_file
 from videoedit.settings import Settings
 
 CheckStatus = Literal["pass", "warning", "fail"]
-
-_WORKER_RUNTIME_SPECS: dict[str, dict[str, str]] = {
-    "sam3": {
-        "display_name": "SAM 3.1",
-        "python": "3.12",
-        "ref_variable": "SAM3_REF",
-    },
-    "matanyone2": {
-        "display_name": "MatAnyone 2",
-        "python": "3.10",
-        "ref_variable": "MATANYONE2_REF",
-    },
-}
 
 
 @dataclass(frozen=True, slots=True)
@@ -351,232 +337,6 @@ def _font_check(workspace: Path, runner: ProcessRunner) -> DoctorCheck:
     )
 
 
-def _worker_check(name: str, command: str) -> DoctorCheck:
-    if not command.strip():
-        return DoctorCheck(
-            name=name,
-            status="warning",
-            required=False,
-            code="worker_not_configured",
-            message=f"{name} is not configured",
-            evidence={},
-            repair_hint=(
-                "Configure the worker only after its licence, checkpoint, and GPU "
-                "prerequisites pass"
-            ),
-        )
-    try:
-        parts = parse_command(command)
-    except ValueError as exc:
-        return DoctorCheck(
-            name=name,
-            status="warning",
-            required=False,
-            code="worker_command_invalid",
-            message=f"{name} command is invalid: {exc}",
-            evidence={},
-            repair_hint="Use an executable plus argument array syntax in worker configuration",
-        )
-    resolved = _binary_path(parts[0])
-    if resolved is None:
-        return DoctorCheck(
-            name=name,
-            status="warning",
-            required=False,
-            code="worker_executable_missing",
-            message=f"{name} executable is unavailable: {parts[0]}",
-            evidence={"command": list(parts)},
-            repair_hint="Install the worker in its isolated environment before enabling it",
-        )
-    return DoctorCheck(
-        name=name,
-        status="warning",
-        required=False,
-        code="worker_configured_not_run",
-        message=f"{name} is configured but not run by doctor",
-        evidence={"command": [resolved, *parts[1:]]},
-        repair_hint=(
-            "Run only an approved, licensed, bounded worker smoke test in its own environment"
-        ),
-    )
-
-
-def _cuda_gpu_probe(*, runner: ProcessRunner, working_directory: Path) -> dict[str, object]:
-    """Probe the optional CUDA target without importing or starting a model worker."""
-
-    configured_path = "nvidia-smi"
-    resolved = _binary_path(configured_path)
-    if resolved is None:
-        return {
-            "available": False,
-            "path": None,
-            "reason": "nvidia_smi_missing",
-        }
-    try:
-        result = runner.run(
-            ProcessRequest(
-                executable=resolved,
-                arguments=(
-                    "--query-gpu=name,driver_version,memory.total",
-                    "--format=csv,noheader",
-                ),
-                working_directory=working_directory,
-                timeout_seconds=30,
-                stdout_limit_bytes=20_000,
-                stderr_limit_bytes=20_000,
-            )
-        )
-    except VideoeditError as exc:
-        return {
-            "available": False,
-            "path": resolved,
-            "reason": "nvidia_smi_unrunnable",
-            "error": exc.message,
-        }
-    if result.exit_code != 0 or not result.stdout.strip():
-        return {
-            "available": False,
-            "path": resolved,
-            "reason": "nvidia_smi_failed",
-            **_command_evidence(result),
-        }
-    return {
-        "available": True,
-        "path": resolved,
-        **_command_evidence(result),
-    }
-
-
-def _worker_runtime_check(
-    *,
-    worker: str,
-    command: str,
-    package_root: Path,
-    runner: ProcessRunner,
-    working_directory: Path,
-    gpu_probe: dict[str, object],
-) -> DoctorCheck:
-    """Report optional worker readiness without treating media-GPU evidence as CUDA readiness."""
-
-    spec = _WORKER_RUNTIME_SPECS[worker]
-    display_name = spec["display_name"]
-    worker_root = package_root / "workers" / worker
-    environment_path = worker_root / ".venv"
-    python_candidates = (
-        environment_path / "Scripts" / "python.exe",
-        environment_path / "bin" / "python",
-    )
-    python_path = next((path for path in python_candidates if path.is_file()), None)
-    upstream_path = worker_root / "upstream"
-    checkpoint_path = worker_root / "models"
-    checkpoint_candidates = (
-        sum(1 for path in checkpoint_path.iterdir() if path.suffix.lower() in {".pt", ".pth"})
-        if checkpoint_path.is_dir()
-        else 0
-    )
-    configured_ref = os.environ.get(spec["ref_variable"], "")
-    ref_is_immutable = re.fullmatch(r"[0-9a-fA-F]{40}", configured_ref) is not None
-    blockers: list[str] = []
-    python_version: str | None = None
-    python_evidence: dict[str, object] = {
-        "path": str(python_path) if python_path else None,
-        "expected": spec["python"],
-        "environment_path": str(environment_path),
-        "environment_exists": environment_path.is_dir(),
-    }
-    if python_path is None:
-        blockers.append("isolated_python_missing")
-    else:
-        try:
-            result = runner.run(
-                ProcessRequest(
-                    executable=str(python_path),
-                    arguments=("--version",),
-                    working_directory=working_directory,
-                    timeout_seconds=30,
-                    stdout_limit_bytes=10_000,
-                    stderr_limit_bytes=10_000,
-                )
-            )
-            python_version = (result.stdout or result.stderr).strip()
-            python_evidence["version"] = python_version
-            python_evidence.update(_command_evidence(result))
-            version_match = re.search(r"Python\s+(\d+\.\d+)", python_version)
-            if result.exit_code != 0 or version_match is None:
-                blockers.append("isolated_python_unrunnable")
-            elif version_match.group(1) != spec["python"]:
-                blockers.append("isolated_python_version_mismatch")
-        except VideoeditError as exc:
-            python_evidence["error"] = exc.message
-            blockers.append("isolated_python_unrunnable")
-
-    upstream_evidence = {
-        "path": str(upstream_path),
-        "git_checkout": (upstream_path / ".git").is_dir(),
-        "immutable_ref_configured": ref_is_immutable,
-        "ref_variable": spec["ref_variable"],
-    }
-    if not upstream_evidence["git_checkout"]:
-        blockers.append("upstream_checkout_missing")
-    if not ref_is_immutable:
-        blockers.append("operator_approved_immutable_ref_missing")
-    if not bool(gpu_probe.get("available")):
-        blockers.append("nvidia_cuda_gpu_missing")
-    if checkpoint_candidates == 0:
-        blockers.append("local_checkpoint_missing")
-
-    command_check = _worker_check(display_name + " worker", command)
-    if command_check.code in {
-        "worker_not_configured",
-        "worker_command_invalid",
-        "worker_executable_missing",
-    }:
-        blockers.append(command_check.code)
-
-    evidence: dict[str, object] = {
-        "worker": worker,
-        "python": python_evidence,
-        "upstream": upstream_evidence,
-        "checkpoint": {
-            "directory": str(checkpoint_path),
-            "candidate_file_count": checkpoint_candidates,
-            "sha256_binding": "job/runtime-approval scoped; not inferred by doctor",
-        },
-        "cuda_gpu": gpu_probe,
-        "command": command_check.as_dict(),
-        "blockers": blockers,
-    }
-    if blockers:
-        return DoctorCheck(
-            name=f"{display_name} worker",
-            status="warning",
-            required=False,
-            code="worker_prerequisites_missing",
-            message=f"{display_name} worker is not ready: {', '.join(blockers)}",
-            evidence=evidence,
-            repair_hint=(
-                "Resolve the listed operator, licence, immutable-ref, checkpoint, "
-                "isolated-runtime, "
-                "and compatible NVIDIA/CUDA prerequisites before enabling this worker; "
-                "AMD AMF is "
-                "media encoding evidence only"
-            ),
-        )
-    return DoctorCheck(
-        name=f"{display_name} worker",
-        status="warning",
-        required=False,
-        code="worker_ready_not_run",
-        message=(
-            f"{display_name} worker prerequisites are present but the worker was not run by doctor"
-        ),
-        evidence=evidence,
-        repair_hint=(
-            "Run only an approved, licensed, bounded worker smoke test and review its outputs"
-        ),
-    )
-
-
 def _whisper_check(
     settings: Settings,
     workspace: Path,
@@ -638,99 +398,6 @@ def _whisper_check(
             "model_size_bytes": resolved_model.stat().st_size,
         },
         repair_hint=None,
-    )
-
-
-def _amd_amf_check(
-    *,
-    configured_path: str,
-    runner: ProcessRunner,
-    working_directory: Path,
-) -> DoctorCheck:
-    """Run a bounded, output-free AMD AMF encode probe.
-
-    AMF is an optional media-engine acceleration path.  It is deliberately not
-    treated as evidence that the isolated CUDA model workers can run.
-    """
-
-    resolved = _binary_path(configured_path)
-    if resolved is None:
-        return DoctorCheck(
-            name="FFmpeg AMD AMF",
-            status="warning",
-            required=False,
-            code="ffmpeg_missing_for_amf",
-            message="FFmpeg AMD AMF was not checked because FFmpeg is unavailable",
-            evidence={"configured_path": configured_path},
-            repair_hint=(
-                "Install an FFmpeg build with AMD AMF support if GPU media encoding is required"
-            ),
-        )
-    try:
-        result = runner.run(
-            ProcessRequest(
-                executable=resolved,
-                arguments=(
-                    "-hide_banner",
-                    "-loglevel",
-                    "verbose",
-                    "-f",
-                    "lavfi",
-                    "-i",
-                    "testsrc2=size=640x360:rate=30",
-                    "-vf",
-                    "format=nv12",
-                    "-frames:v",
-                    "1",
-                    "-an",
-                    "-c:v",
-                    "h264_amf",
-                    "-b:v",
-                    "2M",
-                    "-f",
-                    "null",
-                    "-",
-                ),
-                working_directory=working_directory,
-                timeout_seconds=60,
-                stdout_limit_bytes=100_000,
-                stderr_limit_bytes=200_000,
-            )
-        )
-    except VideoeditError as exc:
-        return DoctorCheck(
-            name="FFmpeg AMD AMF",
-            status="warning",
-            required=False,
-            code="amd_amf_unrunnable",
-            message=f"FFmpeg AMD AMF probe could not be run: {exc.message}",
-            evidence={"path": resolved},
-            repair_hint="Keep the software encoder or install a compatible AMD FFmpeg runtime",
-        )
-    if result.exit_code != 0:
-        return DoctorCheck(
-            name="FFmpeg AMD AMF",
-            status="warning",
-            required=False,
-            code="amd_amf_probe_failed",
-            message=f"FFmpeg AMD AMF probe exited with code {result.exit_code}",
-            evidence={"path": resolved, **_command_evidence(result)},
-            repair_hint=(
-                "Keep the software encoder; inspect the bounded AMF diagnostics before "
-                "enabling AMD encoding"
-            ),
-        )
-    return DoctorCheck(
-        name="FFmpeg AMD AMF",
-        status="pass",
-        required=False,
-        code="amd_amf_ready",
-        message="FFmpeg AMD AMF produced a bounded test frame",
-        evidence={"path": resolved, **_command_evidence(result)},
-        repair_hint=(
-            "AMD AMF remains an explicit media-engine option and does not authorize CUDA "
-            "model workers"
-        ),
     )
 
 
@@ -796,9 +463,6 @@ def run_doctor(
                 arguments=("-hide_banner", "-filters"),
                 required_items=(
                     "silencedetect",
-                    "chromakey",
-                    "alphamerge",
-                    "maskedmerge",
                     "overlay",
                 ),
                 runner=process_runner,
@@ -810,14 +474,7 @@ def run_doctor(
                 name="FFmpeg codecs",
                 configured_path=settings.ffmpeg_path,
                 arguments=("-hide_banner", "-encoders"),
-                required_items=("libx264", "aac", "ffv1"),
-                runner=process_runner,
-                working_directory=workspace,
-            )
-        )
-        checks.append(
-            _amd_amf_check(
-                configured_path=settings.ffmpeg_path,
+                required_items=("libx264", "aac"),
                 runner=process_runner,
                 working_directory=workspace,
             )
@@ -922,28 +579,7 @@ def run_doctor(
             )
         )
     checks.append(_whisper_check(settings, workspace))
-    gpu_probe = _cuda_gpu_probe(runner=process_runner, working_directory=workspace)
-    checks.extend(
-        (
-            _font_check(workspace, process_runner),
-            _worker_runtime_check(
-                worker="sam3",
-                command=settings.sam3_worker_command,
-                package_root=package_root,
-                runner=process_runner,
-                working_directory=workspace,
-                gpu_probe=gpu_probe,
-            ),
-            _worker_runtime_check(
-                worker="matanyone2",
-                command=settings.matanyone_worker_command,
-                package_root=package_root,
-                runner=process_runner,
-                working_directory=workspace,
-                gpu_probe=gpu_probe,
-            ),
-        )
-    )
+    checks.append(_font_check(workspace, process_runner))
     if not package_root.is_dir():
         checks.append(
             DoctorCheck(

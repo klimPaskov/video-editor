@@ -65,7 +65,7 @@ Canonical artifacts should include:
   "revision_id": "rev_001",
   "created_at": "2026-07-23T10:00:00Z",
   "producer": {
-    "application_version": "0.2.0",
+    "application_version": "0.2.1",
     "stage": "transcribe",
     "adapter": "whisper_local",
     "adapter_version": "1"

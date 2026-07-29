@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "codex-video-agent"
-version = "0.2.0"
+version = "0.2.1"
 description = "Local-first, review-gated video editing workflow using Python, FFmpeg, local Whisper, and Remotion"
 readme = "README.md"
 license = { file = "LICENSE" }

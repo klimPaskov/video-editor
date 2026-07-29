@@ -52,7 +52,7 @@ This version replaces the earlier provider-heavy design with the expanded workfl
 - Remotion is the primary visual compositor.
 - FFmpeg remains the deterministic media engine.
 - Transcript word identifiers trigger reviewed effects.
-- Green-screen chroma key is the first subject-separation method.
+- The public workflow is scoped to screen recordings.
 - SAM 3.1 is an optional isolated object segmentation and tracking worker.
 - MatAnyone 2 is an optional isolated person matting worker.
 - Object recoloring, object replacement, explicit occlusion, background replacement, and text behind the subject are first-class planned effects.

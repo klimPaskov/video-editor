@@ -104,16 +104,6 @@ def test_effect_plan_supports_renderer_contract_and_hash_bound_assets(tmp_path: 
                 {"asset_id": "asset_broll", "sha256": asset_sha256, "path": str(asset_path)}
             ],
         },
-        {"id": "fx-recolor", "kind": "track_recolor", "renderer": "sam3"},
-        {"id": "fx-replace", "kind": "track_replace", "renderer": "sam3"},
-        {"id": "fx-inpainting", "kind": "inpainting", "renderer": "provider"},
-        {"id": "fx-matte", "kind": "person_matte", "renderer": "matanyone2"},
-        {"id": "fx-background", "kind": "background_replace", "renderer": "remotion"},
-        {
-            "id": "fx-behind",
-            "kind": "text_between_subject_and_background",
-            "renderer": "remotion",
-        },
         {"id": "fx-pip", "kind": "picture_in_picture", "renderer": "remotion"},
         {"id": "fx-focus", "kind": "screen_focus", "renderer": "remotion"},
     ]

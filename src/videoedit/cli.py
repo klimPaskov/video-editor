@@ -10,7 +10,6 @@ from videoedit import __version__
 from videoedit.adapters.ffmpeg import FFmpegAdapter
 from videoedit.adapters.inpainting import CommandInpaintingAdapter
 from videoedit.adapters.transcription import WhisperAdapter
-from videoedit.adapters.worker import WorkerAdapter
 from videoedit.domain.models import TimelineSpec
 from videoedit.errors import ApprovalRequiredError, VideoeditError
 from videoedit.logging import configure_logging
@@ -135,7 +134,6 @@ from videoedit.services.transition_sound import (
 from videoedit.services.transitions import write_structural_boundaries, write_transition_plan
 from videoedit.services.visual_timeline import validate_visual_timeline
 from videoedit.services.watchthrough import record_watchthrough
-from videoedit.services.worker_runtime import approve_worker_runtime
 from videoedit.settings import Settings
 
 app = typer.Typer(
@@ -1398,13 +1396,8 @@ def compose_visual(
     project_id: str,
     render_manifest: Annotated[Path | None, typer.Option(help="Base render manifest JSON")] = None,
     caption_plan: Annotated[Path | None, typer.Option(help="Caption plan JSON")] = None,
-    subject: Annotated[
-        Path | None, typer.Option(help="Optional local transparent subject video")
-    ] = None,
-    middle_text: Annotated[str, typer.Option(help="Text rendered behind the subject")] = (
-        "TEXT BEHIND SUBJECT"
-    ),
-    front_label: Annotated[str, typer.Option(help="Front-layer label")] = "CODEX VIDEO AGENT",
+    middle_text: Annotated[str, typer.Option(help="Optional middle-layer text")] = "",
+    front_label: Annotated[str, typer.Option(help="Optional front-layer label")] = "",
     focus_pacing_plan: Annotated[
         Path | None, typer.Option(help="Optional approved focus/pacing plan JSON")
     ] = None,
@@ -1443,7 +1436,6 @@ def compose_visual(
         remotion_directory=remotion_directory.resolve(),
         npm_path=_configured_remotion_npm_path(),
         caption_plan_path=caption_path.resolve() if caption_path.is_file() else None,
-        subject_path=subject.resolve() if subject else None,
         middle_text=middle_text,
         front_label=front_label,
         revision_id=revision_id,
@@ -2020,7 +2012,6 @@ def make_demo(
     typer.echo(json.dumps(result, indent=2))
 
 
-@app.command("encode-mask")
 def encode_mask(
     segmentation_result: Path,
     output: Path,
@@ -2036,7 +2027,6 @@ def encode_mask(
     typer.echo(str(encoded))
 
 
-@app.command("chroma-key")
 def chroma_key(
     project_id: str,
     source: Annotated[Path, typer.Option(help="Local source video to key")],
@@ -2078,7 +2068,6 @@ def chroma_key(
     typer.echo(manifest_path.read_text(encoding="utf-8"))
 
 
-@app.command("validate-mask")
 def validate_mask(
     project_id: str,
     source: Annotated[Path, typer.Option(help="Source video aligned with the mask")],
@@ -2096,7 +2085,6 @@ def validate_mask(
     typer.echo(manifest_path.read_text(encoding="utf-8"))
 
 
-@app.command("validate-segmentation")
 def validate_segmentation(
     project_id: str,
     source: Annotated[Path, typer.Option(help="Source video used by the segmentation job")],
@@ -2136,7 +2124,6 @@ def validate_segmentation(
         raise typer.Exit(code=10)
 
 
-@app.command("recolor-mask")
 def recolor_mask(
     project_id: str,
     source: Annotated[Path, typer.Option(help="Source video to recolor")],
@@ -2158,7 +2145,6 @@ def recolor_mask(
     typer.echo(manifest_path.read_text(encoding="utf-8"))
 
 
-@app.command()
 def recolor(
     source: Path,
     mask: Path,
@@ -2173,7 +2159,6 @@ def recolor(
     typer.echo(str(output.resolve()))
 
 
-@app.command("prepare-matte")
 def prepare_matte(
     matting_result: Path,
     output: Path,
@@ -2187,7 +2172,6 @@ def prepare_matte(
     typer.echo(str(prepared))
 
 
-@app.command("verify-matte")
 def verify_matte(
     result: Path,
     output: Annotated[
@@ -2212,7 +2196,6 @@ def verify_matte(
     typer.echo(str(verified))
 
 
-@app.command("review-matte-contrast")
 def review_matte_contrast(
     result: Path,
     output: Annotated[
@@ -2229,7 +2212,6 @@ def review_matte_contrast(
     typer.echo(str(manifest))
 
 
-@app.command("review-matte-quality")
 def review_matte_quality(
     result: Path,
     contrast_review: Annotated[
@@ -2251,7 +2233,6 @@ def review_matte_quality(
     typer.echo(str(report))
 
 
-@app.command("review-track")
 def review_track(
     result: Path,
     segmentation_validation: Annotated[
@@ -2293,7 +2274,6 @@ def review_track(
     typer.echo(str(review))
 
 
-@app.command("compile-track-keyframes")
 def compile_track_keyframes(
     result: Path,
     segmentation_validation: Annotated[
@@ -2337,7 +2317,6 @@ def compile_track_keyframes(
     typer.echo(str(manifest))
 
 
-@app.command("replace-object")
 def replace_object(
     timeline: Path,
     segmentation_result: Path,
@@ -2571,7 +2550,6 @@ def approve_cues(
     typer.echo(str(created))
 
 
-@app.command("plan-inpainting")
 def plan_inpainting(
     project_id: str,
     source: Path,
@@ -2604,7 +2582,6 @@ def plan_inpainting(
     typer.echo(str(created))
 
 
-@app.command("submit-inpainting")
 def submit_inpainting(
     project_id: str,
     request: Path,
@@ -2636,7 +2613,6 @@ def submit_inpainting(
     typer.echo(json.dumps(response, indent=2))
 
 
-@app.command("render-occluder")
 def render_occluder(
     project_id: str,
     segmentation_result: Path,
@@ -2674,7 +2650,6 @@ def render_occluder(
     typer.echo(str(created))
 
 
-@app.command("add-occluder-layer")
 def add_occluder_layer(
     timeline: Path,
     manifest: Path,
@@ -2704,7 +2679,6 @@ def add_occluder_layer(
     typer.echo(str(created))
 
 
-@app.command("track-overlay")
 def track_overlay(
     timeline: Path,
     segmentation_result: Path,
@@ -2745,84 +2719,6 @@ def track_overlay(
         z_index=z_index,
         padding=padding,
         start_frame_offset=start_frame_offset,
-    )
-    typer.echo(str(created))
-
-
-@app.command("run-worker")
-def run_worker(
-    worker: Annotated[str, typer.Argument(help="sam3 or matanyone2")],
-    job: Path,
-    command: Annotated[
-        str | None, typer.Option(help="Override the configured worker command")
-    ] = None,
-) -> None:
-    settings = Settings()
-    configured = {
-        "sam3": settings.sam3_worker_command,
-        "matanyone2": settings.matanyone_worker_command,
-    }
-    if worker not in configured:
-        raise typer.BadParameter("worker must be sam3 or matanyone2")
-    selected = command or configured[worker]
-    if not selected.strip():
-        raise typer.BadParameter(
-            f"Configure VIDEOEDIT_{worker.upper()}_WORKER_COMMAND or pass --command"
-        )
-    schema_names = {
-        "sam3": "segmentation",
-        "matanyone2": "matting",
-    }
-    schema_name = schema_names[worker]
-    payload = WorkerAdapter(
-        selected,
-        job_schema=_package_root() / "schemas" / f"{schema_name}_job.schema.json",
-        result_schema=_package_root() / "schemas" / f"{schema_name}_result.schema.json",
-    ).run(job)
-    typer.echo(json.dumps(payload, indent=2))
-
-
-@app.command("approve-worker-runtime")
-def approve_worker_runtime_command(
-    project_id: str,
-    worker: Annotated[str, typer.Argument(help="sam3 or matanyone2")],
-    upstream_commit: Annotated[
-        str, typer.Option(help="Operator-accepted immutable upstream commit")
-    ],
-    checkpoint_id: Annotated[str, typer.Option(help="Operator-accepted checkpoint identifier")],
-    checkpoint_sha256: Annotated[
-        str, typer.Option(help="SHA-256 of the operator-supplied local checkpoint")
-    ],
-    pytorch: Annotated[str, typer.Option(help="Installed PyTorch identity")],
-    cuda: Annotated[str, typer.Option(help="Installed CUDA identity")],
-    device: Annotated[str, typer.Option(help="Target device identity")],
-    actor: Annotated[str, typer.Option(help="Approving operator or licence owner")],
-    role: Annotated[str, typer.Option(help="Approving operator role")] = "operator",
-    reason: Annotated[
-        str, typer.Option(help="Current licence, checkpoint, and hardware acceptance reason")
-    ] = "Approved after licence and target-runtime review",
-    output: Annotated[
-        Path | None, typer.Option(help="Optional project-local approval output")
-    ] = None,
-    revision_id: Annotated[str, typer.Option(help="Project revision ID")] = "rev_001",
-    workspace: Annotated[Path | None, typer.Option(help="Repository workspace")] = None,
-) -> None:
-    layout = ProjectLayout(_workspace_path(workspace) / "projects" / project_id)
-    created = approve_worker_runtime(
-        _package_root(),
-        layout,
-        worker=worker,
-        upstream_commit=upstream_commit,
-        checkpoint_id=checkpoint_id,
-        checkpoint_sha256=checkpoint_sha256,
-        pytorch=pytorch,
-        cuda=cuda,
-        device=device,
-        actor=actor,
-        role=role,
-        reason=reason,
-        revision_id=revision_id,
-        output=output.resolve() if output else None,
     )
     typer.echo(str(created))
 

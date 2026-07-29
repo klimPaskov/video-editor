@@ -59,43 +59,6 @@ prompt_speedup:
   review_min_confidence: 0.85
   low_confidence_fallback: normal_speed
 
-chroma_key:
-  enabled: true
-  key_color: "#00B140"
-  similarity: 0.18
-  blend: 0.08
-  despill: 0.30
-  crop_to_subject: false
-  alpha_intermediate_codec: prores_ks
-  alpha_intermediate_profile: 4444
-
-object_recolor:
-  enabled: true
-  mask_required: true
-  preserve_luminance: true
-  preserve_texture: true
-  feather_px_at_1080p: 2
-  invalid_mask_action: keep_original
-
-object_replacement:
-  enabled: false
-  asset_catalog: config/assets.example.yaml
-  smoothing_window_frames: 5
-  maximum_center_jump_percent: 12
-  maximum_area_ratio_change: 1.8
-  require_occluder_review: true
-  uncertain_track_action: keep_original
-
-subject_layering:
-  green_screen_first: true
-  normal_background_worker: matanyone2
-  render_order:
-    - background
-    - middle
-    - subject
-    - front
-  require_contrasting_background_preview: true
-
 qa:
   contact_sheet_frames:
     - first
@@ -105,10 +68,6 @@ qa:
     - entry
     - exit
     - occlusion
-  fail_on_missing_mask_frame: true
-  warn_on_border_leak_percent: 2.0
-  warn_on_centroid_jump_percent: 10.0
-  warn_on_area_ratio_change: 1.6
   require_zoom_target_evidence: true
   require_zoom_centering_check: true
   require_zoom_relevance_boundary_check: true

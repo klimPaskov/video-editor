@@ -4,19 +4,19 @@
   "source_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
   "effects": [
     {
-      "id": "fx-ball",
-      "kind": "track_recolor",
+      "id": "fx-prompt-focus",
+      "kind": "screen_focus",
       "start_us": 1000000,
       "end_us": 3000000,
-      "trigger_quote": "change the ball color",
-      "target_prompt": "the ball in the speaker's hand",
-      "renderer": "sam3",
-      "fallback": "Keep the original object if confidence or continuity fails",
+      "trigger_quote": "open the prompt editor",
+      "target_prompt": "the visible prompt editor in the opened application window",
+      "renderer": "remotion",
+      "fallback": "Do not zoom if the target, timing, or stability checks fail",
       "parameters": {
-        "hue_degrees": 100
+        "focus_pacing_action_id": "zoom_prompt_box"
       },
       "requires_approval": true,
-      "linked_action_id": null
+      "linked_action_id": "zoom_prompt_box"
     },
     {
       "id": "fx-prompt-zoom",

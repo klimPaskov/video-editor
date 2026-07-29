@@ -10,15 +10,14 @@ FFmpeg, ffprobe, Remotion, local Whisper, and local assets form the required wor
 
 Visual scenes use typed props and reusable React components. Other renderers stay optional adapters.
 
-### D-003 Green screen first
+### D-003 Screen recordings are the supported input
 
-Controlled green-screen footage uses chroma key before neural matting.
+The production workflow accepts screen recordings and keeps the source layer intact.
 
-### D-004 Isolated GPU workers
+### D-004 Isolated external integrations
 
-SAM 3.1 and MatAnyone 2, if ever enabled, run outside the core environment
-through JSON jobs. They are optional deferred extensions and are not required
-by the final workflow; see ADR-0013.
+Any future external vision integration must run outside the core environment
+through JSON jobs. It is not required by the final workflow; see ADR-0013.
 
 ### D-005 Canonical time
 
@@ -46,9 +45,9 @@ Paid generation, ElevenLabs, cloud rendering, and publishing integrations are ex
 
 ### D-011 Final workflow excludes optional vision workers
 
-The required path uses green-screen chroma key and approved supplied/manual
-masks. SAM 3.1 and MatAnyone 2 remain isolated contracts only and require a new
-accepted decision before installation, inference, or consumption.
+The required path uses the source screen layer and local timeline layers.
+External vision integrations remain outside the public workflow and require a
+new accepted decision before installation, inference, or consumption.
 
 ## Assumptions to verify on the target machine
 
@@ -56,8 +55,8 @@ accepted decision before installation, inference, or consumption.
 - FFmpeg includes required filters and encoders.
 - Licensed fonts can be installed locally.
 - Remotion licensing fits the intended use.
-- If a future decision re-enables SAM, its checkpoint access, licence terms, and compatible runtime are acceptable.
-- If a future decision re-enables MatAnyone 2, its licence terms and output semantics are acceptable.
+- If a future decision re-enables an external integration, its access, licence
+  terms, and compatible runtime are acceptable.
 - Sufficient local and backup storage exists for source and intermediate media.
 
 ## Open operational choices
@@ -66,5 +65,5 @@ accepted decision before installation, inference, or consumption.
 - preferred delivery profiles
 - exact brand typography and caption safe areas
 - asset library location and backup target
-- GPU worker host and transport when remote
+- future external-integration host and transport when remote
 - maximum preview and final render concurrency

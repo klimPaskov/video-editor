@@ -955,7 +955,7 @@ def build_matting_quality_review(
                 )
             ],
             "fallback": (
-                "Retain the original shot or use the approved controlled green-screen/"
+                "Retain the original shot or use an approved local fallback/"
                 "chroma-key path until the matte is accepted."
             ),
         }

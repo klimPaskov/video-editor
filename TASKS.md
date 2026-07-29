@@ -1,15 +1,15 @@
 # Ordered Implementation Backlog
 
-Complete required phases in order. A task may be checked only when its acceptance evidence exists in code, tests, artifacts, or a recorded operator decision. P7 and P8 are retained as optional deferred extensions under ADR-0013 and are not required by the final working workflow.
+Complete required phases in order. A task may be checked only when its acceptance evidence exists in code, tests, artifacts, or a recorded operator decision. Retired optional integrations are outside the final working workflow.
 
 ## P0: foundation and local controls
 
 - [x] P0-01 Establish the Python 3.11 package, lockfile, CLI entry point, and supported exit codes.
 - [x] P0-02 Establish the Node.js 22 Remotion project, lockfile, composition entry point, and type check.
 - [x] P0-03 Implement a typed local process runner with argument arrays, timeouts, output limits, redaction, cancellation, and stable errors.
-- [x] P0-04 Implement a worker process adapter that exchanges versioned JSON jobs and results.
+- [x] P0-04 Keep optional integrations outside the public production workflow.
 - [x] P0-05 Implement structured logging with project, revision, stage, attempt, command, duration, and redacted output fields.
-- [x] P0-06 Implement `videoedit doctor` for FFmpeg, ffprobe, codecs, filters, fonts, disk, Node, npm, Remotion, and optional workers.
+- [x] P0-06 Implement `videoedit doctor` for FFmpeg, ffprobe, codecs, filters, fonts, disk, Node, npm, and Remotion.
 - [x] P0-07 Validate every example against its JSON Schema in local checks and CI.
 - [x] P0-08 Configure Ruff, mypy, pytest, TypeScript, shell syntax, and continuous integration checks.
 - [x] P0-09 Add repository skills, the official Remotion skill installer, phase result writing, and skeptical review instructions.
@@ -64,7 +64,7 @@ Acceptance evidence:
 - [x] P3-02 Generate semantic proposals for false starts, duplicate phrases, weak takes, and removable tangents with evidence.
 - [x] P3-03 Protect uncertain speech, negation, numbers, names, calls to action, and low-confidence regions from automatic semantic removal.
 - [x] P3-04 Create an effect plan with transcript word IDs, source ranges, renderer choice, assets, fallback, risk, and approval requirement.
-- [x] P3-05 Support captions, motion, sound, B-roll, picture-in-picture, screen focus, object recolor, object replacement, person matte, background replacement, and behind-subject text.
+- [x] P3-05 Support captions, motion, sound, B-roll, picture-in-picture, and purposeful screen focus.
 - [x] P3-06 Export immutable JSON proposals and readable Markdown review files.
 - [x] P3-07 Import approve, reject, and modify decisions without editing proposal artifacts in place.
 - [x] P3-08 Bind Gate 1 approval to source, transcript, policy, edit plan, effect plan, and asset hashes.
@@ -110,8 +110,8 @@ Acceptance evidence:
 - [x] P5-03 Implement frame-driven background, text, image, video, audio, and picture-in-picture layers.
 - [x] P5-04 Implement branded word-timed captions with grouping, emphasis, safe areas, and collision policy.
 - [x] P5-05 Implement reusable typography, lower thirds, callouts, diagrams, and transition primitives.
-- [x] P5-06 Implement background and middle-layer plate rendering for behind-subject layouts.
-- [x] P5-07 Implement front-layer rendering for captions and labels after subject compositing.
+- [x] P5-06 Implement background and middle-layer plate rendering for behind-content layouts.
+- [x] P5-07 Implement front-layer rendering for captions and labels over the screen layer.
 - [x] P5-08 Add composition listing, still preview, segment preview, full render, and props validation commands.
 - [x] P5-09 Add frame boundary, duration, z-order, missing asset, font, and type-check tests.
 - [x] P5-10 Implement purposeful target-centered zooms with explicit easing, stabilized transforms, and no untargeted whole-screen movement.
@@ -125,78 +125,41 @@ Acceptance evidence:
 - every zoom has an allowed purpose and a clear visible target or is omitted
 - `.codex/results/P5.json`
 
-## P6: green-screen and local mask effects
+## P6: screen composition and purposeful focus
 
-- [x] P6-01 Implement FFmpeg chroma key with configurable colour, similarity, blend, despill, crop, and edge controls.
-- [x] P6-02 Encode and validate an alpha-preserving foreground intermediate.
-- [x] P6-03 Composite a Remotion background and middle text plate under the subject.
-- [x] P6-04 Render captions and front graphics above the subject.
-- [x] P6-05 Implement mask-driven object recoloring from a supplied lossless local mask sequence or mask video.
-- [x] P6-06 Validate mask dimensions, frame count, range alignment, polarity, and alpha semantics.
-- [x] P6-07 Build a complete synthetic or licensed local milestone showing cut, audio, recolor, cutout, background replacement, behind-subject text, and captions.
-- [x] P6-08 Generate contact sheets and inspect hair, hands, motion blur, spill, holes, edges, and effect boundaries.
+- [x] P6-01 Render an approved Remotion background and middle-layer screen plate.
+- [x] P6-02 Render captions and front graphics over the screen layer.
+- [x] P6-03 Validate purposeful zoom targets, easing, centering, and relevance boundaries.
+- [x] P6-04 Validate prompt-action speed-up boundaries, audible sound, pitch preservation, and A/V sync.
+- [x] P6-05 Build a complete local screen-recording milestone showing cut, audio, captions, focus, and composition.
+- [x] P6-06 Generate contact sheets and inspect UI readability, cursor continuity, edges, and effect boundaries.
 
 Acceptance evidence:
 
-- the complete local milestone works without GPU models or paid providers
+- the complete local milestone works without optional models or paid providers
 - production audio is preserved
 - every generated video decodes
 - `.codex/results/P6.json`
 
-## P7: SAM 3.1 object segmentation and tracking worker (optional deferred extension)
+## P7-P8: retired vision-worker extensions
 
-- [x] P7-01 Review the current official repository, SAM Licence, checkpoint terms, supported Python, PyTorch, CUDA, and exact predictor API.
-- [ ] P7-02 Record an ADR with the accepted upstream commit and checkpoint identity. Deferred by ADR-0013; no live worker pin is required for the final workflow.
-- [x] P7-03 Create an isolated Python 3.12 worker environment without changing the core environment.
-- [x] P7-04 Implement versioned segmentation job and result contracts.
-- [x] P7-05 Support text, point, box, or mask prompts where the selected upstream API supports them.
-- [x] P7-06 Restrict each job to an approved source range and prompt frame.
-- [x] P7-07 Export lossless masks, object IDs, bounding boxes, centroids, area, missing frames, and raw worker metadata.
-- [x] P7-08 Detect identity switches, sudden area changes, jumps, leaks, and missing masks.
-- [x] P7-09 Generate contact sheets and require review of first, middle, last, high-motion, entry, exit, and occlusion frames.
-- [ ] P7-10 Add fake worker contract tests and one short live target-GPU smoke test. Deferred by ADR-0013; fake contract coverage remains useful, but live worker acceptance is not part of the final workflow.
-
-Acceptance evidence for the optional extension:
-
-- a reviewed real clip produces stable masks on the target GPU
-- incompatible checkpoints or uncertain identity fail clearly
-- `.codex/results/P7.json`
-
-## P8: MatAnyone 2 person matting worker (optional deferred extension)
-
-- [x] P8-01 Review the current official repository, NTU S-Lab License 1.0, checkpoint, supported Python, and exact inference API.
-- [ ] P8-02 Record an ADR with the accepted upstream commit and checkpoint identity. Deferred by ADR-0013; no live worker pin is required for the final workflow.
-- [x] P8-03 Create an isolated Python 3.10 worker environment without changing the core or SAM environment.
-- [x] P8-04 Implement versioned matting job and result contracts.
-- [x] P8-05 Accept an approved first-frame person mask from SAM, an interactive tool, or a manual file.
-- [x] P8-06 Identify and verify the foreground and alpha output roles before composition.
-- [x] P8-07 Export hashes, dimensions, frame count, model identity, warnings, and stability metrics.
-- [x] P8-08 Check hair, fingers, loose clothing, holes, transparent regions, fast motion, motion blur, and temporal edge stability.
-- [x] P8-09 Render contrasting-background previews and compare them with the source.
-- [ ] P8-10 Add fake worker contract tests and one short live target-GPU smoke test. Deferred by ADR-0013; fake contract coverage remains useful, but live worker acceptance is not part of the final workflow.
-
-Acceptance evidence for the optional extension:
-
-- a reviewed real clip produces a verified foreground and alpha result
-- output semantics are proved before consumption
-- chroma key remains the preferred controlled-shoot path
-- `.codex/results/P8.json`
+These extensions are retained only as isolated contract history. They are not
+implemented, installed, invoked, or required by the supported workflow. No
+public task, installer step, doctor check, or delivery stage may depend on
+them. Their old live-runtime tasks are therefore retired rather than treated
+as incomplete production work.
 
 ### Final workflow scope
 
-P7 and P8 remain isolated contract boundaries for a future re-enable decision;
-they are not required dependencies of the final workflow. The dependency-safe
-working path is P0-P6, U21/U22, P9, P10, and P11. P9 consumes reviewed supplied
-or manual masks and tracks when an effect needs them, and P6 uses chroma key or
-an approved local mask for subject separation. The unchecked live worker tasks
-remain explicitly deferred under ADR-0013 and must not be marked complete by
-fake tests or by an FFmpeg AMD encoder result.
+The dependency-safe working path is P0-P6, U21/U22, P9, P10, and P11. Retired
+worker contracts, if inspected for compatibility, must not be presented as
+live production features or used as evidence for final workflow acceptance.
 
 ## P9: object effects, asset library, B-roll, and sound
 
 - [x] P9-01 Convert approved object tracks into smoothed position, scale, rotation, and visibility keyframes.
 - [x] P9-02 Implement object replacement with an original-shot fallback.
-- [x] P9-03 Support explicit foreground occluder tracks for hands, fingers, and other crossing objects.
+- [x] P9-03 Support bounded picture-in-picture layouts with explicit z-order and safe areas.
 - [x] P9-04 Keep inpainting behind a separate optional adapter and approval boundary.
 - [x] P9-05 Index local B-roll, sound, images, backgrounds, fonts, and replacement objects with hashes, descriptions, tags, licences, and usage history.
 - [x] P9-06 Search the local asset index using transcript context and effect intent.
@@ -207,7 +170,7 @@ fake tests or by an FFmpeg AMD encoder result.
 
 Acceptance evidence:
 
-- object recolor and replacement work from reviewed masks and tracks
+- B-roll, graphics, picture-in-picture, and sound work from reviewed assets
 - local assets can be found, approved, rendered, mixed, and audited
 - no paid service is required
 - `.codex/results/P9.json`
@@ -215,12 +178,12 @@ Acceptance evidence:
 ## P10: segment review, re-transcription, QA, and Gate 2
 
 - [x] P10-01 Divide the project into logical review segments and render low-cost previews.
-- [x] P10-02 Generate contact sheets, transcript excerpts, effect summaries, mask or matte diagnostics, and warnings for each segment.
-- [x] P10-03 Import `[FIX]`, `[KEEP]`, `[REMOVE]`, `[RETIME]`, `[MASK]`, `[TEXT]`, and `[AUDIO]` markers from review Markdown.
+- [x] P10-02 Generate contact sheets, transcript excerpts, effect summaries, and warnings for each segment.
+- [x] P10-03 Import `[FIX]`, `[KEEP]`, `[REMOVE]`, `[RETIME]`, `[TEXT]`, and `[AUDIO]` markers from review Markdown.
 - [x] P10-04 Apply fixes as a new immutable revision and invalidate only dependent stages.
 - [x] P10-05 Re-transcribe rendered segments and compare intended speech with rendered speech.
 - [x] P10-06 Detect duplicate phrases, missing words, dead air, abrupt joins, caption drift, freeze frames, black frames, clipping, and A/V drift.
-- [x] P10-07 Check mask continuity, matte flicker, effect boundaries, z-order, safe areas, hidden screen content, and picture-in-picture framing.
+- [x] P10-07 Check effect boundaries, z-order, safe areas, hidden screen content, and picture-in-picture framing.
 - [x] P10-08 Bind Gate 2 approval to segment preview, transcript comparison, effect assets, composition code bundle, and QA hashes.
 - [x] P10-09 Lock approved segment revisions while preserving the ability to create a later revision.
 - [x] P10-10 Import `[ZOOM]` and `[SPEED]` markers as revision-safe focus and pacing changes.
@@ -270,12 +233,12 @@ These tasks are part of the canonical dependency graph. Do not reset completed `
 - [x] U22-10 Implement licensed transition-sound selection, transient alignment, gain, fades, speech protection, reuse spacing, and mix QA.
 - [x] U22-11 Add review batching that lets high-confidence micro edits proceed under the approved policy while asking only about material semantic or continuity uncertainty.
 - [x] U22-12 Add cut-density, retained-fragment, cadence, transition-frequency, and repetition metrics as QA signals, not arbitrary cut-count blockers.
-- [x] U22-13 Add fixtures for fillers, stutters, false starts, exact and semantic repetition, duplicate takes, clean and broken joins, screen-state jumps, good structural transitions, bad random transitions, and masked dialogue.
+- [x] U22-13 Add fixtures for fillers, stutters, false starts, exact and semantic repetition, duplicate takes, clean and broken joins, screen-state jumps, good structural transitions, bad random transitions, and overlapping dialogue.
 - [x] U22-14 Render and inspect the required fixtures, update traceability, and write `.codex/results/U22.json` with media evidence.
 
 Acceptance evidence:
 
-- the planner makes many useful small cuts on a dense talking-head fixture without deleting protected meaning
+- the planner makes many useful small cuts on a dense screen-recording fixture without deleting protected meaning
 - every applied cut has a valid join strategy and rendered join result
 - re-transcription catches a deliberately broken join and routes it to repair or review
 - routine cleanup cuts receive no decorative motion transition

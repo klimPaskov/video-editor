@@ -6,22 +6,19 @@ Turn recorded footage and a creative brief into a reviewed final video without m
 
 ## Preferred recording protocol
 
-The most reliable first path is a one-take recording in front of a clean green screen.
+The supported input is a screen recording with a stable capture configuration.
 
-- Use even lighting on the screen and subject.
-- Separate the subject from the screen when possible.
-- Keep motion blur low enough for usable edges.
 - Record at a fixed frame rate.
 - Record clean production audio on a separate channel or device when available.
-- Keep the object to be tracked visible before the effect starts.
-- Avoid complete object occlusion unless an occluder track is planned.
-- Say effect cues naturally when transcript-triggered timing is desired.
-- Record screen and camera feeds separately when picture-in-picture flexibility matters.
+- Keep important prompt-writing actions and relevant UI visible long enough to
+  identify their exact start and end boundaries.
+- Avoid unnecessary window changes during an action that should receive a
+  purposeful focus or speed-up.
 
-The final workflow uses controlled green-screen chroma key or an approved
-project-owned supplied/manual mask. MatAnyone 2 remains a deferred optional
-extension for a future accepted decision; it is not installed, invoked, or
-required by the final path.
+The final workflow uses the original screen recording, local captions, text and
+motion graphics, B-roll, picture-in-picture, sound, and approved prompt-action
+retiming. Optional vision workers are not installed or invoked by the public
+workflow.
 
 ## Project layout
 
@@ -95,7 +92,6 @@ It creates:
 - selected-take proposals
 - effect triggers tied to stable word IDs or explicit source ranges
 - local asset requests
-- optional worker requests only when an explicitly re-enabled extension is in scope; the final path has no worker dependency
 - fallbacks and review risks
 - a focus and pacing plan for purposeful zooms and explicitly requested prompt speed-ups
 - readable plan Markdown
@@ -107,11 +103,6 @@ Supported effect kinds include:
 - `motion_graphic`
 - `sound_effect`
 - `broll`
-- `track_recolor`
-- `track_replace`
-- `person_matte`
-- `background_replace`
-- `text_between_subject_and_background`
 - `picture_in_picture`
 - `screen_focus`
 - `purposeful_zoom`
@@ -123,12 +114,11 @@ The operator reviews:
 - proposed cuts and retained meaning
 - selected takes
 - effect timing and trigger phrases
-- object or person prompts
+- visible UI targets and action ranges
 - background, text, motion, B-roll, and sound choices
 - zoom purpose, visible target, timing, centering evidence, and confidence
 - requested prompt speed-up boundaries, rate, audio mode, and confidence
 - local asset provenance
-- requested GPU work
 - any predicted paid work
 
 Gate 1 approval binds to the exact source, transcript, policy, edit plan, effect plan, focus and pacing plan, and asset hashes. Uncertain items are batched with recommendations. Low-confidence zooms use no zoom. Low-confidence speed-ups use normal speed.
@@ -155,7 +145,7 @@ This contract applies across P3, P4, P5, P9, and P10.
 4. Repair joins with a hard cut, short audio crossfade, adjusted handles, room tone, J-cut, L-cut, B-roll cover, alternate coverage, or purposeful punch-in.
 5. Render a short join preview with context on both sides.
 6. Re-transcribe the preview and compare it with the approved transcript.
-7. Check missing or duplicate words, grammar, meaning, clipped syllables, clicks, room tone, cadence, flashes, frozen frames, face movement, cursor continuity, and screen state.
+7. Check missing or duplicate words, grammar, meaning, clipped syllables, clicks, room tone, cadence, flashes, frozen frames, cursor continuity, and screen state.
 8. Route failed joins to repair or focused review. High cut density by itself is not a failure.
 
 ### Structural transition planning
@@ -165,7 +155,7 @@ This contract applies across P3, P4, P5, P9, and P10.
 3. Select a hard cut, J-cut, L-cut, short crossfade, dip, swipe, push, blur swipe, or chapter transition according to purpose.
 4. Require exact outgoing and incoming segments, duration, direction, easing, full-frame coverage, dialogue clearance, confidence, and a clean fallback.
 5. Pair motion transitions with a licensed sound cue when required. Align the sound transient to the strongest visual movement and protect the first important incoming word.
-6. Apply reuse spacing and reject random timing, random targets, repeated gimmicks, edge gaps, unreadable incoming frames, or masked dialogue.
+6. Apply reuse spacing and reject random timing, random targets, repeated gimmicks, edge gaps, unreadable incoming frames, or dialogue overlap.
 7. Render first, midpoint, and final proof frames plus a short audio preview for QA.
 
 ## P4: deterministic base edit and audio
@@ -198,112 +188,47 @@ Remotion owns the declarative visual timeline:
 - frame-based keyframes
 - purposeful target-centered zooms from the approved focus and pacing plan
 
-FFmpeg remains responsible for exact media cutting, audio, masks, alpha, codecs, and final validation.
+FFmpeg remains responsible for exact media cutting, audio, codecs, and final validation.
 
 P5 proves:
 
 1. schema-valid timeline props
 2. deterministic frame and duration mapping
-3. middle plate rendering for background plus behind-subject text
+3. middle plate rendering for background plus behind-content text
 4. front pass rendering for captions and labels
 5. local asset staging and font loading
 6. low-cost segment previews
 7. smooth zoom easing, stable target centering, and evidence that the target is visible only during the relevant action
 
-## P6: green-screen and local mask effects
+## P6: screen composition and focused pacing
 
-This is the first full visual milestone. It requires no gated checkpoint.
+This is the first full visual milestone and requires no gated model or worker.
 
-### Person extraction
+1. Compile the approved edit and retimed prompt-action ranges from one source
+   timeline.
+2. Render the Remotion background, behind-content text, captions, and labels.
+3. Apply only purposeful target-centered UI zooms with verified boundaries.
+4. Preserve sound during approved prompt-action speed-ups and keep the original
+   voice pitch.
+5. Decode and inspect the end-to-end fixture for timing, joins, audio, captions,
+   safe areas, and motion quality.
 
-1. Apply FFmpeg chroma key and despill.
-2. Produce an alpha-capable foreground intermediate.
-3. Inspect hair, hands, clothes, motion blur, holes, and spill.
+P6 must produce one decoded end-to-end fixture with approved cuts, production
+audio, screen text, captions, and purposeful focus.
 
-### Text behind the subject
+## Deferred integrations
 
-1. Remotion renders the background and middle text plate.
-2. FFmpeg composites the transparent subject above that plate.
-3. Remotion renders front captions and labels.
-
-### Object recoloring from a local mask
-
-1. Validate mask dimensions, frame count, range, and polarity.
-2. Create a colour-transformed source version.
-3. Merge transformed and original pixels through the mask.
-4. Inspect first, middle, last, high-motion, and edge frames.
-
-P6 must produce one decoded end-to-end fixture with approved cuts, production audio, background replacement, behind-subject text, object recolor, and branded captions.
-
-## P7: SAM 3.1 object worker (optional deferred extension)
-
-P7 is not part of the final working workflow. It remains an isolated,
-versioned extension boundary for a future decision. No final-workflow stage may
-require this worker or block because its environment is unavailable. If the
-extension is re-enabled, it begins only after operator licence review,
-checkpoint access, hardware confirmation, and P6 success.
-
-Before a v1.1 job can use live runtime access, `videoedit approve-worker-runtime`
-must persist a separate hash-bound human acceptance for the exact upstream
-commit, checkpoint hash, licence identity, PyTorch/CUDA stack, and target
-device. Gate 1 effect approval alone never authorizes installation or GPU use.
-
-A job declares:
-
-- source identity and frame range
-- prompt type and prompt value
-- prompt frame
-- expected object count
-- output mask format
-- worker and schema version
-
-The worker exports:
-
-- lossless masks
-- stable object IDs when available
-- bounding boxes, centroids, and area per frame
-- missing-frame and identity warnings
-- upstream commit, checkpoint identity, environment, and device metadata
-- hashes and contact sheets
-
-Uncertain object identity fails the effect and preserves the original shot fallback.
-
-## P8: MatAnyone 2 person worker (optional deferred extension)
-
-P8 is not part of the final working workflow. It remains an isolated,
-versioned extension boundary for a future decision. The final workflow uses
-chroma key or an approved supplied/manual mask and does not call this worker.
-If the extension is re-enabled, it begins only after operator licence review,
-hardware confirmation, an accepted upstream pin, and an approved first-frame
-person mask.
-
-MatAnyone 2 jobs use the same separate worker-runtime acceptance. The accepted
-runtime reference is carried into the job and must match the code, checkpoint,
-licence, and device identity before the isolated worker can run.
-
-The worker accepts a source video and first-frame person mask. It exports verified foreground and alpha outputs, metadata, hashes, and stability findings.
-
-Review includes hair, fingers, loose clothing, transparent areas, holes, fast motion, blur, entry, exit, and temporal edge stability. Chroma key stays preferred for controlled green-screen footage.
+Optional vision-worker contracts remain isolated extension material. They are
+not installed, invoked, or required by the public workflow, and their missing
+runtime or model files cannot block the supported screen-recording path.
 
 ## Final workflow scope decision
 
-Under ADR-0013, the dependency-safe final path is P0-P6, U21/U22, P9, P10,
-and P11. SAM 3.1 and MatAnyone 2 contracts, fake-worker tests, and isolated
-runtime gates remain available for future extensions only. `videoedit doctor`
-may report their missing capability as a warning, but the final workflow does
-not install or invoke either worker. P9 uses reviewed supplied/manual masks or
-tracks and preserves the original-shot fallback when a tracked effect cannot
-be verified.
+The dependency-safe final path is P0-P6, U21/U22, P9, P10, and P11. The public
+doctor command checks only the local runtime needed by that path. P9 keeps a
+source-shot fallback whenever a tracked effect cannot be verified.
 
-## P9: object effects, assets, B-roll, and sound
-
-### Object replacement
-
-1. Convert reviewed object geometry into smoothed position, scale, rotation, and visibility keyframes.
-2. Place a licensed replacement asset in Remotion.
-3. Use explicit hand or finger occluder masks when needed.
-4. Keep the original shot as the declared fallback.
-5. Route inpainting through a separate optional adapter only when the original remains visible.
+## P9: assets, B-roll, picture-in-picture, and sound
 
 ### Local asset library
 
@@ -314,7 +239,7 @@ Index every B-roll clip, sound, image, background, font, and replacement object 
 - media properties
 - description and tags
 - source and licence
-- permitted uses and attribution
+- permitted uses and attribution when applicable
 - usage history
 
 Codex searches this index with transcript context. Asset selection remains a proposal until approved.
@@ -331,7 +256,6 @@ Render one preview per logical segment or effect group. Each review package incl
 - contact sheet
 - relevant transcript excerpt
 - effect and asset summary
-- mask or matte diagnostics
 - machine QA findings
 - known warnings
 
@@ -341,11 +265,8 @@ The operator writes timestamped markers:
 [FIX 00:35.200-00:37.000]
 Delete the first duplicate phrase and keep the second.
 
-[MASK 00:41.000-00:42.500]
-The hand leaks into the object mask. Refine the prompt or mask.
-
-[RETIME 00:54.100-00:56.000]
-Hold the replacement asset for another 12 frames.
+[TEXT 00:54.100-00:56.000]
+The chapter label overlaps the active prompt box. Move it to the safe area.
 
 [ZOOM 01:10.000-01:14.500]
 Center the visible prompt box. Start after it opens and end before the results panel appears.
@@ -354,7 +275,7 @@ Center the visible prompt box. Start after it opens and end before the results p
 Speed up only the visible prompt writing at 2.5x and keep pitch-preserved audio.
 ```
 
-Codex applies fixes as a new revision. It re-transcribes the rendered segment and compares intended speech with rendered speech. It also checks joins, captions, freeze frames, black frames, A/V drift, z-order, safe areas, mask continuity, matte flicker, hidden screen content, zoom purpose and stability, and speed-up request scope, boundaries, audio, and transcript continuity.
+Codex applies fixes as a new revision. It re-transcribes the rendered segment and compares intended speech with rendered speech. It also checks joins, captions, freeze frames, black frames, A/V drift, z-order, safe areas, hidden screen content, zoom purpose and stability, and speed-up request scope, boundaries, audio, and transcript continuity.
 
 ### Gate 2
 

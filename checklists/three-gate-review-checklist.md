@@ -6,9 +6,9 @@
 - [ ] Proposed cuts preserve meaning.
 - [ ] Protected terms and low-confidence speech are not removed automatically.
 - [ ] Effect triggers and ranges match the spoken content.
-- [ ] Object prompts and prompt frames are specific.
-- [ ] Background, B-roll, sound, and replacement assets have provenance.
-- [ ] GPU work and paid work are identified before execution.
+- [ ] Visible UI targets and prompt-action ranges are specific.
+- [ ] Background, B-roll, sound, and graphics assets are identified.
+- [ ] Any paid work is identified before execution.
 - [ ] Every proposal is approved, rejected, or modified.
 
 ## Gate 2: segment approval
@@ -17,8 +17,8 @@
 - [ ] Transcript comparison is current.
 - [ ] Duplicate speech, missing speech, dead air, and abrupt joins were reviewed.
 - [ ] Captions, z-order, safe areas, and screen visibility were reviewed.
-- [ ] Masks and mattes were reviewed at difficult frames.
-- [ ] Object replacement and occlusion were reviewed.
+- [ ] Purposeful zoom targets, boundaries, centering, and easing were reviewed.
+- [ ] Prompt-action speed-ups contain audible, pitch-preserved sound and no unrelated activity.
 - [ ] Fix markers were applied through a new revision.
 - [ ] Approval binds to preview, transcript, effect asset, composition bundle, and QA hashes.
 

@@ -19,10 +19,10 @@ Keep:
 - useful breaths and natural emphasis.
 
 Remove exactly:
-- “good job” near 07:18;
-- “very nice” near 07:19;
-- the sentence beginning “the point of this series is also…” on the GitHub page;
-- “I am not even going to do this manually” before “So I’m gonna use a Hermes agent for it.”
+- "good job" near 07:18;
+- "very nice" near 07:19;
+- the sentence beginning "the point of this series is also..." on the GitHub page;
+- "I am not even going to do this manually" before "So I'm gonna use a Hermes agent for it."
 
 Mechanical cleanup:
 - propose obvious uh/um fillers, stutters, false starts, duplicate words,
@@ -46,16 +46,13 @@ Captions:
 Composition:
 - background: original screen recording;
 - title/text: small chapter label only at the start;
-- text behind subject: none for this screen recording;
-- captions in front: yes;
-- green screen: no;
+- captions: in front of the recording;
 - recolor: none.
 
 Constraints:
 - preserve and hash the immutable source;
 - use local FFmpeg, Remotion, and Whisper;
-- keep SAM 3.1 and MatAnyone 2 out of the final path;
-- stop for uncertain identity, timing, licence, credentials, cost, or QA;
+- stop for uncertain timing, licence, credentials, cost, or QA;
 - do not approve gates, delivery, backup, or cleanup without current human review.
 
 First return the plan, evidence list, artifact paths, hashes, warnings, and Gate 1 questions.

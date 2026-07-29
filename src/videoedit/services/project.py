@@ -292,7 +292,7 @@ def initialize_project(workspace: Path, project_id: str) -> ProjectLayout:
                     {
                         "schema_version": "1.0",
                         "project_id": project_id,
-                        "recording_mode": "green_screen",
+                        "recording_mode": "screen_recording",
                         "width": 1920,
                         "height": 1080,
                         "fps": 30,

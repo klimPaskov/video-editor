@@ -10,9 +10,8 @@ uv run videoedit --help
 uv run videoedit COMMAND --help
 ```
 
-The current worker-free production path uses the command names below. The
-optional SAM 3.1 and MatAnyone 2 sections remain contract boundaries only and
-are not part of the public setup path.
+The production path uses the command names below. The public CLI does not
+install or invoke optional vision workers.
 
 | Purpose | Current command |
 | --- | --- |
@@ -90,35 +89,27 @@ Checks:
 - required filters and encoders
 - libass support
 - Whisper availability
-- optional GPU support, including a bounded FFmpeg AMD AMF media-encoder probe
-- optional, deferred SAM 3.1 and MatAnyone 2 worker prerequisites: isolated Python path and
-  version, immutable upstream checkout/ref, local checkpoint presence, compatible
-  `nvidia-smi` probe, and configured command state
+- optional integrations are not part of the public setup path
 - optional provider CLI and authentication state
 - font availability
 - disk space
 
 JSON result includes a list of checks with status, code, message, evidence, and repair hint.
-Worker checks are optional warnings and never start model inference. `h264_amf` remains
-media-encoder evidence only; it does not satisfy the NVIDIA/CUDA requirement for either
-isolated worker. Missing operator acceptance, checkpoint hashes, licence decisions, or
-project-scoped `worker_runtime_approval` remain explicit blockers only for a
-worker extension job. Under ADR-0013 they are warnings for the final workflow,
-which does not invoke `run-worker`.
+The doctor command checks only the local runtime used by the public workflow. It
+never downloads a model, starts an external worker, or grants an approval.
 
 ### Encoder profile
 
 The local render stages use these process settings:
 
 ```text
-VIDEOEDIT_VIDEO_CODEC=libx264|h264_amf
+VIDEOEDIT_VIDEO_CODEC=libx264
 VIDEOEDIT_VIDEO_BITRATE_BPS=4000000
 ```
 
-`libx264` is the default. `h264_amf` is an explicit AMD media-encoder opt-in and
-requires a passing doctor capability check. The selected codec and bitrate are
+`libx264` is the only supported video codec. The selected codec and bitrate are
 part of stage/cache identity for base, retimed, final assembly, delivery derivative,
-proxy, demo, recolor, overlay, contrast-review, and sound/matte QA media operations.
+proxy, demo, composition, and visual QA media operations.
 Audio-bearing overlays, approved-segment assembly, retimed renders, platform
 derivatives, and transition-sound mixes pad or trim mapped production audio before
 the bounded `-shortest` operation so AAC/container end padding cannot remove the
@@ -774,52 +765,9 @@ Options:
 --output PATH
 ```
 
-### `videoedit segment PROJECT` (optional deferred extension)
-
-Creates or runs an approved SAM 3.1 job only for an explicitly re-enabled
-optional extension. The final workflow does not call this command.
-
-Options:
-
-```text
---effect ID
---job PATH
---dry-run
---worker-command PATH
-```
-
-The command must stop when checkpoint access, licence, device compatibility, or object identity is unresolved.
-
-### `videoedit approve-worker-runtime PROJECT WORKER`
-
-Creates a project-local `worker_runtime_approval` artifact for `sam3` or
-`matanyone2`. It requires the operator-accepted immutable upstream commit,
-checkpoint identifier and SHA-256, licence identity, installed PyTorch/CUDA,
-target device, actor, role, and reason. The approval is hash-bound to that
-exact identity and is required before a v1.1 worker job may declare
-`runtime.access` as `approved`. It does not install packages, download a
-checkpoint, or run inference. The reference also binds the current project
-configuration and is rejected when that configuration changes or the approval
-expires.
-
-### `videoedit matte PROJECT` (optional deferred extension)
-
-Creates or runs an approved MatAnyone 2 job only for an explicitly re-enabled
-optional extension. The final workflow does not call this command.
-
-Options:
-
-```text
---effect ID
---initial-mask PATH
---job PATH
---dry-run
---worker-command PATH
-```
-
 ### `videoedit preview segment PROJECT SEGMENT_ID`
 
-Renders a bounded review clip, contact sheet, transcript excerpt, effect metadata, and mask or matte diagnostics.
+Renders a bounded review clip, contact sheet, transcript excerpt, effect metadata, and visual diagnostics.
 
 The P10-01 planning entry point is `videoedit preview-segments PROJECT --media PATH [--transcript PATH]`.
 It creates a schema-valid, hash-bound logical segment plan and low-cost FFmpeg previews under

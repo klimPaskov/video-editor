@@ -124,9 +124,9 @@ class FFmpegAdapter:
 
     @staticmethod
     def _validate_video_codec(video_codec: str) -> str:
-        if not video_codec or not re.fullmatch(r"[A-Za-z0-9_.-]+", video_codec):
-            raise ValueError("video codec must be a safe non-empty process argument")
-        return video_codec
+        if video_codec != DEFAULT_VIDEO_CODEC:
+            raise ValueError("only the reproducible libx264 video codec is supported")
+        return DEFAULT_VIDEO_CODEC
 
     @staticmethod
     def _validate_video_bitrate(video_bitrate_bps: int) -> int:
@@ -141,7 +141,9 @@ class FFmpegAdapter:
         return self._validate_video_codec(video_codec or self.video_codec)
 
     def _video_pixel_format(self, video_codec: str) -> str:
-        return "nv12" if video_codec == "h264_amf" else "yuv420p"
+        if video_codec != DEFAULT_VIDEO_CODEC:
+            raise ValueError("only the reproducible libx264 video codec is supported")
+        return "yuv420p"
 
     def _video_duration_us(self, source: Path) -> int:
         probe = self.probe(source)
@@ -232,17 +234,8 @@ class FFmpegAdapter:
         preset: str,
         qp: int | None = None,
     ) -> tuple[str, ...]:
-        if video_codec == "h264_amf":
-            if qp is not None:
-                raise ValueError("explicit QP is not supported by the AMD AMF profile")
-            return (
-                "-c:v",
-                video_codec,
-                "-b:v",
-                str(self.video_bitrate_bps),
-                "-pix_fmt",
-                self._video_pixel_format(video_codec),
-            )
+        if video_codec != DEFAULT_VIDEO_CODEC:
+            raise ValueError("only the reproducible libx264 video codec is supported")
         if qp is not None and not 0 <= qp <= 51:
             raise ValueError("H.264 QP must be between 0 and 51")
         rate_control = ("-qp", str(qp)) if qp is not None else ("-crf", str(crf))
@@ -1264,8 +1257,10 @@ class FFmpegAdapter:
     def generate_demo_source(self, output: Path, duration_seconds: int = 6) -> ProcessResult:
         output.parent.mkdir(parents=True, exist_ok=True)
         video_filter = (
-            "drawbox=x='440+20*sin(t*2)':y=130:w=320:h=520:color=0xD6A17A:t=fill,"
-            "drawbox=x=515:y=335:w=84:h=84:color=0x2864FF:t=fill"
+            "drawbox=x=90:y=70:w=1100:h=580:color=0x2A2A2A:t=fill,"
+            "drawbox=x=90:y=70:w=1100:h=48:color=0x3D5AFE:t=fill,"
+            "drawbox=x='180+40*sin(t*2)':y=180:w=520:h=28:color=0xE0E0E0:t=fill,"
+            "drawbox=x='180+60*sin(t*1.5)':y=250:w=780:h=20:color=0x8AB4F8:t=fill"
         )
         request = ProcessRequest(
             executable=self.ffmpeg_path,
@@ -1274,7 +1269,7 @@ class FFmpegAdapter:
                 "-f",
                 "lavfi",
                 "-i",
-                f"color=c=0x00FF00:s=1280x720:r=30:d={duration_seconds}",
+                f"color=c=0x10131A:s=1280x720:r=30:d={duration_seconds}",
                 "-f",
                 "lavfi",
                 "-i",
@@ -1302,32 +1297,6 @@ class FFmpegAdapter:
         self._require_success(result, "demo source generation failed")
         return result
 
-    def generate_demo_mask(self, output: Path, duration_seconds: int = 6) -> ProcessResult:
-        output.parent.mkdir(parents=True, exist_ok=True)
-        request = ProcessRequest(
-            executable=self.ffmpeg_path,
-            arguments=(
-                "-y",
-                "-f",
-                "lavfi",
-                "-i",
-                f"color=c=black:s=1280x720:r=30:d={duration_seconds}",
-                "-vf",
-                "drawbox=x=515:y=335:w=84:h=84:color=white:t=fill",
-                "-an",
-                "-c:v",
-                "libx264",
-                "-pix_fmt",
-                "yuv420p",
-                str(output),
-            ),
-            working_directory=output.parent,
-            timeout_seconds=180,
-        )
-        result = self.runner.run(request)
-        self._require_success(result, "demo mask generation failed")
-        return result
-
     def generate_demo_plate(self, output: Path, duration_seconds: int = 6) -> ProcessResult:
         output.parent.mkdir(parents=True, exist_ok=True)
         request = ProcessRequest(
@@ -1342,7 +1311,7 @@ class FFmpegAdapter:
                 (
                     "drawbox=x=0:y=0:w=iw:h=ih:color=0x182848:t=fill,"
                     "drawbox=x=0:y=360:w=iw:h=360:color=0x4B6CB7:t=fill,"
-                    "drawtext=text='TEXT BEHIND SUBJECT':fontcolor=white:"
+                    "drawtext=text='SCREEN RECORDING':fontcolor=white:"
                     "fontsize=68:x=(w-text_w)/2:y=(h-text_h)/2"
                 ),
                 "-an",
@@ -1626,9 +1595,8 @@ class FFmpegAdapter:
         if audio_source is not None:
             # AAC/container timestamps can end a few milliseconds before the
             # final visual frame. Bind padded production audio to the shorter
-            # visual input explicitly; relying on ``-shortest`` alone can make
-            # AMF intermittently retain an AAC/container tail beyond the last
-            # encoded frame.
+            # visual input explicitly; relying on ``-shortest`` alone can retain
+            # an AAC/container tail beyond the last encoded frame.
             visual_duration_us = min(
                 self._video_duration_us(plate),
                 self._video_duration_us(foreground),

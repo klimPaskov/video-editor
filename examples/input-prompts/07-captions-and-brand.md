@@ -9,11 +9,11 @@ English, maximum two lines, sentence case, white text with a dark 6px outline,
 bottom safe-area padding of 8% of frame height, and no more than 42 characters
 per line when a natural break is available.
 
-Add a small chapter label “HERMES AGENT / LOCAL WORKFLOW” at the upper left
+Add a small chapter label "HERMES AGENT / LOCAL WORKFLOW" at the upper left
 from `00:00.800-00:04.200`. Use a dark translucent plate and keep it inside the
 title safe area. Do not caption the intro card if it already contains the same
-words. Captions render in front of the subject; a background plate renders
-behind the subject; supporting text must never cover the active prompt box.
+words. Captions render over the recording; supporting text must never cover the
+active prompt box.
 
 Hash the font and every other non-source asset. Record origin, permission,
 attribution, glyph coverage, contrast, wrapping, output-clock timing, integer

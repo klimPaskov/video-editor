@@ -336,8 +336,6 @@ def _motion_cue_type(purpose: str) -> str:
         "mode_change": "definition",
         "comparison": "comparison",
         "before_after": "comparison",
-        "talking_head_to_major_demo": "highlight",
-        "major_demo_to_talking_head": "highlight",
         "location_change": "chapter",
         "return_from_visual_explanation": "highlight",
     }.get(purpose, "highlight")

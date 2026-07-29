@@ -27,14 +27,14 @@ def _segments() -> list[dict[str, object]]:
             "start_us": 0,
             "end_us": 2_400_000,
             "text": "We set up the idea.",
-            "visual_mode": "talking_head",
+            "visual_mode": "demo",
         },
         {
             "segment_id": "seg_demo",
             "start_us": 2_400_000,
             "end_us": 6_000_000,
             "text": "Now let's demonstrate the result.",
-            "visual_mode": "major_demo",
+            "visual_mode": "screen_recording",
         },
     ]
 
@@ -86,7 +86,7 @@ def test_detector_requires_evidence_and_classifies_major_mode_change() -> None:
     boundaries = detect_structural_boundaries(_segments(), transcript, policy=_policy())
 
     assert len(boundaries) == 1
-    assert boundaries[0]["purpose"] == "talking_head_to_major_demo"
+    assert boundaries[0]["purpose"] == "mode_change"
     assert boundaries[0]["boundary_us"] == 2_400_000
     assert boundaries[0]["full_frame_coverage"] is True
     assert boundaries[0]["status"] == "review_required"

@@ -94,8 +94,7 @@ def build_visual_composition(
     remotion_directory: Path,
     npm_path: str = "npm",
     caption_plan_path: Path | None = None,
-    subject_path: Path | None = None,
-    middle_text: str = "TEXT BEHIND SUBJECT",
+    middle_text: str = "",
     front_label: str = "CODEX VIDEO AGENT",
     revision_id: str = "rev_001",
     focus_pacing_plan_path: Path | None = None,
@@ -148,7 +147,7 @@ def build_visual_composition(
             asset_id="asset_base_edit",
             src=base_src,
             sha256=str(output["sha256"]),
-            role="audio" if subject_path is not None else "subject",
+            role="subject",
         )
     ]
     staged_assets = [base_src]
@@ -174,55 +173,18 @@ def build_visual_composition(
         )
     layers: list[TextLayer | VideoLayer | ImageLayer] = []
     audio: list[AudioLayer] = []
-    if subject_path is None:
-        layers.append(
-            VideoLayer(
-                id="base-edit",
-                start_frame=0,
-                duration_frames=duration_frames,
-                z_index=20,
-                role="subject",
-                src=base_src,
-                muted=False,
-                volume=1,
-            )
+    layers.append(
+        VideoLayer(
+            id="base-edit",
+            start_frame=0,
+            duration_frames=duration_frames,
+            z_index=20,
+            role="subject",
+            src=base_src,
+            muted=False,
+            volume=1,
         )
-    else:
-        subject_path = subject_path.expanduser().resolve()
-        subject_src = remotion.stage_asset(layout.root.name, subject_path)
-        subject_hash = sha256_file(subject_path)
-        assets.append(
-            TimelineAssetRef(
-                asset_id="asset_subject_foreground",
-                src=subject_src,
-                sha256=subject_hash,
-                role="subject",
-            )
-        )
-        staged_assets.append(subject_src)
-        layers.append(
-            VideoLayer(
-                id="subject-foreground",
-                start_frame=0,
-                duration_frames=duration_frames,
-                z_index=20,
-                role="subject",
-                src=subject_src,
-                muted=True,
-                transparent=True,
-                fit="cover",
-            )
-        )
-        audio.append(
-            AudioLayer(
-                id="production-audio",
-                start_frame=0,
-                duration_frames=duration_frames,
-                src=base_src,
-                source_from_frame=0,
-                volume=1,
-            )
-        )
+    )
     fps = RationalFrameRate(numerator=numerator, denominator=denominator)
     transition_compilation = None
     if transition_plan_path is not None:
@@ -329,11 +291,10 @@ def build_visual_composition(
                 raise ValueError("retimed timeline does not belong to the project revision")
             rebased = rebase_focus_pacing_plan(retimed, plan.model_dump(mode="json"))
             plan = FocusPacingPlan.model_validate(rebased)
-        zoom_layer_id = "base-edit" if subject_path is None else "subject-foreground"
         timeline = apply_purposeful_zooms(
             timeline,
             plan,
-            layer_id=zoom_layer_id,
+            layer_id="base-edit",
             approved_zoom_ids=approved_zoom_ids,
         ).model_copy(update={"focus_pacing_plan_sha256": sha256_file(focus_plan_path)})
     timeline_key = timeline_artifact_key(timeline)
